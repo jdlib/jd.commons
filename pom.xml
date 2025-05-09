@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.gitlab.jdlib</groupId>
+	<groupId>io.github.jdlib</groupId>
 	<artifactId>jd.commons</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
@@ -15,6 +15,17 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
+	<developers>
+		<developer>
+			<id>johannes-doebler</id>
+			<name>Johannes Döbler</name>
+			<email>jd at civilian-framework.org</email>
+			<roles>
+				<role>Owner</role>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
 	<scm>
 		<url>https://github.com/jdlib/jdcommons/tree/master</url>
 	</scm>
@@ -177,6 +188,15 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<version>0.7.0</version>
+						<extensions>true</extensions>
+						<configuration>
+							<publishingServerId>central</publishingServerId>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
