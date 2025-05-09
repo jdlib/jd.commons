@@ -1,0 +1,10 @@
+.classpath
+.project
+.settings
+.vscode
+mvnrun.bat
+todo.txt
+next.txt
+*.pdf
+*.odt
+/target/
