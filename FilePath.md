@@ -14,7 +14,7 @@ methods in an easy to use interface
 	jd.commons.io.FilePath;
 	
 	FilePath dir = FilePath.of("/some/dir");
-	FilePath file = dir.resolbe("test.txt");
+	FilePath file = dir.resolve("test.txt");
 	
 Access to path properties:	
 	
@@ -22,10 +22,11 @@ Access to path properties:
 	boolean isFile = file.isRegularFile(); 
 	String name = file.getName();
 	
-Access to all attributes:
+Efficient access of attributes:
 	
-	BasicFileAttributes attrs = dir.attributes().basic();
-	FileTime lastModified = attrs.lastModifiedTime();
+	BasicFileAttributes basicAttrs = dir.attributes().basic();
+	FileTime lastModified = basicAttrs.lastModifiedTime();
+	boolean isFile = basicAttrs.isRegularFile(); 
 	
 Creating directories, files and links:
 	
@@ -48,5 +49,5 @@ Open streams to read or write the file content:
 Directly read and write file content:
 
 	byte[] bytes = file.read().all();
-	file.write().as(UTF_16).string("hello");
+	file.write().as(StandardCharsets.UTF_16).string("hello");
 	List<String> lines = file.read().asLatin1().lines().toList();	
