@@ -51,11 +51,11 @@ public class OneLineIOChallenge
 
 
 	/**
-	 * Given a java.io.InputStream, decode the stream content as UTF-8 and return as string.
+	 * Given a java.io.InputStream, decode the stream content as UTF-8 and append to a StringBuilder.
 	 */
-	public String challenge3(java.io.InputStream in) throws IOException
+	public void challenge3(java.io.InputStream in, StringBuilder sb) throws IOException
 	{
-		return Bytes.from(in).asUtf8().read().all();
+		Bytes.from(in).asUtf8().write().to(sb);
 	}
 
 
