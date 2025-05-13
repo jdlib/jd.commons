@@ -19,6 +19,9 @@ import java.util.Map;
 import jd.commons.io.FilePath;
 
 
+/**
+ * Demonstrates FilePath properties and attributes.
+ */
 public class FilePathDemo
 {
 	public static void main(String[] args) throws Exception
@@ -31,7 +34,6 @@ public class FilePathDemo
 		
 		FilePath path = FilePath.of(args[0]);
 		String attrPattern = args.length > 1 ? args[1] : "*";
-		//FilePath path = FilePath.of(arg);
 
 		System.out.println("absolute path: " + path.toAbsolutePath());
 		System.out.print("filesystem: ");
