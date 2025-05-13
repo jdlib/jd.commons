@@ -7,4 +7,5 @@ todo.txt
 next.txt
 *.pdf
 *.odt
+.~lock*
 /target/
