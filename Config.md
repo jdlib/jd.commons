@@ -1,4 +1,4 @@
-# jd.commons.io.config
+# jd.commons.config
 
 The `config` package contains the abstract `Config` class and various implementations.
 
@@ -6,11 +6,11 @@ The `config` package contains the abstract `Config` class and various implementa
 `Config`  is thought as a replacement for `java.util.Properties`.
 
 It allows:
-- to easily get a Config value converted to a variety of (primitive or non-primitive) types
-- to easily set a Config value from a variety of (primitive or non-primitive) types
-- to concatenate Configs, to provide default values
+- to easily get a Config value converted to a variety of primitive or non-primitive types
+- to easily set a Config value from a variety of primitive or non-primitive types
+- to concatenate Configs, e.g. to provide default values
 - to have different `Config` backends, e.g based on `java.util.Map`, `java.util.Properties`, JNDI context, environment variables...
-- to easily load or save Configs based on `java.util.Properties`
+- to easily load or save Configs which are based on `java.util.Properties`
 
 ## Accessing Values
 `Config` allows for easy conversion of String values to/from other types:
@@ -26,7 +26,7 @@ It allows:
 	config.set("price").to(4.5); // stores "4.5" under key "price"
 	config.set("flag").to(true); // stores "true" under key "flag"
 
-Replace missing values by defaults:
+Replace missing primitive values by defaults:
 
 	itemCount = config.get("itemCount").asInt(); // fails for missing value
 	itemCount = config.get("itemCount").asInt(0); // returns 0 if value missing
@@ -34,7 +34,7 @@ Replace missing values by defaults:
 Provoke exceptions for missing values:
 
 	installDir = config.get("installDir").asFile(); // returns null for missing value
-	installDir = config.get("installDir").notEmpty().asFile(); // will complain if value missing or empty
+	installDir = config.get("installDir").notEmpty().asFile(); // will fail if value missing or empty
 
 ## Primary Configs
 
@@ -119,8 +119,7 @@ of the original config starting with a given prefix.
 	String v2 = config.get("some.v2").value()
 	
 	// accessing values by their prefixed key
-	Config config = ...
-	Config someConfig = config.prefix("some");
+	Config someConfig = config.prefix("some.");
 	String v1 = someConfig.get("v1").value()
 	String v2 = someConfig.get("v2").value()
 
