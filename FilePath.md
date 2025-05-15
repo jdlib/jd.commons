@@ -1,11 +1,13 @@
 # jd.commons.io.FilePath
 
 Java 1.0 introduced the `java.io.File` class to represent files in a local file system. 
-In order to generalize to other file systems (archives, JRT) and to add missing features 
-like file attributes, Java 1.7 introduced `java.nio.file.Path` as a replacement for `File`.
-The designers decided to provide much of its functionality as static methods in the new `java.nio.file.Files` class which makes using `Path` harder and non-intuitive.
+In order to generalize to other file systems (archives, JRT) and to add address shortcomings
+(limited functionality, poor error handling, performance issues, cross-platform reliability), 
+Java 1.7 introduced `java.nio.file.Path` as a replacement for `File`.
+The designers decided to provide much of its functionality as static methods in the new `java.nio.file.Files` 
+class which makes using `Path` an non pleasant experience.
 
-`FilePath` provides the functionality of `Path` without the added complexity.
+`FilePath` tries to be what `Path` could have been.
 Technically it wraps a `Path` object and provides static methods of `java.nio.file.Files` as instance 
 methods in an easy to use interface
 
