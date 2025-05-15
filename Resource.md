@@ -21,18 +21,19 @@ Resource objects can provide a `URL` and `InputStream` to the resource:
         ...
     }
 
-A non existing resources will return a null URL. Or simply call the `exists` method
+A non existing resource will return a null URL. Or simply call the `exists` method
     
     res.getURL() 
     res.exists()
 
 Or make sure that a `Resource` exists: 
 
-    res.checkExists().getURL() // throws an IOException if not
+    res.checkExists().getURL() // throws an IOException if not existent
 
-Reading resource content is easy since `Resource` is a `ByteSource` defined by [FluentIO](FluentIO.md)
+Reading resource content is easy since `Resource` itself is a `ByteSource` (see [FluentIO](FluentIO.md)).
 
     import jd.commons.config.PropsConfig;
 
     byte[] testdata = Resource.of("testdata.bin").read().all();
-    PropsConfig config = PropsConfig.read().unchecked().from(Resource.of(META-INF/app.properties"));
+    List<String> examples = Resource.of("examples").asUtf8()..read().lines().toList();  
+    PropsConfig appProps = PropsConfig.read().from(Resource.of(META-INF/app.properties"));
