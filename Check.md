@@ -70,12 +70,12 @@ Examples:
 	double price = ...
 		
 	Check.file(input, "input").isFile().length().greater(0);
-	Check.size(name, "names").greater(5).lessEq(10);
+	Check.size(names, "names").greater(5).lessEq(10);
 	Check.value(price, "price").greater(4.5);
 	
-## Why use Check of jd.commons?
+## Why use the Check class?
 
-...because `Check`
+...because it
 * allows for dense and readable code,
 * produces high quality error messages,
 * provides a lot of validations out of the box,
@@ -88,30 +88,33 @@ Given our example this is how these alternatives would solve the challenge:
 A pure Java solution:
 
 	import java.util.Objects;
-
-	Objects.requireNonNull(id, "id");
-	Objects.requireNonNull(names, "names");
-	f (names.isEmpty()))
-		throw new IllegalArgumentException("names is empty");
-	if (names.stream().anyMatch(Objects::isNull))
-		throw new IllegalArgumentException("names contains null elements");
-	if (percent < 0.0 || percent > 100.0)
-		throw new IllegalArgumentException("percent must be >= 0.0 and <= 100.0, is " + percent);
+	
+	public void calculate(String id, List<String> names, double percent) {
+		Objects.requireNonNull(id, "id");
+		Objects.requireNonNull(names, "names");
+		if (names.isEmpty()))
+			throw new IllegalArgumentException("names is empty");
+		if (names.stream().anyMatch(Objects::isNull))
+			throw new IllegalArgumentException("names contains null elements");
+		if (percent < 0.0 || percent > 100.0)
+			throw new IllegalArgumentException("percent must be >= 0.0 and <= 100.0, is " + percent);
 
 A Guava solution:
 
 	import com.google.common.base.Preconditions;
-
-	Preconditions.checkNotNull(id, "id cannot be null");
-	Preconditions.checkArgument(names != null && !names.isEmpty(), "names cannot be null or empty");
-	Preconditions.checkArgument(names.stream().noneMatch(java.util.Objects::isNull), "names cannot contain null elements");
-	Preconditions.checkArgument(percent >= 0.0 && percent <= 100.0, "percent must be between 0.0 and 100.0");
+	
+	public void calculate(String id, List<String> names, double percent) {
+		Preconditions.checkNotNull(id, "id cannot be null");
+		Preconditions.checkArgument(names != null && !names.isEmpty(), "names cannot be null or empty");
+		Preconditions.checkArgument(names.stream().noneMatch(java.util.Objects::isNull), "names cannot contain null elements");
+		Preconditions.checkArgument(percent >= 0.0 && percent <= 100.0, "percent must be between 0.0 and 100.0");
 
 An Apache Commons solution:
 
 	import org.apache.commons.lang3.Validate;
-
-    Validate.notNull(id, "id cannot be null");
-    Validate.notEmpty(names, "names cannot be null or empty");
-    Validate.noNullElements(names, "names cannot contain null elements");
-    Validate.inclusiveBetween(0.0, 100.0, percent, "percent must be between 0.0 and 100.0");
+	
+	public void calculate(String id, List<String> names, double percent) {
+		Validate.notNull(id, "id cannot be null");
+		Validate.notEmpty(names, "names cannot be null or empty");
+		Validate.noNullElements(names, "names cannot contain null elements");
+		Validate.inclusiveBetween(0.0, 100.0, percent, "percent must be between 0.0 and 100.0");
