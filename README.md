@@ -23,14 +23,14 @@ or download the [latest release](https://github.com/jdlib/jd.commons/releases/la
 ### Fluent IO package
 [Enables](FluentIO.md) complex IO operations with one line of code.
 
-### Resource
-[Fuses](FilePath.md) java.io.File and java.nio.file.Path.
-
 ### FilePath class
 [Fuses](FilePath.md) java.io.File and java.nio.file.Path.
 
 ### FileTree class
 Effective operations on a [tree of files](FileTree.md).
+
+### Resource
+Easy handling of classpath [resources](Resource.md).
 
 ### Config class
 [Replaces](Config.md) java.util.Properties.
