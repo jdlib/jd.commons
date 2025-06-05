@@ -36,9 +36,9 @@ Easy handling of classpath [resources](Resource.md).
 [Replaces](Config.md) java.util.Properties.
 
 ### Extended functional interfaces 
-[Counterparts](XInterfaces.md) for `java.util.functio` which can throw checked exceptions.
+[Counterparts](XInterfaces.md) for `java.util.function` which can throw checked exceptions.
 
-### Utility class
-A small collection of utility classes.
+### Utility classes
+...contained in the proverbial [util package](Utilities.md).
 
 
