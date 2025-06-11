@@ -206,7 +206,7 @@ public interface Unbox
 
 	/**
 	 * Adds the given Numbers to a double sum.
-	 * @param numbers. Any null item is ignored.
+	 * @param numbers Any null item is ignored.
 	 * @return the sum
 	 */
 	public static double addDouble(Number... numbers)
@@ -220,7 +220,7 @@ public interface Unbox
 
 	/**
 	 * Adds the given Numbers to a float sum.
-	 * @param numbers. Any null item is ignored.
+	 * @param numbers Any null item is ignored.
 	 * @return the sum
 	 */
 	public static float addFloat(Number... numbers)
@@ -234,7 +234,7 @@ public interface Unbox
 
 	/**
 	 * Adds the given Numbers to a int sum.
-	 * @param numbers. Any null item is ignored.
+	 * @param numbers Any null item is ignored.
 	 * @return the sum
 	 */
 	public static int addInt(Number... numbers)
@@ -248,7 +248,7 @@ public interface Unbox
 
 	/**
 	 * Adds the given Numbers to a long sum.
-	 * @param numbers. Any null item is ignored.
+	 * @param numbers Any null item is ignored.
 	 * @return the sum
 	 */
 	public static long addLong(Number... numbers)
