@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.jdlib</groupId>
 	<artifactId>jd.commons</artifactId>
-	<packaging>jar</packaging>
 	<version>1.0.0</version>
+	<packaging>jar</packaging>
 	<name>jd.commons</name>
 	<description>jd.commons is a library containing common utility classes.</description>
 	<url>https://github.com/jdlib/jd.commons</url>
