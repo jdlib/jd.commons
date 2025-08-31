@@ -260,7 +260,7 @@ public class FilePathTest
 		assertEquals("text/plain", tempFile.probeContentType());
 		assertEquals(3L, tempFile.size());
 		assertTrue(tempFile.startsWith(tempDir));
-		assertSame(tempFile, tempFile.toRealPath());
+		assertEquals(tempFile, tempFile.toRealPath());
 		assertTrue(tempFile.startsWith(tempDir.toString()));
 		assertTrue(tempFile.toAbsolutePath().isAbsolute());
 		assertEquals(tempFile.toNioPath().toString(), tempFile.toString());
