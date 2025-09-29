@@ -47,7 +47,7 @@ public interface ResourceLoader
 	
 	
 	/**
-	 * @return a ResourceLoader which is based on the {@link ClassLoader#getSystemClassLoader() platform classloader}.
+	 * @return a ResourceLoader which is based on the {@link ClassLoader#getPlatformClassLoader() platform classloader}.
 	 */
 	public static ResourceLoader platform()
 	{
@@ -61,6 +61,15 @@ public interface ResourceLoader
 	public static ResourceLoader own()
 	{
 		return ResLoaderByCL.OWN;
+	}
+
+	
+	/**
+	 * @return a ResourceLoader which always returns null/fails.
+	 */
+	public static ResourceLoader nop()
+	{
+		return GenericResLoader.NOP;
 	}
 
 	
@@ -97,15 +106,6 @@ public interface ResourceLoader
 		Function<String,URL> url)
 	{
 		return new GenericResLoader(name, inputStream, url);
-	}
-
-	
-	/**
-	 * @return a ResourceLoader which always returns null/fails.
-	 */
-	public static ResourceLoader nop()
-	{
-		return GenericResLoader.NOP;
 	}
 
 	

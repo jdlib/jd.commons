@@ -56,6 +56,9 @@ public class ResourceTest
 	{
 		URL url = Resource.ofClassFile(String.class).checkExists().getURL();
 		assertThat(url.toString()).endsWith("java/lang/String.class");
+
+		// test with inner classes
+		Resource.ofClassFile(InnerClass.class).checkExists();
 	}
 
 	
@@ -90,5 +93,8 @@ public class ResourceTest
 		assertThatThrownBy(() -> res.checkExists(IllegalStateException::new))
 			.isInstanceOf(IllegalStateException.class)
 			.hasMessage("resource 'dummy.txt' not found");
+	}
+	
+	class InnerClass {
 	}
 }
