@@ -16,7 +16,7 @@ package jd.commons.check;
 /**
  * CheckSize allows to check a size or length value.
  */
-class CheckSize extends CheckLong
+public class CheckSize extends CheckLong
 {
 	private final boolean isSize_;
 	
@@ -30,7 +30,7 @@ class CheckSize extends CheckLong
 
 	/**
 	 * Checks that the provided value is contained in the interval [0,length[,
-	 * i.e. is >= 0 and < length
+	 * i.e. is >= 0 and < length.
 	 * @param index an index value
 	 * @param what describes the index
 	 * @return this
@@ -43,6 +43,12 @@ class CheckSize extends CheckLong
 	}
 
 
+	/**
+	 * Checks that the provided value is contained in the interval [0,length[,
+	 * i.e. is >= 0 and < length.
+	 * @param index an index value
+	 * @return this
+	 */
 	public CheckSize indexValid(int index)
 	{
 		return indexValid(index, "index");
@@ -51,7 +57,7 @@ class CheckSize extends CheckLong
 	
 	/**
 	 * Checks that the provided value is contained in the interval [0,length],
-	 * i.e. is >= 0 and <= length
+	 * i.e. is >= 0 and <= length.
 	 * @param end an end value 
 	 * @param what describes the value
 	 * @return this
@@ -64,6 +70,12 @@ class CheckSize extends CheckLong
 	}
 
 	
+	/**
+	 * Checks that the provided value is contained in the interval [0,length],
+	 * i.e. is >= 0 and <= length.
+	 * @param end an end value 
+	 * @return this
+	 */
 	public CheckSize endValid(int end)
 	{
 		return endValid(end, "end");
