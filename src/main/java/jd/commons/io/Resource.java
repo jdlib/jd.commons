@@ -68,9 +68,14 @@ public class Resource implements ByteSource
 	public static Resource ofClassFile(Class<?> c)
 	{
 		Check.notNull(c, "class");
-		String fullName   = c.getName();
-		String simpleName = Utils.afterOr(fullName, '.', fullName) + ".class";
-		return new Resource(simpleName + ".class", ResourceLoader.of(c.getClassLoader()));
+		// two caveats:
+		// - use a ResourceLoader based on the class not its ClassLoader
+		//   since for classes loaded by the bootstrap ClassLoader
+		//   the returned ClassLoader is null
+		// - don't use the simple class name and relative loading since
+		//   for inner classes the simple clas name does not contain the outer class names
+		String resName  = '/' + c.getName().replace('.', '/') + ".class";
+		return new Resource(resName, ResourceLoader.of(c));
 	}
 
 	
