@@ -156,7 +156,7 @@ public class FilePath implements Comparable<FilePath>
     /**
      * @return the FilePath for the current user directory.
      */
-	public static FilePath ofUserDir() 
+	public static FilePath userDir() 
 	{
         return of(System.getProperty("user.dir"));
     }
@@ -165,7 +165,7 @@ public class FilePath implements Comparable<FilePath>
     /**
      * @return the FilePath for the system temp directory.
      */
-	public static FilePath ofTempDir() 
+	public static FilePath tempDir() 
 	{
         return of(System.getProperty("java.io.tmpdir"));
     }
@@ -580,6 +580,31 @@ public class FilePath implements Comparable<FilePath>
     }    
 
     
+    /**
+     * Creates a new directory in this directory, using the given prefix to generate its name. 
+     * @param prefix the prefix string to be used in generating the directory's name; may be {@code null}
+     * @param attrs an optional list of file attributes to set atomically when creating the directory
+     * @throws IOException if an I/O error occurs
+     */
+    public FilePath createTempDir(String prefix, FileAttribute<?>... attrs) throws IOException 
+    {
+        return FilePath.of(Files.createTempDirectory(path_, prefix, attrs));
+    }
+
+
+    /**
+     * Creates a new empty file in this directory, using the given prefix and suffix to generate its name. 
+     * @param prefix the prefix string to be used in generating the directory's name; may be {@code null}
+     * @param suffix the suffix string to be used in generating the file's name; may be {@code null}, in which case "{@code .tmp}" is used
+     * @param attrs an optional list of file attributes to set atomically when creating the directory
+     * @throws IOException if an I/O error occurs
+     */
+    public FilePath createTempFile(String prefix, String suffix, FileAttribute<?>... attrs) throws IOException 
+    {
+        return FilePath.of(Files.createTempFile(path_, prefix, suffix, attrs));
+    }
+	
+	
     /**
      * Deletes this path.
 	 * @throws IOException if an I/O error occurs or the path does not exist

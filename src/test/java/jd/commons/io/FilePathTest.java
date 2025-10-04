@@ -189,8 +189,7 @@ public class FilePathTest
 	public void testOf() throws Exception
 	{
 		assertEquals(tempFile, FilePath.of(tempFile.toUri()));
-		FilePath.ofUserDir(); // coverage
-		FilePath.ofTempDir(); // coverage
+		FilePath.userDir(); // coverage
 		
 		FilePath empty = FilePath.of("");
 		assertNull(empty.getRoot());
@@ -319,6 +318,31 @@ public class FilePathTest
 		String name = tempLink.getName();
 		assertEquals(tempLink, tempFile.resolveSibling(name));
 		assertEquals(tempLink, tempFile.resolveSibling(FilePath.of(name)));
+	}
+
+	
+	@Test
+	public void testTemp() throws Exception
+	{
+		FilePath tempRoot = FilePath.tempDir();
+		FilePath tempDir = null;
+		try {
+			tempDir = tempRoot.createTempDir("test");
+			assertThat(tempDir.getName()).startsWith("test");
+			FilePath tempFile = null;
+			try {
+				tempFile = tempDir.createTempFile("test", ".tmp");
+				assertThat(tempFile.getName()).startsWith("test").endsWith(".tmp");
+			}
+			finally {
+				if (tempFile != null)
+					tempFile.deleteIfExists();
+			}
+		}
+		finally {
+			if (tempDir != null)
+				tempDir.deleteIfExists();
+		}
 	}
 
 	
