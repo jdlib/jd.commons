@@ -53,3 +53,14 @@ Directly read and write file content:
 	byte[] bytes = file.read().all();
 	file.write().as(StandardCharsets.UTF_16).string("hello");
 	List<String> lines = file.read().asLatin1().lines().toList();	
+	
+Create temporary files:
+
+	FilePath tempDir = FilePath.tempDir(); // defined by java.io.tmpdir sys property
+	// create a new temporary file in tempDir
+	FilePath tempFile = tempDir.createTempFile("test", ".tmp");
+	// create a new temporary file and delete when closing
+	try (FilePathCloseable tempFile2 = tempDir.createTempFile("test2", ".tmp").toCloseable()) {
+	    ...
+	}
+	
