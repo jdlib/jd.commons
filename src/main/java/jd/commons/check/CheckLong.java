@@ -42,6 +42,15 @@ public class CheckLong extends CheckHelper
 	
 	
 	/**
+	 * @return the value of this Check object.
+	 */
+	public long get()
+	{
+		return value_;
+	}
+	
+	
+	/**
 	 * Checks that the size is greater than the given value.
 	 * @param other a value to compare
 	 * @return this

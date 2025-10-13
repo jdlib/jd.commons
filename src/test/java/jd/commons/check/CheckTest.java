@@ -332,9 +332,9 @@ public class CheckTest
 	@Test
 	public void testValueDecimal()
 	{
-		Check.value(1.3f, null)
-			.greater(1).lessEq(1.3).positive().notNaN().finite();
+		Check.value(1.3f, null).greater(1).lessEq(1.3).positive().notNaN().finite();
 		Check.value(-1.3, null).greaterEq(-1.3).less(0).notEqual(2).equal(-1.3).negative().notNaN().finite();
+		assertEquals(2.5, Check.value(2.5, null).get());
 		failCheck(() -> Check.value(2.5, "price").greater(3), "price is 2.5, expected to be > 3.0");
 		failCheck(() -> Check.value(Float.NaN, "price").notNaN(), "price is NaN");
 		failCheck(() -> Check.value(Double.NEGATIVE_INFINITY, "price").finite(), "price is -Infinity");
@@ -347,6 +347,7 @@ public class CheckTest
 	{
 		Check.value(1, null).greater(0).lessEq(1000);
 		Check.value((short)5, null).greaterEq(0).less(10).notEqual(6).equal(5);
+		assertEquals(2, Check.value(2, null).get());
 		failCheck(() -> Check.value(4, "count").lessEq(3), "count is 4, expected to be <= 3");
 	}
 
@@ -355,6 +356,7 @@ public class CheckTest
 	public void testValueLong()
 	{
 		Check.value(1L, null).greater(0).lessEq(1000L).equal(1L).notEqual(2);
+		assertEquals(3L, Check.value(3L, null).get());
 		failCheck(() -> Check.value(4L, "count").lessEq(3L), "count is 4, expected to be <= 3");
 		failCheck(() -> Check.value(4L, "count").notEqual(4L), "count is 4, expected to be != 4");
 	}

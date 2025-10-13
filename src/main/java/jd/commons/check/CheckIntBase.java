@@ -34,6 +34,15 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 	
 	
 	/**
+	 * @return the value of this Check object.
+	 */
+	public int get()
+	{
+		return value_;
+	}
+	
+	
+	/**
 	 * Checks that the size is greater than the given value.
 	 * @param other a value to compare
 	 * @return this

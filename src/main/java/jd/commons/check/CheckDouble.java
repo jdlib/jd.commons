@@ -35,6 +35,15 @@ public class CheckDouble extends CheckHelper
 	
 	
 	/**
+	 * @return the value of this Check object.
+	 */
+	public double get()
+	{
+		return value_;
+	}
+	
+	
+	/**
 	 * Checks that this value is greater than the given value.
 	 * @param other a value to compare
 	 * @return this
