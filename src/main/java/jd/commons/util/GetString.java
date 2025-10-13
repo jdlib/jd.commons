@@ -80,7 +80,7 @@ public interface GetString
 	
 	public default boolean isEmpty()
 	{
-		return Utils.isEmpty(valueOr(null));
+		return Utils.isEmpty(value());
 	}
 
 	
