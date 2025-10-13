@@ -167,6 +167,30 @@ public class FilePathTest
 	
 	
 	@Test
+	public void testDelete(@TempDir File tempDir) throws Exception
+	{
+		FilePath root = FilePath.of(tempDir);
+		FilePath file1 = root.resolve("a", "1.txt");
+		assertFalse(file1.exists());
+		assertFalse(file1.deleteIfExists());
+		assertThatThrownBy(() -> file1.delete()).isInstanceOf(NoSuchFileException.class);
+		
+		file1.getParent().createDirectories();
+		file1.createFile();
+		assertTrue(file1.exists());
+		FilePath file2 = file1.resolveSibling("2.txt").createFile();
+		FilePath file3 = file1.resolveSibling("3.txt").createFile();
+		
+		assertTrue(file2.deleteIfExists());
+		file3.delete(); 
+		assertFalse(file3.exists());
+		
+		assertEquals(3, root.deleteRecursively());
+		assertFalse(root.exists());
+	}
+	
+	
+	@Test
 	public void testGetType() throws Exception
 	{
 		assertSame(FilePath.Type.DIRECTORY, tempDir.getType());
@@ -325,23 +349,12 @@ public class FilePathTest
 	public void testTemp() throws Exception
 	{
 		FilePath tempRoot = FilePath.tempDir();
-		FilePath tempDir = null;
-		try {
-			tempDir = tempRoot.createTempDir("test");
+		try (FilePathCloseable tempDir = tempRoot.createTempDir("test").toCloseable()) {
 			assertThat(tempDir.getName()).startsWith("test");
-			FilePath tempFile = null;
-			try {
-				tempFile = tempDir.createTempFile("test", ".tmp");
+			tempDir.createTempFile("test1", ".tmp"); // will be deleted when tempRoot is closed
+			try (FilePathCloseable tempFile = tempDir.createTempFile("test", ".tmp").toCloseable()) {
 				assertThat(tempFile.getName()).startsWith("test").endsWith(".tmp");
 			}
-			finally {
-				if (tempFile != null)
-					tempFile.deleteIfExists();
-			}
-		}
-		finally {
-			if (tempDir != null)
-				tempDir.deleteIfExists();
 		}
 	}
 

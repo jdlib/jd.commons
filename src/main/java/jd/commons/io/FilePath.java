@@ -1387,6 +1387,15 @@ public class FilePath implements Comparable<FilePath>
     	return path_.toUri();
     }
     
+    
+    /**
+     * @return a closeable FilePath which deletes the underlying path when closed.
+     */
+    public FilePathCloseable toCloseable()
+    {
+        return new FilePathCloseable(path_);
+    }
+    
 
     /**
      * @return a File representing this path.
