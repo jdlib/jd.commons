@@ -36,7 +36,7 @@ public class GetStringTest
 
 	
 	@Test 
-	public void testAsBooleanTF()
+	public void testAsBooleanYesNo()
 	{
 		assertTrue(of("yes").asBoolean("yes", "no"));
 		assertFalse(of("no").asBoolean("yes", "no"));
@@ -145,10 +145,20 @@ public class GetStringTest
 		assertTrue(n.isNull());
 		assertTrue(n.isEmpty());
 		assertEquals("b", n.valueOr("b"));
-		assertIAE(() -> n.notNull(), "null not allowed");
-		assertIAE(() -> n.notEmpty(), "null not allowed");
-		assertIAE(() -> of("").notEmpty(), "\"\" not allowed");
 		assertEquals("x", n.replaceNull("x").value());
+		assertIAE(() -> n.notNull(), "value is null");
+		assertIAE(() -> n.notEmpty(), "value is null");
+		
+		GetString nw = of(null, "what");
+		assertIAE(() -> nw.notNull(), "what is null");
+		
+		GetString e = of("");
+		assertFalse(e.isNull());
+		assertTrue(e.isEmpty());
+		assertIAE(() -> e.notEmpty(), "value is empty");
+		
+		GetString ew = of("", "what");
+		assertIAE(() -> ew.notEmpty(), "what is empty");
 	}
 	
 	
