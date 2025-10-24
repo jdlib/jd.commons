@@ -60,7 +60,7 @@ Create temporary files:
 	// create a new temporary file in tempDir
 	FilePath tempFile = tempDir.createTempFile("test", ".tmp");
 	// create a new temporary file and delete when closing
-	try (FilePathCloseable tempFile2 = tempDir.createTempFile("test2", ".tmp").toCloseable()) {
+	try (FilePath.Closeable tempFile2 = tempDir.createTempFile("test2", ".tmp").toCloseable()) {
 	    ...
 	}
 	

@@ -1391,10 +1391,35 @@ public class FilePath implements Comparable<FilePath>
     /**
      * @return a closeable FilePath which deletes the underlying path when closed.
      */
-    public FilePathCloseable toCloseable()
+    public FilePath.Closeable toCloseable()
     {
-        return new FilePathCloseable(path_);
+        return new Closeable(path_);
     }
+
+
+    /**
+     * A FilePath class that implements Closeable.
+     * When closed, it deletes the underlying file or recursively deletes the underlying directory.
+     * @see FilePath#toCloseable()
+     */
+    public static class Closeable extends FilePath implements java.io.Closeable
+    {
+	    	public Closeable(Path path)
+		{
+			super(path);
+		}
+
+
+	    	@Override
+	    	public void close() throws IOException
+	    	{
+	    		if (isDirectory())
+	    			deleteRecursively();
+	    		else
+	    			deleteIfExists();
+	    	}
+    }
+
 
 
     /**
