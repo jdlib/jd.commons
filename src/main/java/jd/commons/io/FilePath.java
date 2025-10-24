@@ -73,9 +73,9 @@ import jd.commons.util.function.XFunction;
  * a user friendly interface for {@code Path} operations, especially
  * it exposes static Path methods in {@code java.nio.file.Files} as instance methods.
  * <p>
- * Java 1.0 introduced the {@code File} class to model files in 
+ * Java 1.0 introduced the {@code File} class to model files in
  * a local file system.<br>
- * In order to generalize to other file systems (e.g. archives, JRT) and add missing features 
+ * In order to generalize to other file systems (e.g. archives, JRT) and add missing features
  * like file attributes, Java 1.7 introduced {@code Path} as a replacement for {@code File}.
  * {@code Path} designers decided to provide lot of functionality as static
  * methods in the new {@code java.nio.file.Files} class which makes using the {@code Path}
@@ -88,7 +88,7 @@ import jd.commons.util.function.XFunction;
  * <li>using builders and fluent APIs to keep a easy to use interface
  * </ul>
  */
-public class FilePath implements Comparable<FilePath> 
+public class FilePath implements Comparable<FilePath>
 {
 	/**
 	 * Categorizes a FilePath.
@@ -100,14 +100,14 @@ public class FilePath implements Comparable<FilePath>
 		SYMBOLIC_LINK,
 		OTHER
 	}
-	
-	
+
+
 	/**
 	 * The path wrapped by this FilePath.
 	 */
 	protected final Path path_;
 
-	
+
 	/**
 	 * @return a FilePath object for the given Path.
 	 * @param path a Path, not null
@@ -116,7 +116,7 @@ public class FilePath implements Comparable<FilePath>
 	{
 		return new FilePath(path);
 	}
-	
+
 
 	/**
 	 * @return a FilePath object for the given File.
@@ -128,7 +128,7 @@ public class FilePath implements Comparable<FilePath>
 		return of(Check.notNull(file, "file").toPath());
 	}
 
-	
+
 	/**
 	 * @return a FilePath object for the given URI.
 	 * @param uri a URI, not null
@@ -139,7 +139,7 @@ public class FilePath implements Comparable<FilePath>
 		return of(Path.of(Check.notNull(uri, "uri")));
 	}
 
-	
+
 	/**
      * @return a {@code FilePath} by converting a path string, or a sequence of
      * strings that when joined form a path string.
@@ -147,36 +147,36 @@ public class FilePath implements Comparable<FilePath>
      * @param more additional strings to be joined to form the path string
      * @see Path#of(String, String...)
      */
-	public static FilePath of(String first, String... more) 
+	public static FilePath of(String first, String... more)
 	{
         return of(Path.of(first, more));
     }
-	
-	
+
+
     /**
      * @return the FilePath for the current user directory.
      */
-	public static FilePath userDir() 
+	public static FilePath userDir()
 	{
         return of(System.getProperty("user.dir"));
     }
 
-	
+
     /**
      * @return the FilePath for the system temp directory.
      */
-	public static FilePath tempDir() 
+	public static FilePath tempDir()
 	{
         return of(System.getProperty("java.io.tmpdir"));
     }
 
-	
+
 	private static FilePath ofNullable(Path path)
 	{
 		return path != null ? new FilePath(path) : null;
 	}
 
-	
+
 	/**
 	 * Creates a FilePath object for the given path.
 	 * @param path a Path, not null
@@ -190,9 +190,9 @@ public class FilePath implements Comparable<FilePath>
 	/**
 	 * @return a builder object which allows to access the attributes of this path.
 	 * @param options indicating how symbolic links are handled.
-	 * 		By default, if you don't provide any options then symbolic links are followed 
-	 * 		and the attributes of the final target of the link are returned. 
-	 * 		If the option {@link LinkOption#NOFOLLOW_LINKS NOFOLLOW_LINKS} is present 
+	 * 		By default, if you don't provide any options then symbolic links are followed
+	 * 		and the attributes of the final target of the link are returned.
+	 * 		If the option {@link LinkOption#NOFOLLOW_LINKS NOFOLLOW_LINKS} is present
 	 * 		then symbolic links are not followed.
 	 * @see #attrsNoFollowLinks()
 	 */
@@ -201,8 +201,8 @@ public class FilePath implements Comparable<FilePath>
     {
     	return new Attributes(options);
     }
-    
-    
+
+
 	/**
 	 * @return a builder object which allows to access the attributes of this path.
 	 * Symbolic links are not followed.
@@ -214,7 +214,7 @@ public class FilePath implements Comparable<FilePath>
     	return attributes(LinkOption.NOFOLLOW_LINKS);
     }
 
-    
+
     /**
      * Provides access to attributes of this FilePath.
      * @see FilePath#attributes(LinkOption...)
@@ -223,8 +223,8 @@ public class FilePath implements Comparable<FilePath>
     public class Attributes
     {
     	private final LinkOption[] options_;
-    	
-    	
+
+
     	/**
     	 * Creates a new Attributes object.
     	 * @param options the link options
@@ -234,20 +234,20 @@ public class FilePath implements Comparable<FilePath>
     		options_ = options;
     	}
 
-    
+
     	/**
     	 * @return the BasicFileAttributes of the FilePath.
-    	 * @throws IOException if an I/O error occurs 
+    	 * @throws IOException if an I/O error occurs
     	 */
         public BasicFileAttributes basic() throws IOException
         {
         	return type(BasicFileAttributes.class);
         }
 
-        
+
     	/**
     	 * @return the value of an attribute.
-    	 * @param attribute the attribute name. 
+    	 * @param attribute the attribute name.
     	 * 		Consult {@link Files#getAttribute(Path, String, LinkOption...)}
     	 * 		to learn about the possible values for this parameter.
     	 * @throws IOException if an I/O error occurs
@@ -256,14 +256,14 @@ public class FilePath implements Comparable<FilePath>
         {
         	return Files.getAttribute(path_, attribute, options_);
         }
-        
-        
+
+
     	/**
     	 * @return a map of attribute names and its values.
-    	 * @param attributes the attributes to read. 
+    	 * @param attributes the attributes to read.
     	 * 		Please consult {@link Files#readAttributes(Path, String, LinkOption...)}
     	 * 		to learn about the possible values for this parameter.
-    	 * @throws IOException if an I/O error occurs 
+    	 * @throws IOException if an I/O error occurs
     	 * @see Files#readAttributes(Path, String, LinkOption...)
     	 */
         public Map<String,Object> map(String attributes) throws IOException
@@ -271,7 +271,7 @@ public class FilePath implements Comparable<FilePath>
         	return Files.readAttributes(path_, attributes, options_);
         }
 
-        
+
     	/**
     	 * @return the {@link FileOwnerAttributeView} of the Path.
     	 */
@@ -280,17 +280,17 @@ public class FilePath implements Comparable<FilePath>
         	return view(FileOwnerAttributeView.class);
         }
 
-        
+
     	/**
     	 * @return the {@link PosixFileAttributes} of this path.
-    	 * @throws IOException if an I/O error occurs 
+    	 * @throws IOException if an I/O error occurs
     	 */
         public PosixFileAttributes posix() throws IOException
         {
         	return type(PosixFileAttributes.class);
         }
 
-        
+
     	/**
     	 * Sets the value of an attribute.
     	 * @param attribute the attribute
@@ -304,12 +304,12 @@ public class FilePath implements Comparable<FilePath>
         	Files.setAttribute(path_, attribute, value, options_);
         	return this;
         }
-        
-        
+
+
     	/**
     	 * @return an object providing specific attributes of this path.
-      	 * @param attrClass a class derived from BasicFileAttributes 
-      	 * @param<A> the type of attrClass  
+      	 * @param attrClass a class derived from BasicFileAttributes
+      	 * @param<A> the type of attrClass
       	 * @throws IOException if an I/O error occurs
     	 * @see Files#readAttributes(Path, String, LinkOption...)
     	 */
@@ -317,11 +317,11 @@ public class FilePath implements Comparable<FilePath>
         {
         	return Files.readAttributes(path_, attrClass, options_);
         }
-        
+
 
     	/**
     	 * @return an object providing a specific attributes view of this path.
-    	 * @param viewClass a class derived from FileAttributeView 
+    	 * @param viewClass a class derived from FileAttributeView
     	 * @param<V> the type of viewClass
     	 * @see Files#getFileAttributeView(Path, Class, LinkOption...)
     	 */
@@ -331,7 +331,7 @@ public class FilePath implements Comparable<FilePath>
         }
     }
 
-    
+
 	/**
 	 * @return a Children object which provides access to the children of this path.
 	 */
@@ -341,7 +341,7 @@ public class FilePath implements Comparable<FilePath>
         return new Children(null, null);
     }
 
-    
+
     /**
      * Represents the children of this patn.
      */
@@ -349,15 +349,15 @@ public class FilePath implements Comparable<FilePath>
     {
     	private String glob_;
     	private Predicate<FilePath> filter_;
-    	
-    	
+
+
     	private Children(String glob, Predicate<FilePath> filter)
     	{
     		glob_   = glob;
     		filter_ = filter;
     	}
-    	
-    	
+
+
     	/**
     	 * Returns a new children object restricted to children which match the glob pattern.
     	 * To learn more about glob patterns consult {@link Files#newDirectoryStream(Path, String)}.
@@ -369,7 +369,7 @@ public class FilePath implements Comparable<FilePath>
         	return new Children(pattern, filter_);
         }
 
-        
+
     	/**
     	 * Returns a new children object restricted to children which match the filter.
     	 * @param filter the filter
@@ -380,7 +380,7 @@ public class FilePath implements Comparable<FilePath>
         	return new Children(glob_, filter);
         }
 
-        
+
         /**
          * @return if the children list is empty.
     	 * @throws IOException if an I/O error occurs
@@ -389,7 +389,7 @@ public class FilePath implements Comparable<FilePath>
         {
         	return apply(Stream::findAny).isEmpty();
         }
-        
+
 
         /**
          * @return the number of children.
@@ -400,10 +400,10 @@ public class FilePath implements Comparable<FilePath>
         	return apply(Stream::count);
         }
 
-        
+
         /**
          * Deletes the children. This operation applies {@link FilePath#deleteIfExists()}
-         * to all children matching the glob pattern and filter of this Children instance. 
+         * to all children matching the glob pattern and filter of this Children instance.
          * This is not a recursive delete and can fail, i.e
          * if a child is a non-empty directory. For recursive deletes use {@link FileTree#delete()}
          * @return the number of deleted childrens
@@ -413,14 +413,14 @@ public class FilePath implements Comparable<FilePath>
     	public int delete() throws IOException
     	{
     		int[] count = new int[1];
-    		forEach(fp -> { 
-    			if (fp.deleteIfExists()) 
+    		forEach(fp -> {
+    			if (fp.deleteIfExists())
     				count[0]++;
     		});
     		return count[0];
     	}
 
-    	
+
     	/**
          * @return the children as List.
     	 * @throws IOException if an I/O error occurs
@@ -430,7 +430,7 @@ public class FilePath implements Comparable<FilePath>
     		return apply(s -> s.collect(Collectors.toList()));
     	}
 
-        
+
     	/**
     	 * Invokes the consumer for every child path.
     	 * @param consumer a Consumer
@@ -450,7 +450,7 @@ public class FilePath implements Comparable<FilePath>
     		}
     	}
 
-    
+
     	/**
     	 * Passes a Stream of child paths to a Function and returns the result.
     	 * @param fn a function
@@ -470,18 +470,18 @@ public class FilePath implements Comparable<FilePath>
     		}
     	}
 
-        
+
         private DirectoryStream<Path> open() throws IOException
     	{
-    		return glob_ != null ? 
-    			Files.newDirectoryStream(path_, glob_) : 
+    		return glob_ != null ?
+    			Files.newDirectoryStream(path_, glob_) :
     			Files.newDirectoryStream(path_);
     	}
     }
 
-    
+
     /**
-     * Initiates a copy operation of this FilePath. 
+     * Initiates a copy operation of this FilePath.
      * @param options specifying how the copy should be done
      * @return a builder to choose the target of where to copy this FilePath.
      * @see Files#copy(Path, Path, CopyOption...)
@@ -489,7 +489,7 @@ public class FilePath implements Comparable<FilePath>
     @CheckReturnValue
     public FileTarget copy(CopyOption... options)
     {
-    	return new FilePathTarget() 
+    	return new FilePathTarget()
     	{
 			@Override
 			protected void execute(FilePath target) throws IOException
@@ -497,8 +497,8 @@ public class FilePath implements Comparable<FilePath>
 		    	Files.copy(path_, target.path_, options);
 			}
     	};
-    }    
-        
+    }
+
 
     /**
      * Creates a new and empty file, failing if the file already exists.
@@ -513,8 +513,8 @@ public class FilePath implements Comparable<FilePath>
         Files.createFile(path_, attrs);
         return this;
     }
-    
-    
+
+
     /**
      * Creates a new directory.
      * @param attrs an optional list of file attributes to set atomically when
@@ -529,7 +529,7 @@ public class FilePath implements Comparable<FilePath>
         return this;
     }
 
-    
+
     /**
      * Creates a directory by creating all nonexistent parent directories first.
      * @param attrs an optional list of file attributes to set atomically when
@@ -544,7 +544,7 @@ public class FilePath implements Comparable<FilePath>
         return this;
     }
 
-    
+
     /**
      * @param attrs attributes for the symbolic link
      * @return a Target builder to specify the target of the symbolik link
@@ -552,7 +552,7 @@ public class FilePath implements Comparable<FilePath>
     @CheckReturnValue
     public FileTarget createSymbolicLink(FileAttribute<?>... attrs)
     {
-    	return new FilePathTarget() 
+    	return new FilePathTarget()
     	{
 			@Override
 			protected void execute(FilePath target) throws IOException
@@ -560,16 +560,16 @@ public class FilePath implements Comparable<FilePath>
 		    	Files.createSymbolicLink(path_, target.path_, attrs);
 			}
     	};
-    }    
+    }
 
-    
+
     /**
      * @return a FileTarget to specifiy the link target.
      */
     @CheckReturnValue
     public FileTarget createLink()
     {
-    	return new FilePathTarget() 
+    	return new FilePathTarget()
     	{
 			@Override
 			protected void execute(FilePath target) throws IOException
@@ -577,68 +577,68 @@ public class FilePath implements Comparable<FilePath>
 		    	Files.createLink(path_, target.path_);
 			}
     	};
-    }    
+    }
 
-    
+
     /**
-     * Creates a new directory in this directory, using the given prefix to generate its name. 
+     * Creates a new directory in this directory, using the given prefix to generate its name.
      * @param prefix the prefix string to be used in generating the directory's name; may be {@code null}
      * @param attrs an optional list of file attributes to set atomically when creating the directory
      * @throws IOException if an I/O error occurs
      */
-    public FilePath createTempDir(String prefix, FileAttribute<?>... attrs) throws IOException 
+    public FilePath createTempDir(String prefix, FileAttribute<?>... attrs) throws IOException
     {
         return FilePath.of(Files.createTempDirectory(path_, prefix, attrs));
     }
 
 
     /**
-     * Creates a new empty file in this directory, using the given prefix and suffix to generate its name. 
+     * Creates a new empty file in this directory, using the given prefix and suffix to generate its name.
      * @param prefix the prefix string to be used in generating the directory's name; may be {@code null}
      * @param suffix the suffix string to be used in generating the file's name; may be {@code null}, in which case "{@code .tmp}" is used
      * @param attrs an optional list of file attributes to set atomically when creating the directory
      * @throws IOException if an I/O error occurs
      */
-    public FilePath createTempFile(String prefix, String suffix, FileAttribute<?>... attrs) throws IOException 
+    public FilePath createTempFile(String prefix, String suffix, FileAttribute<?>... attrs) throws IOException
     {
         return FilePath.of(Files.createTempFile(path_, prefix, suffix, attrs));
     }
-	
-	
+
+
     /**
      * Deletes this path.
 	 * @throws IOException if an I/O error occurs or the path does not exist
      */
-    public void delete() throws IOException 
+    public void delete() throws IOException
     {
     	Files.delete(path_);
     }
-    
-    
+
+
     /**
      * Deletes this path if it exists.
      * @return did the file exist and was deleted?
 	 * @throws IOException if an I/O error occurs
-	 * @see Files#deleteIfExists(Path) 
+	 * @see Files#deleteIfExists(Path)
 	 * @see FileTree#delete()
 	 */
-    public boolean deleteIfExists() throws IOException 
+    public boolean deleteIfExists() throws IOException
     {
     	return Files.deleteIfExists(path_);
     }
-    
-    
+
+
 	/**
 	 * Recursively walks this file tree and deletes the files included in this tree.
 	 * @return the number of deleted files and directories
 	 * @throws IOException if an I/O error occurs
 	 */
-    public int deleteRecursively() throws IOException 
+    public int deleteRecursively() throws IOException
     {
     	return FileTree.of(this).delete();
     }
 
-    
+
     /**
      * @return if this path ends with the given path
      * @param other a path
@@ -650,7 +650,7 @@ public class FilePath implements Comparable<FilePath>
     	return path_.endsWith(other.path_);
     }
 
-   
+
     /**
      * @return if this path ends with the given path
      * @param other a path
@@ -660,8 +660,8 @@ public class FilePath implements Comparable<FilePath>
     {
     	return path_.endsWith(other);
     }
-    
-    
+
+
     /**
      * @return if the path exists.
      * @param options indicating how symbolic links are handled
@@ -672,7 +672,7 @@ public class FilePath implements Comparable<FilePath>
     	return Files.exists(path_, options);
     }
 
-    
+
     /**
      * @return if the path exists, if symbolic links are not followed:
      * @see Files#exists(Path, LinkOption...)
@@ -682,7 +682,7 @@ public class FilePath implements Comparable<FilePath>
     	return exists(LinkOption.NOFOLLOW_LINKS);
     }
 
-    
+
     /**
 	 * @return the extension of the file name or "" if the file name does not have a extension#.
 	 */
@@ -691,7 +691,7 @@ public class FilePath implements Comparable<FilePath>
     	return getExtensionOr("");
     }
 
-    
+
 	/**
 	 * @param defaultValue a default value
 	 * @return the extension of the file name or the default value if the extensiopn is empty.
@@ -700,10 +700,10 @@ public class FilePath implements Comparable<FilePath>
     {
     	String name = getName();
     	int p = name.lastIndexOf('.');
-    	return p >= 0 ? name.substring(p + 1) : defaultValue; 
+    	return p >= 0 ? name.substring(p + 1) : defaultValue;
     }
-    
-    
+
+
     /**
      * @return the FileStore of this path.
      * @throws IOException if an I/O error occurs
@@ -713,8 +713,8 @@ public class FilePath implements Comparable<FilePath>
     {
     	return Files.getFileStore(path_);
     }
- 
-    
+
+
     /**
      * @return the file system that created this object.
      * @see Path#getFileSystem()
@@ -738,8 +738,8 @@ public class FilePath implements Comparable<FilePath>
     	Path name = path_.getFileName();
     	return name != null ? name.toString() : "";
     }
-    
-    
+
+
     /**
      * @return a path representing the path's parent or null if this path does not have a parent.
      * @see Path#getParent()
@@ -749,7 +749,7 @@ public class FilePath implements Comparable<FilePath>
     	return ofNullable(path_.getParent());
     }
 
-    
+
     /**
      * @return  a path representing the root component of this path,
      *          or {@code null} if this path does not have a root component.
@@ -760,7 +760,7 @@ public class FilePath implements Comparable<FilePath>
     	return ofNullable(path_.getRoot());
     }
 
-    
+
     public Type getType(LinkOption... options)
     {
 		try
@@ -779,26 +779,26 @@ public class FilePath implements Comparable<FilePath>
 		return Type.OTHER;
     }
 
-    
+
     /**
      * @return if this path has all the given access modes.
      * @param modes the access modes
      * @see FileSystemProvider#checkAccess(Path, AccessMode...)
      */
-    public boolean isAccessible(AccessMode... modes) 
+    public boolean isAccessible(AccessMode... modes)
     {
         try
         {
             path_.getFileSystem().provider().checkAccess(path_, modes);
             return true;
-        } 
-        catch (IOException e) 
+        }
+        catch (IOException e)
         {
             return false;
         }
     }
 
-    
+
     /**
      * @return Tells whether or not this path is absolute.
      * @see Path#isAbsolute
@@ -808,7 +808,7 @@ public class FilePath implements Comparable<FilePath>
     	return path_.isAbsolute();
     }
 
-    
+
     /**
      * @return if this path is a directory.
      * @param options LinkOptions
@@ -819,7 +819,7 @@ public class FilePath implements Comparable<FilePath>
     	return Files.isDirectory(path_, options);
     }
 
-    
+
     /**
      * @return if this path is executable.
      * @see Files#isExecutable(Path)
@@ -830,7 +830,7 @@ public class FilePath implements Comparable<FilePath>
     	return Files.isExecutable(path_);
     }
 
-    
+
     /**
      * @return if this file is hidden.
      * @see Files#isHidden(Path)
@@ -841,7 +841,7 @@ public class FilePath implements Comparable<FilePath>
     	return Files.isHidden(path_);
     }
 
-    
+
     /**
      * @return if this path is readable.
      * @see Files#isReadable(Path)
@@ -852,7 +852,7 @@ public class FilePath implements Comparable<FilePath>
     	return Files.isReadable(path_);
     }
 
-    
+
     /**
      * @return if this path is a regular file.
      * @param options LinkOptions
@@ -862,20 +862,20 @@ public class FilePath implements Comparable<FilePath>
     {
     	return Files.isRegularFile(path_, options);
     }
-    
-    
+
+
     /**
      * @return if this path is the same as the other path.
      * @param other another path, not null
      * @throws IOException if an I/O error occurs
      * @see Files#isSameFile(Path, Path)
      */
-    public boolean isSameFile(FilePath other) throws IOException 
+    public boolean isSameFile(FilePath other) throws IOException
     {
     	Check.notNull(other, "other");
     	return Files.isSameFile(path_, other.path_);
     }
-   
+
 
     /**
      * @return if this path is a symbolic link.
@@ -887,7 +887,7 @@ public class FilePath implements Comparable<FilePath>
     	return Files.isSymbolicLink(path_);
     }
 
-    
+
     /**
      * @return if this path is writable.
      * @see Files#isWritable(Path)
@@ -897,7 +897,7 @@ public class FilePath implements Comparable<FilePath>
     {
     	return Files.isWritable(path_);
     }
-    
+
 
     /**
      * @return a FileTarget object to specify the target of a move operation.
@@ -907,7 +907,7 @@ public class FilePath implements Comparable<FilePath>
     @CheckReturnValue
     public FileTarget move(CopyOption... options)
     {
-    	return new FilePathTarget() 
+    	return new FilePathTarget()
     	{
 			@Override
 			protected void execute(FilePath target) throws IOException
@@ -915,9 +915,9 @@ public class FilePath implements Comparable<FilePath>
 		    	Files.move(path_, target.path_, options);
 			}
     	};
-    }    
+    }
 
-    
+
     /**
      * @return a Builder to open a binary stream or channel to this file.
      */
@@ -926,19 +926,19 @@ public class FilePath implements Comparable<FilePath>
     {
     	return new ByteOpen();
     }
-    
+
 
     private static final OpenOption[] EMPTY_OPEN_OPTIONS = new OpenOption[0];
 
-    
+
     /**
      * A builder to open a binary stream or channel to this file.
      */
     public class ByteOpen implements AsCharset<CharOpen>
     {
-    	private OpenOption[] options_ = EMPTY_OPEN_OPTIONS; 
+    	private OpenOption[] options_ = EMPTY_OPEN_OPTIONS;
 
-    	
+
     	/**
          * @return a builder to open a character stream to this FilePath, encoded or decoded
          * by the given Charset.
@@ -950,8 +950,8 @@ public class FilePath implements Comparable<FilePath>
     	{
     		return new CharOpen(charset, options_);
     	}
-    	
-    	
+
+
         /**
          * Opens or creates a file, returning a seekable byte channel to access the file.
          * @param attrs an optional list of file attributes to set atomically when creating the file
@@ -963,8 +963,8 @@ public class FilePath implements Comparable<FilePath>
         {
         	return Files.newByteChannel(path_, Set.of(options_), attrs);
         }
-        
-        
+
+
         /**
          * @return an InputStream to read from this FilePath.
          * @throws IOException if an I/O error occurs
@@ -974,7 +974,7 @@ public class FilePath implements Comparable<FilePath>
             return Files.newInputStream(path_, options_);
         }
 
-        
+
         /**
          * @return an OutputStream to write to this FilePath.
          * @throws IOException if an I/O error occurs
@@ -983,8 +983,8 @@ public class FilePath implements Comparable<FilePath>
         {
             return Files.newOutputStream(path_, options_);
         }
-    	
-    	
+
+
     	/**
 	     * Sets the options to {@link StandardOpenOption#APPEND}
 	     * @return this
@@ -1008,23 +1008,23 @@ public class FilePath implements Comparable<FilePath>
 		}
     }
 
-    
+
     /**
      * A a builder to open a character stream to this FilePath.
      */
     public class CharOpen
     {
     	private final Charset charset_;
-    	private OpenOption[] options_ = EMPTY_OPEN_OPTIONS; 
-    	
-    	
+    	private OpenOption[] options_ = EMPTY_OPEN_OPTIONS;
+
+
     	private CharOpen(Charset charset, OpenOption[] options)
     	{
     		charset_ = Check.notNull(charset, "charset");
     		options_ = options;
     	}
-    	
-    	
+
+
         /**
          * @return a Reader to read from this file.
          * @throws IOException if an I/O error occurs
@@ -1034,7 +1034,7 @@ public class FilePath implements Comparable<FilePath>
         	return new InputStreamReader(Files.newInputStream(path_, options_), charset_);
         }
 
-        
+
         /**
          * @return a BufferedReader to read from this file.
          * @throws IOException if an I/O error occurs
@@ -1044,7 +1044,7 @@ public class FilePath implements Comparable<FilePath>
         	return new BufferedReader(reader());
         }
 
-        
+
         /**
          * @return a Writer to write to this file.
          * @throws IOException if an I/O error occurs
@@ -1054,7 +1054,7 @@ public class FilePath implements Comparable<FilePath>
         	return new OutputStreamWriter(Files.newOutputStream(path_, options_), charset_);
         }
 
-    
+
         /**
          * @return a PrintWriter to write to this file.
          * @throws IOException if an I/O error occurs
@@ -1065,7 +1065,7 @@ public class FilePath implements Comparable<FilePath>
         }
     }
 
-    
+
     /**
      * @return a path that is this path with redundant name elements eliminated.
      * @see Path#normalize()
@@ -1075,7 +1075,7 @@ public class FilePath implements Comparable<FilePath>
     	return thisOrNew(path_.normalize());
     }
 
-    
+
     /**
      * @return if the path does not exists
      * @param options indicating how symbolic links are handled
@@ -1087,7 +1087,7 @@ public class FilePath implements Comparable<FilePath>
     	return Files.notExists(path_, options);
     }
 
-    
+
     /**
      * Probes the content type of a file.
      * @return  The content type of the file, or {@code null} if the content
@@ -1095,12 +1095,12 @@ public class FilePath implements Comparable<FilePath>
      * @see Files#probeContentType(Path)
      * @throws IOException if an I/O error occurs
      */
-    public String probeContentType() throws IOException 
+    public String probeContentType() throws IOException
     {
     	return Files.probeContentType(path_);
     }
-    
-    
+
+
     /**
      * @return a builder which allows to read the content of this file.
      */
@@ -1109,8 +1109,8 @@ public class FilePath implements Comparable<FilePath>
     {
     	return new ByteRead(IO.Bytes.from(path_));
     }
-    
-    
+
+
     public class ByteRead extends ByteReadData<IOException> implements AsCharset<CharReadData<IOException>>
     {
 		private ByteRead(ByteSource source)
@@ -1118,15 +1118,15 @@ public class FilePath implements Comparable<FilePath>
 			super(source, ErrorFunction.throwUncheckedOrIOE());
 		}
 
-    
+
 		@Override
 		public CharReadData<IOException> as(Charset charset)
 		{
 			return source_.as(charset).read();
 		}
     }
-     
-    
+
+
     /**
      * Constructs a relative path between this path and a given path.
      * @param other the other path
@@ -1153,10 +1153,10 @@ public class FilePath implements Comparable<FilePath>
     	return thisOrNew(path_.resolve(other.path_));
     }
 
-    
+
     /**
      * Converts a given path string to a {@code FilePath} and resolves it against
-     * this {@code FilePath} 
+     * this {@code FilePath}
      * @param other the path string to resolve against this path
      * @return the resulting path
      * @see Path#resolve(String)
@@ -1166,9 +1166,9 @@ public class FilePath implements Comparable<FilePath>
     	return thisOrNew(path_.resolve(other));
     }
 
-    
+
     /**
-     * Iteratively resolves path strings against this path. 
+     * Iteratively resolves path strings against this path.
      * @param other the initial path string to resolve against this path
      * @param more more path strings to resolve
      * @return the resulting path
@@ -1181,7 +1181,7 @@ public class FilePath implements Comparable<FilePath>
     	return p;
     }
 
-    
+
     /**
      * Resolves the given path against this path's {@link #getParent parent}
      * path.
@@ -1195,7 +1195,7 @@ public class FilePath implements Comparable<FilePath>
     	return thisOrNew(path_.resolveSibling(other.path_));
     }
 
-    
+
     /**
      * Converts a given path string to a {@code FilePath} and resolves it against
      * this path's {@link #getParent parent} path.
@@ -1209,59 +1209,59 @@ public class FilePath implements Comparable<FilePath>
     	return thisOrNew(path_.resolveSibling(other));
     }
 
-   
+
     /**
      * @return the path to which this symbolic link points to-
      * @throws IOException if an I/O error occurs
      * @see Files#readSymbolicLink(Path)
      */
-    public FilePath resolveSymbolicLink() throws IOException 
+    public FilePath resolveSymbolicLink() throws IOException
     {
-    	return thisOrNew(Files.readSymbolicLink(path_));
+    		return thisOrNew(Files.readSymbolicLink(path_));
     }
 
-    
+
     /**
      * @return the size of the path.
      * @throws IOException if an I/O error occurs
      */
     public long size() throws IOException
     {
-    	return Files.size(path_);
+    		return Files.size(path_);
     }
 
-    
+
     /**
      * @return if this path starts with the other path.
      * @param other another path
      */
     public boolean startsWith(FilePath other)
     {
-    	Check.notNull(other, "other");
-    	return path_.startsWith(other.path_);
+	    	Check.notNull(other, "other");
+	    	return path_.startsWith(other.path_);
     }
 
-	
+
     /**
      * @return if this path starts with the other path.
      * @param other another path
      */
     public boolean startsWith(String other)
     {
-    	return path_.startsWith(other);
+    		return path_.startsWith(other);
     }
-    
-    
+
+
     /**
      * @return a builder to specify what to write to this FilePath.
      */
     @CheckReturnValue
     public ByteWrite write()
     {
-    	return new ByteWrite(IO.Bytes.to(this));
+    		return new ByteWrite(IO.Bytes.to(this));
     }
-    
-    
+
+
     /**
      * A builder class to specify what to write to this {@link FilePath}.
      * @see FilePath#write()
@@ -1274,8 +1274,8 @@ public class FilePath implements Comparable<FilePath>
 		}
 
 
-    	/**
-    	 * Configures this builder to append to an existing file.
+	    	/**
+	    	 * Configures this builder to append to an existing file.
 	     * Calls {@link #append()} with {@link StandardOpenOption#APPEND}
 	     * @return a new builder object with updated options
 	     */
@@ -1301,7 +1301,7 @@ public class FilePath implements Comparable<FilePath>
 		 * Returns a {@link CharWriteData} to write the bytes of this source encoded with
 		 * a certain charset.
 		 * @param charset a charset, not null
-		 * @return t the CharWriteData 
+		 * @return t the CharWriteData
 		 */
 		@CheckReturnValue
 		@Override
@@ -1311,13 +1311,13 @@ public class FilePath implements Comparable<FilePath>
 		}
     }
 
-    
+
     private FilePath thisOrNew(Path path)
     {
-    	return path == path_ || path_.equals(path) ? this : of(path);
+    		return path == path_ || path_.equals(path) ? this : of(path);
     }
-    
-    
+
+
     @Override
 	public int compareTo(FilePath other)
 	{
@@ -1334,8 +1334,8 @@ public class FilePath implements Comparable<FilePath>
 	{
 		return path_.hashCode();
 	}
-	
-	
+
+
     /**
      * @return equality with the given object.
      * @see Path#equals(Object)
@@ -1345,30 +1345,30 @@ public class FilePath implements Comparable<FilePath>
 	{
 		return other instanceof FilePath && (((FilePath)other).path_).equals(path_);
 	}
-	
-	
+
+
     /**
      * @return a {@code FilePath} object representing the absolute path of this path.
      * @see Path#toAbsolutePath()
      */
     public FilePath toAbsolutePath()
     {
-    	return thisOrNew(path_.toAbsolutePath());
+    		return thisOrNew(path_.toAbsolutePath());
     }
 
-    
+
     /**
      * @return the <em>real</em> path of an existing file.
      * @param options indicating how symbolic links are handled
      * @see Path#toRealPath(LinkOption...)
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
      */
     public FilePath toRealPath(LinkOption... options) throws IOException
     {
-    	return thisOrNew(path_.toRealPath(options));
+    		return thisOrNew(path_.toRealPath(options));
     }
- 
-    
+
+
     /**
      * @return the Path object used by this FilePath.
      */
@@ -1376,18 +1376,18 @@ public class FilePath implements Comparable<FilePath>
 	{
 		return path_;
 	}
-	
-	
+
+
     /**
      * @return a URI representing this path.
      * @see Path#toUri()
      */
     public URI toUri()
     {
-    	return path_.toUri();
+    		return path_.toUri();
     }
-    
-    
+
+
     /**
      * @return a closeable FilePath which deletes the underlying path when closed.
      */
@@ -1395,18 +1395,18 @@ public class FilePath implements Comparable<FilePath>
     {
         return new FilePathCloseable(path_);
     }
-    
+
 
     /**
      * @return a File representing this path.
      * @see Path#toFile()
      */
-    public File toFile() 
+    public File toFile()
     {
-    	return path_.toFile();
+    		return path_.toFile();
     }
 
-    
+
     // TODO toSource(options)
     // TODO toTarget(options)
 
@@ -1420,14 +1420,14 @@ public class FilePath implements Comparable<FilePath>
 	{
 		return path_.toString();
 	}
-	
-	
+
+
 	/**
 	 * A builder class to select a target for a FilePath operation.
 	 */
     protected abstract class FilePathTarget implements FileTarget
 	{
-		@Override 
+		@Override
 		public FilePath toSibling(String name) throws IOException
 		{
 			Check.notNull(name, "name");
@@ -1443,7 +1443,7 @@ public class FilePath implements Comparable<FilePath>
 			execute(path);
 			return path;
 		}
-		
+
 
 		/**
 		 * Executes the operation of this target.
