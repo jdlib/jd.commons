@@ -19,8 +19,8 @@ package jd.commons.check;
 public class CheckSize extends CheckLong
 {
 	private final boolean isSize_;
-	
-	
+
+
 	protected CheckSize(long value, String what, boolean isSize)
 	{
 		super(value, what);
@@ -30,7 +30,7 @@ public class CheckSize extends CheckLong
 
 	/**
 	 * Checks that the provided value is contained in the interval [0,length[,
-	 * i.e. is >= 0 and < length.
+	 * i.e. is >= 0 and &lt; length.
 	 * @param index an index value
 	 * @param what describes the index
 	 * @return this
@@ -45,7 +45,7 @@ public class CheckSize extends CheckLong
 
 	/**
 	 * Checks that the provided value is contained in the interval [0,length[,
-	 * i.e. is >= 0 and < length.
+	 * i.e. is >= 0 and &lt; length.
 	 * @param index an index value
 	 * @return this
 	 */
@@ -53,12 +53,12 @@ public class CheckSize extends CheckLong
 	{
 		return indexValid(index, "index");
 	}
-	
-	
+
+
 	/**
 	 * Checks that the provided value is contained in the interval [0,length],
-	 * i.e. is >= 0 and <= length.
-	 * @param end an end value 
+	 * i.e. is >= 0 and &lt;= length.
+	 * @param end an end value
 	 * @param what describes the value
 	 * @return this
 	 */
@@ -69,19 +69,19 @@ public class CheckSize extends CheckLong
 		return this;
 	}
 
-	
+
 	/**
 	 * Checks that the provided value is contained in the interval [0,length],
-	 * i.e. is >= 0 and <= length.
-	 * @param end an end value 
+	 * i.e. is >= 0 and &lt;= length.
+	 * @param end an end value
 	 * @return this
 	 */
 	public CheckSize endValid(int end)
 	{
 		return endValid(end, "end");
 	}
-	
-	
+
+
 	@Override
 	protected String what()
 	{
