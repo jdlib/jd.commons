@@ -31,12 +31,12 @@ import jd.commons.util.Utils;
  */
 public class Resource implements ByteSource
 {
-	private String name_ = ""; 
+	private String name_ = "";
 	private ResourceLoader loader_ = ResourceLoader.own();
 	private URL url_;
 	private boolean urlRetrieved_;
 
-	
+
 	/**
 	 * @return a Resource with an empty name loaded by the {@link ResourceLoader#own() own ResourceLoader}.
 	 * Use {@link #path(String)} methods to append to the name.
@@ -44,12 +44,12 @@ public class Resource implements ByteSource
 	@CheckReturnValue
 	public static Resource of()
 	{
-		return of(null);
+		return of((String)null);
 	}
-	
-	
+
+
 	/**
-	 * @return a Resource identified by the given name, 
+	 * @return a Resource identified by the given name,
 	 * 		loaded by the {@link ResourceLoader#own() own ResourceLoader}.
 	 * @param name the Resource name
 	 */
@@ -59,7 +59,20 @@ public class Resource implements ByteSource
 		return new Resource(name, null);
 	}
 
-	
+
+	/**
+	 * @return a Resource constructed by the given path parts,
+	 * 		loaded by the {@link ResourceLoader#own() own ResourceLoader}.
+	 * @param parts the parts making up the resource name
+	 * @see #path(String...)
+	 */
+	@CheckReturnValue
+	public static Resource of(String... parts)
+	{
+		return of().path(parts);
+	}
+
+
 	/**
 	 * @return a Resource for the class file of the given class.
 	 * @param c a class, not null
@@ -78,17 +91,17 @@ public class Resource implements ByteSource
 		return new Resource(resName, ResourceLoader.of(c));
 	}
 
-	
+
 	private Resource(String name, ResourceLoader loader)
 	{
 		name_ 	= name != null ? name : "";
 		loader_ = loader != null ? loader : ResourceLoader.own();
 	}
 
-	
+
 	/**
 	 * Adds the path of the name of this resource, defined by the given context object:
-	 * If the context is a Class then then the path is the package of the class, 
+	 * If the context is a Class then then the path is the package of the class,
 	 * with dots converted to slashes; else the path of the class of the context object is added.
 	 * If this resource has a non empty name a '/' is automatically insert between
 	 * the current name and the added path.
@@ -102,8 +115,8 @@ public class Resource implements ByteSource
 		Class<?> c = context instanceof Class ? (Class<?>)context : context.getClass();
 		return path(Utils.packageName(c).replace('.', '/'));
 	}
-	
-	
+
+
 	/**
 	 * Adds the given part to the resource name. If there is a preceding part,
 	 * the parts will be separated by a slash character.
@@ -131,7 +144,7 @@ public class Resource implements ByteSource
 		return new Resource(newName, loader_);
 	}
 
-	
+
 	/**
 	 * Adds the given parts to the resource name.
 	 * Each part is added with a slash prepended to the part.
@@ -146,8 +159,8 @@ public class Resource implements ByteSource
 			res = res.path(part);
 		return res;
 	}
-	
-	
+
+
 	/**
 	 * Loads the resource by the given Class.
 	 * @param c a class, not null
@@ -189,12 +202,12 @@ public class Resource implements ByteSource
 		return loadBy(ResourceLoader.of(cl));
 	}
 
-	
+
 	/**
 	 * Sets that the built resource is loaded by the ClassLoader of the given context object.
-	 * @param context a context, not null, used to obtain a ClassLoader. If the context is 
+	 * @param context a context, not null, used to obtain a ClassLoader. If the context is
 	 * 		a class the ClassLoader of that class is used, else the ClassLoader of the class
-	 * 		of the context object is used  
+	 * 		of the context object is used
 	 * @return the resource
 	 */
 	@CheckReturnValue
@@ -205,7 +218,7 @@ public class Resource implements ByteSource
 		return loadBy(c.getClassLoader());
 	}
 
-	
+
 	/**
 	 * Sets that the built resource is loaded by the given loader.
 	 * @param loader a loader
@@ -217,8 +230,8 @@ public class Resource implements ByteSource
 		Check.notNull(loader, "loader");
 		return loader.equals(loader_) ? this : new Resource(name_, loader);
 	}
-	
-	
+
+
 	/**
 	 * @return the resource name.
 	 */
@@ -226,8 +239,8 @@ public class Resource implements ByteSource
 	{
 		return name_;
 	}
-	
-	
+
+
 	/**
 	 * @return if this Resource exists.
 	 */
@@ -236,7 +249,7 @@ public class Resource implements ByteSource
 		return getURL() != null;
 	}
 
-	
+
 	/**
 	 * Checks that this Resource exists. If not it throws an IOException.
 	 * @return this
@@ -247,7 +260,7 @@ public class Resource implements ByteSource
 		return checkExists(IOException::new);
 	}
 
-	
+
 	/**
 	 * Checks that this Resource exists. If not it throws an Exception
 	 * produced by the given function.
@@ -263,7 +276,7 @@ public class Resource implements ByteSource
 		return this;
 	}
 
-	
+
 	/**
 	 * @return the resource URL or null if the resource is not found.
 	 */
@@ -271,21 +284,21 @@ public class Resource implements ByteSource
 	{
 		if (!urlRetrieved_)
 		{
-			urlRetrieved_ = true;
 			url_ = loader_.getURL(name_);
+			urlRetrieved_ = true;
 		}
 		return url_;
 	}
-	
-	
+
+
 	/**
 	 * @return the loader used by this Resource.
 	 */
 	public ResourceLoader getLoader()
 	{
 		return loader_;
-	}	
-	
+	}
+
 
 	/**
 	 * @return an InputStream for this Resource.
@@ -298,24 +311,24 @@ public class Resource implements ByteSource
 		return loader_.getInputStream(name_);
 	}
 
-	
+
 	/**
 	 * @return an InputStream to this Resource or null if the resource does not exist
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public InputStream getInputStreamOrNull() throws IOException
 	{
 		return loader_.getInputStreamOrNull(name_);
 	}
 
-	
+
 	@Override
 	public int hashCode()
 	{
 		return Objects.hash(name_, loader_);
 	}
-	
-	
+
+
 	@Override
 	public boolean equals(Object other)
 	{
@@ -327,8 +340,8 @@ public class Resource implements ByteSource
 		else
 			return false;
 	}
-				
-		
+
+
 	@Override
 	public String toString()
 	{
