@@ -34,18 +34,22 @@ import jd.commons.util.UncheckedException;
 
 
 /**
- * FileTree represents a list of paths, consisting of a root FilePath and 
- * all its descendants, enumerated in a depth-first order.
- * The tree can be reshaped to 
+ * FileTree represents the tree of files defined by a root file
+ * and all of its descendant files.
+ * <p>
+ * It cane be created from a {@link #of(FilePath) FilePath}, {@link #of(Path) Path} or {@link #of(File) File}.
+ * <p>
+ * A FileTree can be restricted to
  * <ul>
  * <li>{@link #setIncludeRoot(boolean) include} or {@link #setExcludeRoot() exclude} the root
- * <li>to only consist of the paths which match a {@link FileTree#addFilter(BiPredicate) filter}
+ * <li>only consist of the paths which match a {@link FileTree#addFilter(BiPredicate) filter}
  * <li>include traversal {@link #setOptions(FileVisitOption...) FileVisitOption options}, i.e. if to follow
  * 		symbolic links (by default links are not followed).
- * <li>only include descendants up to a certain {@link #setMaxDepth(int) directory depth} 
+ * <li>only include descendants up to a certain {@link #setMaxDepth(int) directory depth}
  * </ul>
+ * <p>
  * FileTree allows to visit or stream the FilePaths contained in the tree,
- * or apply bulk operations like delete, copy the members of the tree.
+ * or apply bulk operations like delete, copy to the members of the tree.
  */
 public class FileTree implements Cloneable
 {
@@ -54,10 +58,10 @@ public class FileTree implements Cloneable
 	private boolean includeRoot_ = true;
 	private BiPredicate<FilePath,BasicFileAttributes> filter_;
 	private Set<FileVisitOption> options_ = Set.of();
-	
+
 
 	/**
-	 * @return the FileTree based on the given root. 
+	 * @return the FileTree based on the given root.
 	 * @param root a File, not null
 	 */
 	public static FileTree of(File root)
@@ -65,9 +69,9 @@ public class FileTree implements Cloneable
 		return of(FilePath.of(root));
 	}
 
-	
+
 	/**
-	 * @return the FileTree based on the given root. 
+	 * @return the FileTree based on the given root.
 	 * @param root a Path, not null
 	 */
 	public static FileTree of(Path root)
@@ -75,9 +79,9 @@ public class FileTree implements Cloneable
 		return of(FilePath.of(root));
 	}
 
-	
+
 	/**
-	 * @return the FileTree based on the given root. 
+	 * @return the FileTree based on the given root.
 	 * @param root a FilePath, not null
 	 */
 	public static FileTree of(FilePath root)
@@ -85,22 +89,22 @@ public class FileTree implements Cloneable
 		return new FileTree(root);
 	}
 
-	
+
 	/**
-	 * Creates a new FileTree. 
+	 * Creates a new FileTree.
 	 * @param root the root, not null
 	 */
 	protected FileTree(FilePath root)
 	{
 		root_ = Check.notNull(root, "root");
 	}
-	
+
 
 	//------------------------
 	// accessors
 	//------------------------
-	
-	
+
+
 	/**
 	 * @return the root of this tree.
 	 */
@@ -109,11 +113,11 @@ public class FileTree implements Cloneable
 		return root_;
 	}
 
-	
+
 	/**
 	 * Max depth is the maximum number of levels of directories to visit in the tree.
-	 * A value of {@code 0} means that only the starting root is included. By default the value 
-	 * is {@link Integer#MAX_VALUE MAX_VALUE} meaning that all levels should be visited.  
+	 * A value of {@code 0} means that only the starting root is included. By default the value
+	 * is {@link Integer#MAX_VALUE MAX_VALUE} meaning that all levels should be visited.
 	 * @return the max depth
 	 * @see #setMaxDepth(int)
 	 */
@@ -121,12 +125,12 @@ public class FileTree implements Cloneable
 	{
 		return maxDepth_;
 	}
-	
-	
+
+
 	/**
 	 * Sets the maximum depth of directories to traverse.
 	 * @param value a depth value, must be &gt;= 0
-	 * @return this 
+	 * @return this
 	 * @see #getMaxDepth()
 	 */
 	public FileTree setMaxDepth(int value)
@@ -136,7 +140,7 @@ public class FileTree implements Cloneable
 		return this;
 	}
 
-	
+
 	/**
 	 * Returns the FileVisitOptions of this tree.
 	 * By default they are empty.
@@ -151,7 +155,7 @@ public class FileTree implements Cloneable
 		return options_;
 	}
 
-	
+
 	/**
 	 * Sets the FileVisitOptions of this tree.
 	 * @param options the options, not null
@@ -164,7 +168,7 @@ public class FileTree implements Cloneable
 		return setOptions(set);
 	}
 
-	
+
 	/**
 	 * Sets the FileVisitOptions of this tree.
 	 * @param options the options, not null
@@ -177,18 +181,18 @@ public class FileTree implements Cloneable
 		return this;
 	}
 
-	
+
 	/**
 	 * Sets the options of this FileTree to {@link FileVisitOption#FOLLOW_LINKS}.
 	 * @return this
-	 * @see #setOptions(FileVisitOption...) 
+	 * @see #setOptions(FileVisitOption...)
 	 */
 	public FileTree setFollowLinks()
 	{
 		return setOptions(FileVisitOption.FOLLOW_LINKS);
 	}
-	
-	
+
+
 	/**
 	 * @return if this tree reports the root when {@link #accept(FileVisitor) visited} or {@link #stream() streamed}.
 	 */
@@ -196,8 +200,8 @@ public class FileTree implements Cloneable
 	{
 		return includeRoot_;
 	}
-	
-	
+
+
 	/**
 	 * Sets that the root is not reported when {@link #accept(FileVisitor) visited} or {@link #stream() streamed}.
 	 * @return this
@@ -206,8 +210,8 @@ public class FileTree implements Cloneable
 	{
 		return setIncludeRoot(false);
 	}
-	
-	
+
+
 	/**
 	 * Sets that the root is reported when {@link #accept(FileVisitor) visited} or {@link #stream() streamed}.
 	 * @param value true if it should be included
@@ -219,7 +223,7 @@ public class FileTree implements Cloneable
 		return this;
 	}
 
-	
+
 	/**
 	 * @return the filter set on this FileTree or null if no filter is set.
 	 */
@@ -227,10 +231,10 @@ public class FileTree implements Cloneable
 	{
 		return filter_;
 	}
-	
-	
+
+
 	/**
-	 * Adds a new filter for regular files to this FileTree. 
+	 * Adds a new filter for regular files to this FileTree.
 	 * The filter is only applied  to regular files, all other paths, especially directories are not filtered.
 	 * @param newFilter a filter, not null
 	 * @return this
@@ -250,7 +254,7 @@ public class FileTree implements Cloneable
 	 * Note that if a directory does not match the filter, its subtree is still processed
 	 * (i.e. forwarded to a visitor or contained in the result stream).
 	 * To skip a whole subtree you need to use a {@link #accept(FileVisitor) visitor} instead
-	 * and implement {@link FileVisitor#preVisitDirectory(Object, BasicFileAttributes)} accordingly. 
+	 * and implement {@link FileVisitor#preVisitDirectory(Object, BasicFileAttributes)} accordingly.
 	 * @param newFilter a filter, not null
 	 * @return this
 	 * @see #addFilter(BiPredicate)
@@ -268,7 +272,7 @@ public class FileTree implements Cloneable
 	 * Note that if a directory does not match the filter, its subtree is still processed
 	 * (i.e. forwarded to a visitor or contained in the result stream).
 	 * To skip a whole subtree you need to use a {@link #accept(FileVisitor) visitor} instead
-	 * and implement {@link FileVisitor#preVisitDirectory(Object, BasicFileAttributes)} accordingly. 
+	 * and implement {@link FileVisitor#preVisitDirectory(Object, BasicFileAttributes)} accordingly.
 	 * @param newFilter a filter, not null
 	 * @return this
 	 * @see #getFilter()
@@ -276,32 +280,32 @@ public class FileTree implements Cloneable
 	public FileTree addFilter(BiPredicate<FilePath,BasicFileAttributes> newFilter)
 	{
 		Check.notNull(newFilter, "newFilter");
-		filter_  = filter_ != null ? filter_.and(newFilter) : newFilter; 
+		filter_  = filter_ != null ? filter_.and(newFilter) : newFilter;
 		return this;
 	}
 
 
 	/**
 	 * Clears the filter of this tree.
-	 * @return this 
+	 * @return this
 	 */
 	public FileTree clearFilter()
 	{
 		filter_ = null;
 		return this;
 	}
-	
-	
+
+
 	//------------------------
 	// Operations
 	//------------------------
 
-	
+
 	/**
 	 * Recursively walks this file tree and invokes the visitor for each path encountered.
 	 * Tree traversal is depth-first, using the {@link #getOptions() options},
 	 * {@link #getMaxDepth() max depth}, {@link #getIncludeRoot() root inclusion} and
-	 * {@link #getFilter() filter settings} of this tree to enumerate its members. 
+	 * {@link #getFilter() filter settings} of this tree to enumerate its members.
 	 * @param visitor a visitor, not null
 	 * @throws IOException if an I/O error occurs
 	 */
@@ -314,11 +318,11 @@ public class FileTree implements Cloneable
 			visitor = new FilterProxy(visitor);
 		Files.walkFileTree(root_.toNioPath(), options_, maxDepth_, new VisitorAdapter(visitor));
 	}
-	
-	
+
+
     protected abstract class FileTreeTarget implements FileTarget
 	{
-		@Override 
+		@Override
 		public FilePath toSibling(String name) throws IOException
 		{
 			Check.notNull(name, "name");
@@ -333,15 +337,15 @@ public class FileTree implements Cloneable
 			execute(path);
 			return path;
 		}
-		
-		
+
+
 		protected abstract void execute(FilePath path) throws IOException;
 	}
-	
+
 
 	public FileTarget copy(CopyOption... options)
 	{
-		return new FileTreeTarget() 
+		return new FileTreeTarget()
 		{
 			@Override
 			protected void execute(FilePath target) throws IOException
@@ -387,8 +391,8 @@ public class FileTree implements Cloneable
 			}
 		};
 	}
-	
-	
+
+
 	/**
 	 * Recursively walks this file tree and deletes the files included in this tree.
 	 * @return the number of deleted files and directories
@@ -403,13 +407,13 @@ public class FileTree implements Cloneable
 		accept(visitor);
 		return visitor.count_;
 	}
-	
-	
+
+
 	private class DeleteVisitor implements FileVisitor<FilePath>
 	{
 		private int count_;
-		
-		
+
+
 		@Override
 		public FileVisitResult preVisitDirectory(FilePath dir, BasicFileAttributes attrs) throws IOException
 		{
@@ -435,7 +439,7 @@ public class FileTree implements Cloneable
 		{
 			if (e != null)
 				throw e;
-			
+
 			if (filter_ == null || dir.children().isEmpty())
 			{
 				if (dir.deleteIfExists())
@@ -445,12 +449,12 @@ public class FileTree implements Cloneable
 		}
 	}
 
-	
+
 	/**
 	 * Returns a Stream, lazily populated with the members of this tree.
 	 * Tree traversal is depth-first, using the {@link #getOptions() options},
 	 * {@link #getMaxDepth() max depth}, {@link #getIncludeRoot() root inclusion} and
-	 * {@link #getFilter() filter settings} of this tree to enumerate its members.. 
+	 * {@link #getFilter() filter settings} of this tree to enumerate its members..
 	 * @throws IOException if an I/O error occurs
 	 * @return the stream
 	 */
@@ -464,8 +468,8 @@ public class FileTree implements Cloneable
 			stream = stream.filter(buildStreamFilter());
 		return stream;
 	}
-	
-	
+
+
 	private Predicate<FilePath> buildStreamFilter()
 	{
 		boolean followLinks = options_.contains(FileVisitOption.FOLLOW_LINKS);
@@ -473,34 +477,34 @@ public class FileTree implements Cloneable
 			path -> filter_.test(path, readAttributesFollowLinks(path)) :
 			path -> filter_.test(path, readAttributesNoFollowLinks(path));
 	}
-	
+
 
 	private static BasicFileAttributes readAttributesFollowLinks(FilePath path)
 	{
-	    try 
+	    try
 	    {
 	        return Files.readAttributes(path.toNioPath(), BasicFileAttributes.class);
-	    } 
-	    catch (IOException e) 
+	    }
+	    catch (IOException e)
 	    {
 	    	// fallback
 	    	return readAttributesNoFollowLinks(path);
 	    }
 	}
-	
+
 
 	private static BasicFileAttributes readAttributesNoFollowLinks(FilePath path)
 	{
-	    try 
+	    try
 	    {
 	        return Files.readAttributes(path.toNioPath(), BasicFileAttributes.class, LinkOption.NOFOLLOW_LINKS);
-	    } 
-	    catch (IOException e) 
+	    }
+	    catch (IOException e)
 	    {
 	    	throw UncheckedException.create(e);
 	    }
 	}
-	
+
 
 	/**
 	 * @return the members of this tree as list.
@@ -510,26 +514,26 @@ public class FileTree implements Cloneable
 	{
 		return stream().collect(Collectors.toList());
 	}
-	
+
 
 	// a file visitor for java.nio.file.Path translating Paths to FilePath
 	private static class VisitorAdapter implements FileVisitor<Path>
 	{
 		private final FileVisitor<FilePath> inner_;
-		
-		
+
+
 		public VisitorAdapter(FileVisitor<FilePath> inner)
 		{
 			inner_ = inner;
 		}
-		
-		
+
+
 		@Override
 		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException
 		{
 			return inner_.preVisitDirectory(FilePath.of(dir), attrs);
 		}
-		
+
 
 		@Override
 		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException
@@ -537,14 +541,14 @@ public class FileTree implements Cloneable
 			return inner_.visitFile(FilePath.of(file), attrs);
 		}
 
-		
+
 		@Override
 		public FileVisitResult visitFileFailed(Path file, IOException e) throws IOException
 		{
 			return inner_.visitFileFailed(FilePath.of(file), e);
 		}
 
-		
+
 		@Override
 		public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException
 		{
@@ -553,102 +557,102 @@ public class FileTree implements Cloneable
 	}
 
 
-	// a FileVisitor which continues a path if it equals the root 
+	// a FileVisitor which continues a path if it equals the root
 	class SkipRootProxy implements FileVisitor<FilePath>
 	{
 		private final FileVisitor<FilePath> inner_;
 
-		
+
 		public SkipRootProxy(FileVisitor<FilePath> inner)
 		{
 			inner_ = inner;
 		}
 
-		
+
 		private boolean isRoot(FilePath fp)
 		{
 			return root_.equals(fp);
 		}
 
-		
+
 		@Override
 		public FileVisitResult preVisitDirectory(FilePath dir, BasicFileAttributes attrs) throws IOException
 		{
-			return isRoot(dir) ? FileVisitResult.CONTINUE : inner_.preVisitDirectory(dir, attrs); 
+			return isRoot(dir) ? FileVisitResult.CONTINUE : inner_.preVisitDirectory(dir, attrs);
 		}
 
-		
+
 		@Override
 		public FileVisitResult visitFile(FilePath file, BasicFileAttributes attrs) throws IOException
 		{
-			return isRoot(file) ? FileVisitResult.TERMINATE : inner_.visitFile(file, attrs); 
+			return isRoot(file) ? FileVisitResult.TERMINATE : inner_.visitFile(file, attrs);
 		}
 
-		
+
 		@Override
 		public FileVisitResult visitFileFailed(FilePath file, IOException e) throws IOException
 		{
-			if (isRoot(file)) 
+			if (isRoot(file))
 				throw e;
 			return inner_.visitFileFailed(file, e);
 		}
 
-		
+
 		@Override
 		public FileVisitResult postVisitDirectory(FilePath dir, IOException e) throws IOException
 		{
-			return isRoot(dir) ? FileVisitResult.CONTINUE : inner_.postVisitDirectory(dir, e); 
+			return isRoot(dir) ? FileVisitResult.CONTINUE : inner_.postVisitDirectory(dir, e);
 		}
 	}
-	
+
 
 	// a FileVisitor which forwards to another visitor for all paths which match a filter
 	private class FilterProxy implements FileVisitor<FilePath>
 	{
 		private final FileVisitor<FilePath> inner_;
-		
-	
+
+
 		public FilterProxy(FileVisitor<FilePath> inner)
 		{
 			inner_ = inner;
 		}
 
-		
+
 		private boolean filter(FilePath fp,  BasicFileAttributes attrs) throws IOException
 		{
 			return filter_.test(fp, attrs);
 		}
 
-		
+
 		@Override
 		public FileVisitResult preVisitDirectory(FilePath dir, BasicFileAttributes attrs) throws IOException
 		{
-			return filter(dir, attrs) ? inner_.preVisitDirectory(dir, attrs) : FileVisitResult.CONTINUE; 
+			return filter(dir, attrs) ? inner_.preVisitDirectory(dir, attrs) : FileVisitResult.CONTINUE;
 		}
 
-		
+
 		@Override
 		public FileVisitResult visitFile(FilePath file, BasicFileAttributes attrs) throws IOException
 		{
-			return filter(file, attrs) ? inner_.visitFile(file, attrs) : FileVisitResult.CONTINUE; 
+			return filter(file, attrs) ? inner_.visitFile(file, attrs) : FileVisitResult.CONTINUE;
 		}
 
-		
+
 		@Override
 		public FileVisitResult visitFileFailed(FilePath file, IOException e) throws IOException
 		{
 			return inner_.visitFileFailed(file, e);
 		}
 
-		
+
 		@Override
 		public FileVisitResult postVisitDirectory(FilePath dir, IOException e) throws IOException
 		{
-			return inner_.postVisitDirectory(dir, e); 
+			return inner_.postVisitDirectory(dir, e);
 		}
 	}
 
-	
+
 	/**
 	 * @return a clone of this FileTree.
 	 */
@@ -664,8 +668,8 @@ public class FileTree implements Cloneable
 			throw new InternalError(e);
 		}
 	}
-	
-	
+
+
 	/**
 	 * @return a string representation of this FileTree.
 	 */
