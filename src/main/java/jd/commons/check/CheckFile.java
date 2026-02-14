@@ -23,8 +23,8 @@ public class CheckFile
 {
 	private final File file_;
 	private final String what_;
-	
-	
+
+
 	/**
 	 * Creates a new CheckFile.
 	 * @param file a file
@@ -35,8 +35,17 @@ public class CheckFile
 		file_ = Check.notNull(file, "file");
 		what_ = what;
 	}
-	
-	
+
+
+	/**
+	 * @return the File of this Check object.
+	 */
+	public File get()
+	{
+		return file_;
+	}
+
+
 	/**
 	 * Checks if this file exists.
 	 * @param expected the expected value
@@ -49,7 +58,18 @@ public class CheckFile
 			throw error(expected ? "does not exist" : "exists");
 		return this;
 	}
-	
+
+
+	/**
+	 * Checks that the file exists. Calls #exists(true).
+	 * @exception IllegalArgumentException if the file does not exist
+	 * @return this
+	 */
+	public CheckFile exists()
+	{
+		return exists(true);
+	}
+
 
 	/**
 	 * Checks that this file is a directory.
@@ -63,7 +83,7 @@ public class CheckFile
 		return this;
 	}
 
-	
+
 	/**
 	 * Checks that this file is a regular file.
 	 * @exception IllegalArgumentException if the file is not a file
@@ -76,7 +96,7 @@ public class CheckFile
 		return this;
 	}
 
-	
+
 	/**
 	 * @return a CheckSize object to check the file length.
 	 */
@@ -84,8 +104,8 @@ public class CheckFile
 	{
 		return Check.length(file_, what_);
 	}
-	
-	
+
+
 	private IllegalArgumentException error(String op)
 	{
 		StringBuilder msg = new StringBuilder();
