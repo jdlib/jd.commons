@@ -28,7 +28,9 @@ import java.nio.file.AccessMode;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,6 +56,35 @@ public class FilePathTest
 
 		tempLink = tempDir.resolve("test.link");
 		tempLink.createLink().to(tempFile);
+	}
+
+
+	@Test
+	public void testAncestors() throws Exception
+	{
+		final FilePath p0 = tempFile;
+		final FilePath p1 = p0.getParent();
+		List<FilePath> ancestorsOrSelf = new ArrayList<>();
+		FilePath p = p0;
+		while (p != null)
+		{
+			ancestorsOrSelf.add(p);
+			p = p.getParent();
+		}
+
+		// first(), firstOrNull() + filter
+		assertEquals(p0, p0.ancestors().orSelf().firstOrNull());
+		assertEquals(p1, p0.ancestors().first().orElse(null)); // coverage of first()
+		assertNull(p0.getRoot().ancestors().firstOrNull());
+		assertEquals(p1, p0.ancestors().orSelf().filter(fp -> fp.equals(p1)).firstOrNull());
+
+		// iterator
+		assertThrows(NoSuchElementException.class, () -> p0.ancestors().filter(filepath -> false)
+			.iterator().next());
+
+		// toList (involves iterator())
+		assertEquals(ancestorsOrSelf, p0.ancestors().orSelf().toList());
+		assertEquals(ancestorsOrSelf, p0.ancestors().orSelf().filter(fp -> true).toList());
 	}
 
 
