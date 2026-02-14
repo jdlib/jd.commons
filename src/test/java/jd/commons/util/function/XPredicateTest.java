@@ -27,7 +27,7 @@ public class XPredicateTest
 	{
 		XPredicate<String,SQLException> pTrue  = s -> true;
 		XPredicate<String,SQLException> pFalse = s -> false;
-		
+
 		assertTrue(pTrue.and(pTrue).test("x"));
 		assertFalse(pTrue.and(pFalse).test("x"));
 		assertFalse(pFalse.and(pTrue).test("x"));
@@ -47,5 +47,23 @@ public class XPredicateTest
 
 		assertTrue(p1.unchecked().test("s"));
 		assertThatThrownBy(() -> p2.unchecked().test("s")).isInstanceOf(UncheckedException.class);
+	}
+
+
+	@Test
+	public void testTRUEFALSE() throws Exception
+	{
+		XPredicate<String,Exception> f = XPredicate.FALSE();
+		XPredicate<String,Exception> t = XPredicate.TRUE();
+
+		assertFalse(f.test("x"));
+		assertSame(t, f.negate());
+		assertSame(t, f.or(t));
+		assertSame(f, f.and(t));
+
+		assertTrue(t.test("x"));
+		assertSame(f, t.negate());
+		assertSame(t, t.or(t));
+		assertSame(f, t.and(f));
 	}
 }

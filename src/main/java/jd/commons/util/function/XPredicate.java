@@ -25,72 +25,93 @@ import jd.commons.util.UncheckedException;
  * @param <E> the type of the Exception
  */
 @FunctionalInterface
-public interface XPredicate<T,E extends Exception> 
+public interface XPredicate<T,E extends Exception>
 {
-    /**
-     * Evaluates this predicate on the given argument.
-     * @param t the input argument
-     * @return {@code true} if the input argument matches the predicate,
-     * otherwise {@code false}
+	/**
+	 * @return a XPredicate that always returns true.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T,E extends Exception> XPredicate<T,E> TRUE()
+	{
+		return (XPredicate<T, E>)TrueXPredicate.INSTANCE;
+	}
+
+
+	/**
+	 * @return a XPredicate that always returns false.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T,E extends Exception> XPredicate<T,E> FALSE()
+	{
+		return (XPredicate<T, E>)FalseXPredicate.INSTANCE;
+	}
+
+
+	/**
+	 * Evaluates this predicate on the given argument.
+	 * @param t the input argument
+	 * @return {@code true} if the input argument matches the predicate,
+	 * otherwise {@code false}
 	 * @throws E thrown if the operation fails
-     */
-    boolean test(T t) throws E;
+	 */
+	boolean test(T t) throws E;
 
-    /**
-     * Returns a composed predicate that represents a short-circuiting logical
-     * AND of this predicate and another.  When evaluating the composed
-     * predicate, if this predicate is {@code false}, then the {@code other}
-     * predicate is not evaluated.
-     *
-     * <p>Any exceptions thrown during evaluation of either predicate are relayed
-     * to the caller; if evaluation of this predicate throws an exception, the
-     * {@code other} predicate will not be evaluated.
-     *
-     * @param other a predicate that will be logically-ANDed with this
-     *              predicate
-     * @return a composed predicate that represents the short-circuiting logical
-     * AND of this predicate and the {@code other} predicate
-     * @throws NullPointerException if other is null
-     */
-    default XPredicate<T,E> and(XPredicate<? super T,E> other) 
-    {
-    	Check.notNull(other, "other");
-        return t -> test(t) && other.test(t);
-    }
+	/**
+	 * Returns a composed predicate that represents a short-circuiting logical
+	 * AND of this predicate and another.  When evaluating the composed
+	 * predicate, if this predicate is {@code false}, then the {@code other}
+	 * predicate is not evaluated.
+	 *
+	 * <p>Any exceptions thrown during evaluation of either predicate are relayed
+	 * to the caller; if evaluation of this predicate throws an exception, the
+	 * {@code other} predicate will not be evaluated.
+	 *
+	 * @param other a predicate that will be logically-ANDed with this
+	 *              predicate
+	 * @return a composed predicate that represents the short-circuiting logical
+	 * AND of this predicate and the {@code other} predicate
+	 * @throws NullPointerException if other is null
+	 */
+	default XPredicate<T,E> and(XPredicate<? super T,E> other)
+	{
+		Check.notNull(other, "other");
+		return t -> test(t) && other.test(t);
+	}
 
-    /**
-     * Returns a predicate that represents the logical negation of this
-     * predicate.
-     *
-     * @return a predicate that represents the logical negation of this
-     * predicate
-     */
-    default XPredicate<T,E> negate() 
-    {
-        return t -> !test(t);
-    }
 
-    /**
-     * Returns a composed predicate that represents a short-circuiting logical
-     * OR of this predicate and another.  When evaluating the composed
-     * predicate, if this predicate is {@code true}, then the {@code other}
-     * predicate is not evaluated.
-     *
-     * <p>Any exceptions thrown during evaluation of either predicate are relayed
-     * to the caller; if evaluation of this predicate throws an exception, the
-     * {@code other} predicate will not be evaluated.
-     *
-     * @param other a predicate that will be logically-ORed with this
-     *              predicate
-     * @return a composed predicate that represents the short-circuiting logical
-     * OR of this predicate and the {@code other} predicate
-     * @throws NullPointerException if other is null
-     */
-    default XPredicate<T,E> or(XPredicate<? super T,E> other) 
-    {
-    	Check.notNull(other, "other");
-        return t -> test(t) || other.test(t);
-    }
+	/**
+	 * Returns a predicate that represents the logical negation of this
+	 * predicate.
+	 *
+	 * @return a predicate that represents the logical negation of this
+	 * predicate
+	 */
+	default XPredicate<T,E> negate()
+	{
+		return t -> !test(t);
+	}
+
+	/**
+	 * Returns a composed predicate that represents a short-circuiting logical
+	 * OR of this predicate and another.  When evaluating the composed
+	 * predicate, if this predicate is {@code true}, then the {@code other}
+	 * predicate is not evaluated.
+	 *
+	 * <p>Any exceptions thrown during evaluation of either predicate are relayed
+	 * to the caller; if evaluation of this predicate throws an exception, the
+	 * {@code other} predicate will not be evaluated.
+	 *
+	 * @param other a predicate that will be logically-ORed with this
+	 *              predicate
+	 * @return a composed predicate that represents the short-circuiting logical
+	 * OR of this predicate and the {@code other} predicate
+	 * @throws NullPointerException if other is null
+	 */
+	default XPredicate<T,E> or(XPredicate<? super T,E> other)
+	{
+		Check.notNull(other, "other");
+		return t -> test(t) || other.test(t);
+	}
 
 
 	/**
@@ -99,17 +120,82 @@ public interface XPredicate<T,E extends Exception>
 	 * converted to a {@link UncheckedException}
 	 * @return the unchecked predicate.
 	 */
-    default Predicate<T> unchecked()
-    {
-    	return t -> {
-    		try
-    		{
-    			return test(t); 
-    		}
-    		catch (Exception e)
-    		{
-    			throw UncheckedException.create(e);
-    		}
-    	};
-    }
+	default Predicate<T> unchecked()
+	{
+		return t -> {
+			try
+			{
+				return test(t);
+			}
+			catch (Exception e)
+			{
+				throw UncheckedException.create(e);
+			}
+		};
+	}
+}
+
+
+class TrueXPredicate<T,E extends Exception> implements XPredicate<T,E>
+{
+	public static final TrueXPredicate<?,?> INSTANCE = new TrueXPredicate<>();
+
+
+	@Override public boolean test(T t) throws E
+	{
+		return true;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override public XPredicate<T,E> and(XPredicate<? super T,E> other)
+	{
+		Check.notNull(other, "other");
+		return (XPredicate<T, E>)other;
+	}
+
+
+	@Override public XPredicate<T,E> negate()
+	{
+		return XPredicate.FALSE();
+	}
+
+
+	@Override public XPredicate<T,E> or(XPredicate<? super T,E> other)
+	{
+		Check.notNull(other, "other");
+		return this;
+	}
+}
+
+
+class FalseXPredicate<T,E extends Exception> implements XPredicate<T,E>
+{
+	public static final FalseXPredicate<?,?> INSTANCE = new FalseXPredicate<>();
+
+	@Override public boolean test(T t) throws E
+	{
+		return false;
+	}
+
+
+	@Override public XPredicate<T,E> and(XPredicate<? super T,E> other)
+	{
+		Check.notNull(other, "other");
+		return this;
+	}
+
+
+	@Override public XPredicate<T,E> negate()
+	{
+		return XPredicate.TRUE();
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override public XPredicate<T,E> or(XPredicate<? super T,E> other)
+	{
+		Check.notNull(other, "other");
+		return (XPredicate<T, E>)other;
+	}
 }
