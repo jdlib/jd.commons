@@ -347,7 +347,8 @@ public class FilePath implements Comparable<FilePath>
 
 
 	/**
-	 * Represents the ancestors of this path.
+	 * Represents the ancestors of this path, optionally including this path,
+	 * or filtered by a glob pattern and/or a filter.
 	 */
 	public class Ancestors implements Iterable<FilePath>
 	{
@@ -475,7 +476,7 @@ public class FilePath implements Comparable<FilePath>
 
 
 	/**
-	 * @return a Children object which provides access to the children of this path.
+	 * @return a Children object which represents the children of this path.
 	 */
 	@CheckReturnValue
 	public Children children()
@@ -485,7 +486,7 @@ public class FilePath implements Comparable<FilePath>
 
 
 	/**
-	 * Represents the children of this path.
+	 * Represents the children of this path, optionally filtered by a glob pattern and/or a filter.
 	 */
 	public class Children
 	{
@@ -501,27 +502,29 @@ public class FilePath implements Comparable<FilePath>
 
 
 		/**
-		 * Returns a new children object restricted to children which match the glob pattern.
+		 * Restricts to the children which match the glob pattern.
+		 * Any previous glob pattern is overridden.
 		 * To learn more about glob patterns consult {@link Files#newDirectoryStream(Path, String)}.
 		 * @param pattern the glob pattern
-		 * @return the new Children object
+		 * @return this
 		 */
 		public Children glob(String pattern)
 		{
-			return new Children(pattern, filter_);
+			glob_ = pattern;
+			return this;
 		}
 
 
 		/**
 		 * Returns a new children object restricted to children which match the filter.
+		 * Any previous filter is overridden.
 		 * @param filter the filter
 		 * @return the new Children object
 		 */
 		public Children filter(Predicate<FilePath> filter)
 		{
-			if (filter_ != null)
-				filter = filter_.and(filter);
-			return new Children(glob_, filter);
+			filter_ = filter;
+			return this;
 		}
 
 
