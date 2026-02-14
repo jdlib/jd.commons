@@ -26,8 +26,8 @@ public class CheckPath
 	private final Path path_;
 	private final String what_;
 	private final LinkOption[] options_;
-	
-	
+
+
 	/**
 	 * Creates a new CheckPath.
 	 * @param path a path, not nulk
@@ -40,12 +40,12 @@ public class CheckPath
 		what_ 		= what;
 		options_	= options;
 	}
-	
-	
+
+
 	/**
 	 * Checks if the path exists.
 	 * @param expected the expected value
-	 * @exception IllegalArgumentException if the path does not exist
+	 * @exception IllegalArgumentException if the expectation is not met
 	 * @return this
 	 */
 	public CheckPath exists(boolean expected)
@@ -54,7 +54,18 @@ public class CheckPath
 			throw error(expected ? "does not exist" : "exists");
 		return this;
 	}
-	
+
+
+	/**
+	 * Checks that the path exists. Calls #exists(true).
+	 * @exception IllegalArgumentException if the path does not exist
+	 * @return this
+	 */
+	public CheckPath exists()
+	{
+		return exists(true);
+	}
+
 
 	/**
 	 * Checks if this path is a directory.
@@ -66,7 +77,7 @@ public class CheckPath
 			throw error("is not a directory");
 		return this;
 	}
-	
+
 
 	/**
 	 * Checks if this path is a file.
@@ -91,7 +102,7 @@ public class CheckPath
 		return this;
 	}
 
-	
+
 	/**
 	 * @return a CheckSize object to check the path size.
 	 */
@@ -100,7 +111,7 @@ public class CheckPath
 		return Check.size(path_, what_);
 	}
 
-	
+
 	private IllegalArgumentException error(String op)
 	{
 		StringBuilder msg = new StringBuilder();
