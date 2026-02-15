@@ -33,6 +33,7 @@ import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
+import java.nio.file.NotDirectoryException;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -487,6 +488,8 @@ public class FilePath implements Comparable<FilePath>
 
 	/**
 	 * Represents the children of this path, optionally filtered by a glob pattern and/or a filter.
+	 * Note that any terminal operation will throw a {@link NotDirectoryException} if this
+	 * path is not a directory.
 	 */
 	public class Children
 	{
