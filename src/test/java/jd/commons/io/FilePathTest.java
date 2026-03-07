@@ -29,13 +29,16 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import jd.commons.io.FilePath.Attributes;
+import jd.commons.util.Utils;
 
 
 public class FilePathTest
@@ -64,6 +67,8 @@ public class FilePathTest
 	{
 		final FilePath p0 = tempFile;
 		final FilePath p1 = p0.getParent();
+		final FilePath proot = p0.getRoot();
+
 		List<FilePath> ancestorsOrSelf = new ArrayList<>();
 		FilePath p = p0;
 		while (p != null)
@@ -71,6 +76,17 @@ public class FilePathTest
 			ancestorsOrSelf.add(p);
 			p = p.getParent();
 		}
+		List<FilePath> ancestorsOrSelfReverted = new ArrayList<>(ancestorsOrSelf);
+		Collections.reverse(ancestorsOrSelfReverted);
+
+		List<String> ancestorOrSelfNames = ancestorsOrSelf.stream().map(FilePath::getName).collect(Collectors.toList());
+		if (Utils.isBlank(proot.getName()))
+			ancestorOrSelfNames.remove(ancestorOrSelfNames.size() - 1);
+		List<String> ancestorOrSelfNamesReverted = new ArrayList<>(ancestorOrSelfNames);
+		Collections.reverse(ancestorOrSelfNamesReverted);
+
+		//----------------------------------
+		// nearest to root
 
 		// first(), firstOrNull() + filter
 		assertEquals(p0, p0.ancestors().orSelf().firstOrNull());
@@ -79,12 +95,40 @@ public class FilePathTest
 		assertEquals(p1, p0.ancestors().orSelf().filter(fp -> fp.equals(p1)).firstOrNull());
 
 		// iterator
+		assertEquals(p0, p0.ancestors().orSelf().iterator().next());
+		assertEquals(p1, p0.ancestors().iterator().next());
 		assertThrows(NoSuchElementException.class, () -> p0.ancestors().filter(filepath -> false)
 			.iterator().next());
 
-		// toList (involves iterator())
+		// toList
 		assertEquals(ancestorsOrSelf, p0.ancestors().orSelf().toList());
-		assertEquals(ancestorsOrSelf, p0.ancestors().orSelf().filter(fp -> true).toList());
+		assertEquals(ancestorsOrSelf, p0.ancestors().orSelf()
+			.filter(fp -> true) // coverage
+			.filter(fp -> true) // coverage of filter chaining
+			.toList());
+
+		// toNameList
+		assertEquals(ancestorOrSelfNames, p0.ancestors().orSelf().toNameList());
+
+		//----------------------------------
+		// root to nearest
+
+		// firstOrNull()
+		assertEquals(proot, p0.ancestors().rootToNearest().firstOrNull());
+
+		// filter
+		assertEquals(List.of(p1, p0), p0.ancestors().orSelf().rootToNearest()
+			.filter(fp -> fp.equals(p1) || fp.equals(p0))
+			.toList());
+
+		// iterator
+		assertEquals(proot, p0.ancestors().rootToNearest().iterator().next());
+
+		// toList
+		assertEquals(ancestorsOrSelfReverted, p0.ancestors().orSelf().rootToNearest().toList());
+
+		// toNameList
+		assertEquals(ancestorOrSelfNamesReverted, p0.ancestors().orSelf().rootToNearest().toNameList());
 	}
 
 

@@ -67,6 +67,7 @@ import jd.commons.io.fluent.CharWriteData;
 import jd.commons.io.fluent.IO;
 import jd.commons.io.fluent.handler.ErrorFunction;
 import jd.commons.util.UncheckedException;
+import jd.commons.util.Utils;
 import jd.commons.util.function.XConsumer;
 import jd.commons.util.function.XFunction;
 
@@ -350,11 +351,13 @@ public class FilePath implements Comparable<FilePath>
 	/**
 	 * Represents the ancestors of this path, optionally including this path,
 	 * or filtered by a glob pattern and/or a filter.
+	 * The order of the ancestors is starting from nearest to root.
 	 */
 	public class Ancestors implements Iterable<FilePath>
 	{
 		private Predicate<FilePath> filter_;
 		private boolean includeSelf_;
+		private boolean rootToNearest_;
 
 
 		protected Ancestors()
@@ -374,13 +377,24 @@ public class FilePath implements Comparable<FilePath>
 
 
 		/**
+		 * Instructs the builder to order the ancestors starting from root to nearest.
+		 * @return this
+		 */
+		public Ancestors rootToNearest()
+		{
+			rootToNearest_ = true;
+			return this;
+		}
+
+
+		/**
 		 * Restricts to ancestors which match the filter.
-		 * @param filter the filter. Overrides any previous filter.
+		 * @param filter the filter. If there is already a filter defined it is added to the existing filter
 		 * @return this
 		 */
 		public Ancestors filter(Predicate<FilePath> filter)
 		{
-			filter_ = filter;
+			filter_ = filter_ != null ? filter_.and(filter) : filter;
 			return this;
 		}
 
@@ -399,14 +413,8 @@ public class FilePath implements Comparable<FilePath>
 		 */
 		public FilePath firstOrNull()
 		{
-			FilePath p = includeSelf_ ? FilePath.this : getParent();
-			while (p != null)
-			{
-				if (filter_ == null || filter_.test(p))
-					return p;
-				p = p.getParent();
-			}
-			return null;
+			Iterator<FilePath> it = iterator();
+			return it.hasNext() ? it.next() : null;
 		}
 
 
@@ -415,7 +423,9 @@ public class FilePath implements Comparable<FilePath>
 		 */
 		@Override public Iterator<FilePath> iterator()
 		{
-			return new AncestorsIterator(filter_, includeSelf_ ? FilePath.this : getParent());
+			return rootToNearest_ ?
+				buildListFromRoot().iterator() :
+				new AncestorsToRootIt(filter_, getNearest());
 		}
 
 
@@ -424,22 +434,65 @@ public class FilePath implements Comparable<FilePath>
 		 */
 		public List<FilePath> toList()
 		{
+			if (rootToNearest_)
+				return buildListFromRoot();
+			else
+			{
+				List<FilePath> list = new ArrayList<>();
+				forEach(list::add);
+				return list;
+			}
+		}
+
+
+		/**
+		 * @return the matched ancestor names as List.
+		 * Does not include the root path if it does not have a name (e.g. "/" on Unix).
+		 */
+		public List<String> toNameList()
+		{
+			return toList().stream().map(FilePath::getName).filter(s -> !Utils.isBlank(s)).collect(Collectors.toList());
+		}
+
+
+		/**
+		 * @return the matched ancestors as List.
+		 */
+		private List<FilePath> buildListFromRoot()
+		{
 			List<FilePath> list = new ArrayList<>();
-			forEach(list::add);
+			buildListFromRoot(list, getNearest());
 			return list;
+		}
+
+
+		private void buildListFromRoot(List<FilePath> ancestors, FilePath path)
+		{
+			if (path != null)
+			{
+				buildListFromRoot(ancestors, path.getParent());
+				if (filter_ == null || filter_.test(path))
+					ancestors.add(path);
+			}
+		}
+
+
+		private FilePath getNearest()
+		{
+			return includeSelf_ ? FilePath.this : getParent();
 		}
 	}
 
 
-	private static class AncestorsIterator implements Iterator<FilePath>
+	private static class AncestorsToRootIt implements Iterator<FilePath>
 	{
-		private FilePath next_;
 		private final Predicate<FilePath> filter_;
+		private FilePath next_;
 
 
-		public AncestorsIterator(Predicate<FilePath> filter, FilePath start)
+		public AncestorsToRootIt(Predicate<FilePath> filter, FilePath start)
 		{
-			filter_ = filter; // must be set before calling findNext
+			filter_ = filter; // must be set before calling setNext
 			setNext(start);
 		}
 
