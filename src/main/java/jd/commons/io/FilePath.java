@@ -48,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -235,7 +236,7 @@ public class FilePath implements Comparable<FilePath>
 		 * Creates a new Attributes object.
 		 * @param options the link options
 		 */
-		protected Attributes(LinkOption[] options)
+		protected Attributes(LinkOption... options)
 		{
 			options_ = options;
 		}
@@ -566,11 +567,13 @@ public class FilePath implements Comparable<FilePath>
 	 * Represents the children of this path, optionally filtered by a glob pattern and/or a filter.
 	 * Note that any terminal operation will throw a {@link NotDirectoryException} if this
 	 * path is not a directory.
+	 * Children is immutable and all methods which change the filter or the glob pattern
+	 * will return a new Children object.
 	 */
 	public class Children
 	{
-		private String glob_;
-		private Predicate<FilePath> filter_;
+		private final String glob_;
+		private final Predicate<FilePath> filter_;
 
 
 		private Children(String glob, Predicate<FilePath> filter)
@@ -584,26 +587,29 @@ public class FilePath implements Comparable<FilePath>
 		 * Restricts to the children which match the glob pattern.
 		 * Any previous glob pattern is overridden.
 		 * To learn more about glob patterns consult {@link Files#newDirectoryStream(Path, String)}.
-		 * @param pattern the glob pattern
-		 * @return this
+		 * @param pattern the pattern
+		 * @return a Children object based on this object with the given glob pattern applied.
 		 */
+		@CheckReturnValue
 		public Children glob(String pattern)
 		{
-			glob_ = pattern;
-			return this;
+			return !Objects.equals(glob_, pattern) ? new Children(pattern, filter_) : this;
 		}
 
 
 		/**
-		 * Returns a new children object restricted to children which match the filter.
-		 * Any previous filter is overridden.
-		 * @param filter the filter
-		 * @return the new Children object
+		 * Restricts to children which match the filter.
+		 * @param filter the filter. If the filter is null, the filter is reset.
+		 * 		If there is already a filter defined it is added to the existing filter
+		 * @return a Children object based on this object with the given filter applied.
 		 */
+		@CheckReturnValue
 		public Children filter(Predicate<FilePath> filter)
 		{
-			filter_ = filter;
-			return this;
+			Predicate<FilePath> newFilter = filter == null ?
+				null :
+				filter_ != null ? filter_.and(filter) : filter;
+			return filter_ == newFilter ? this : new Children(glob_, newFilter);
 		}
 
 
@@ -1343,6 +1349,10 @@ public class FilePath implements Comparable<FilePath>
 	}
 
 
+	/**
+	 * A builder class to specify what to read from this {@link FilePath}.
+	 * @see FilePath#read()
+	 */
 	public class ByteRead extends ByteReadData<IOException> implements AsCharset<CharReadData<IOException>>
 	{
 		private ByteRead(ByteSource source)
