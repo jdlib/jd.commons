@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import jd.commons.io.FilePath.Ancestors;
 import jd.commons.io.FilePath.Attributes;
 import jd.commons.util.Utils;
 
@@ -69,21 +70,39 @@ public class FilePathTest
 		final FilePath p1 = p0.getParent();
 		final FilePath proot = p0.getRoot();
 
-		List<FilePath> ancestorsOrSelf = new ArrayList<>();
+		List<FilePath> ancOrSelfList = new ArrayList<>();
 		FilePath p = p0;
 		while (p != null)
 		{
-			ancestorsOrSelf.add(p);
+			ancOrSelfList.add(p);
 			p = p.getParent();
 		}
-		List<FilePath> ancestorsOrSelfReverted = new ArrayList<>(ancestorsOrSelf);
-		Collections.reverse(ancestorsOrSelfReverted);
+		List<FilePath> ancOrSelfRevertedList = new ArrayList<>(ancOrSelfList);
+		Collections.reverse(ancOrSelfRevertedList);
 
-		List<String> ancestorOrSelfNames = ancestorsOrSelf.stream().map(FilePath::getName).collect(Collectors.toList());
+		List<String> ancOrSelfNameList = ancOrSelfList.stream().map(FilePath::getName).collect(Collectors.toList());
 		if (Utils.isBlank(proot.getName()))
-			ancestorOrSelfNames.remove(ancestorOrSelfNames.size() - 1);
-		List<String> ancestorOrSelfNamesReverted = new ArrayList<>(ancestorOrSelfNames);
-		Collections.reverse(ancestorOrSelfNamesReverted);
+			ancOrSelfNameList.remove(ancOrSelfNameList.size() - 1);
+		List<String> ancOrSelfNamesRevertedList = new ArrayList<>(ancOrSelfNameList);
+		Collections.reverse(ancOrSelfNamesRevertedList);
+
+		//----------------------------------
+		// immutability
+		Ancestors ancestors = p0.ancestors();
+
+		Ancestors ancestorsOrSelf = ancestors.orSelf();
+		assertNotSame(ancestors, ancestorsOrSelf);
+		assertSame(ancestorsOrSelf, ancestorsOrSelf.orSelf());
+
+		Ancestors rootToNearest = ancestors.rootToNearest();
+		assertNotSame(ancestors, rootToNearest);
+		assertSame(rootToNearest, rootToNearest.rootToNearest());
+
+		assertSame(ancestors, ancestors.filter(null));
+		Ancestors filtered = ancestors.filter(fp -> true);
+		assertNotSame(ancestors, filtered);
+		assertNotSame(filtered, filtered.filter(fp -> false));
+		assertNotSame(filtered, filtered.filter(null));
 
 		//----------------------------------
 		// nearest to root
@@ -101,14 +120,14 @@ public class FilePathTest
 			.iterator().next());
 
 		// toList
-		assertEquals(ancestorsOrSelf, p0.ancestors().orSelf().toList());
-		assertEquals(ancestorsOrSelf, p0.ancestors().orSelf()
+		assertEquals(ancOrSelfList, p0.ancestors().orSelf().toList());
+		assertEquals(ancOrSelfList, p0.ancestors().orSelf()
 			.filter(fp -> true) // coverage
 			.filter(fp -> true) // coverage of filter chaining
 			.toList());
 
 		// toNameList
-		assertEquals(ancestorOrSelfNames, p0.ancestors().orSelf().toNameList());
+		assertEquals(ancOrSelfNameList, p0.ancestors().orSelf().toNameList());
 
 		//----------------------------------
 		// root to nearest
@@ -125,14 +144,14 @@ public class FilePathTest
 		assertEquals(proot, p0.ancestors().rootToNearest().iterator().next());
 
 		// toList
-		assertEquals(ancestorsOrSelfReverted, p0.ancestors().orSelf().rootToNearest().toList());
+		assertEquals(ancOrSelfRevertedList, p0.ancestors().orSelf().rootToNearest().toList());
 
 		// toNameList
-		assertEquals(ancestorOrSelfNamesReverted, p0.ancestors().orSelf().rootToNearest().toNameList());
+		assertEquals(ancOrSelfNamesRevertedList, p0.ancestors().orSelf().rootToNearest().toNameList());
 
 		//----------------------------------
 		// size
-		assertEquals(ancestorsOrSelf.size(), p0.ancestors().orSelf().size());
+		assertEquals(ancOrSelfList.size(), p0.ancestors().orSelf().size());
 		assertEquals(1, p0.ancestors().filter(fp -> fp.equals(p1)).size());
 	}
 

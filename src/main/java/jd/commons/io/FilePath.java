@@ -344,58 +344,64 @@ public class FilePath implements Comparable<FilePath>
 	@CheckReturnValue
 	public Ancestors ancestors()
 	{
-		return new Ancestors();
+		return new Ancestors(null, false, false);
 	}
 
 
 	/**
 	 * Represents the ancestors of this path, optionally including this path,
-	 * or filtered by a glob pattern and/or a filter.
-	 * The order of the ancestors is starting from nearest to root.
+	 * or filtered by a Predicate. The order of the ancestors is starting from nearest to root but can be reverted.
+	 * Ancestors is immutable and all methods which change the filter, order or whether to include this path
+	 * return a new Ancestors object.
 	 */
 	public class Ancestors implements Iterable<FilePath>
 	{
-		private Predicate<FilePath> filter_;
-		private boolean includeSelf_;
-		private boolean rootToNearest_;
+		private final Predicate<FilePath> filter_;
+		private final boolean includeSelf_;
+		private final boolean rootToNearest_;
 
 
-		protected Ancestors()
+		private Ancestors(Predicate<FilePath> filter, boolean includeSelf, boolean rootToNearest)
 		{
+			filter_ 		= filter;
+			includeSelf_ 	= includeSelf;
+			rootToNearest_ = rootToNearest;
 		}
 
 
 		/**
-		 * Instructs this builder to also include the start path itself.
-		 * @return this
+		 * @return a Ancestors object which also includes the start path itself.
 		 */
+		@CheckReturnValue
 		public Ancestors orSelf()
 		{
-			includeSelf_ = true;
-			return this;
+			return includeSelf_ ? this : new Ancestors(filter_, true, rootToNearest_);
 		}
 
 
 		/**
-		 * Instructs the builder to order the ancestors starting from root to nearest.
-		 * @return this
+		 * @return a Ancestors object which orders the ancestors starting from root to nearest.
 		 */
+		@CheckReturnValue
 		public Ancestors rootToNearest()
 		{
-			rootToNearest_ = true;
-			return this;
+			return rootToNearest_ ? this : new Ancestors(filter_, includeSelf_, true);
 		}
 
 
 		/**
 		 * Restricts to ancestors which match the filter.
-		 * @param filter the filter. If there is already a filter defined it is added to the existing filter
-		 * @return this
+		 * @param filter the filter. If the filter is null, the filter is reset.
+		 * 		If there is already a filter defined it is added to the existing filter
+		 * @return a Ancestors object based on this object with the given filter applied.
 		 */
+		@CheckReturnValue
 		public Ancestors filter(Predicate<FilePath> filter)
 		{
-			filter_ = filter_ != null ? filter_.and(filter) : filter;
-			return this;
+			Predicate<FilePath> newFilter = filter == null ?
+				null :
+				filter_ != null ? filter_.and(filter) : filter;
+			return filter_ == newFilter ? this : new Ancestors(newFilter, includeSelf_, rootToNearest_);
 		}
 
 
