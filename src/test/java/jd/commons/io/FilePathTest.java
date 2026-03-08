@@ -129,6 +129,11 @@ public class FilePathTest
 
 		// toNameList
 		assertEquals(ancestorOrSelfNamesReverted, p0.ancestors().orSelf().rootToNearest().toNameList());
+
+		//----------------------------------
+		// size
+		assertEquals(ancestorsOrSelf.size(), p0.ancestors().orSelf().size());
+		assertEquals(1, p0.ancestors().filter(fp -> fp.equals(p1)).size());
 	}
 
 

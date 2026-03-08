@@ -419,6 +419,23 @@ public class FilePath implements Comparable<FilePath>
 
 
 		/**
+		 * @return the number of matching ancestors.
+		 */
+		public int size()
+		{
+			int size = 0;
+			FilePath path = getNearest();
+			while (path != null)
+			{
+				if (filter_ == null || filter_.test(path))
+					size++;
+				path = path.getParent();
+			}
+			return size;
+		}
+
+
+		/**
 		 * @return an iterator over the matched ancestors.
 		 */
 		@Override public Iterator<FilePath> iterator()
@@ -887,7 +904,7 @@ public class FilePath implements Comparable<FilePath>
 
 
 	/**
-	 * @return the extension of the file name or "" if the file name does not have a extension#.
+	 * @return the extension of the file name or "" if the file name does not have a extension.
 	 */
 	public String getExtension()
 	{
