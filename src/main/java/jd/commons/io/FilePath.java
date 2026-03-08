@@ -621,7 +621,7 @@ public class FilePath implements Comparable<FilePath>
 		 * @return the number of children.
 		 * @throws IOException if an I/O error occurs
 		 */
-		public long count() throws IOException
+		public long size() throws IOException
 		{
 			return apply(Stream::count);
 		}

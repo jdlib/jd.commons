@@ -189,7 +189,7 @@ public class FilePathTest
 		assertThat(files).containsExactly(tempFile);
 
 		// .count
-		assertEquals(2, tempDir.children().count());
+		assertEquals(2, tempDir.children().size());
 
 		// .filter.list
 		files = tempDir.children().filter(fp -> fp.getName().endsWith(".link")).toList();
