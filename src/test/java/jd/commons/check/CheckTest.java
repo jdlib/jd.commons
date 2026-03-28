@@ -42,7 +42,7 @@ public class CheckTest
 	private static File SOME_LINK;
 	private static File INVALID_FILE;
 
-	
+
 	@BeforeAll
 	public static void beforeAll() throws Exception
 	{
@@ -52,20 +52,20 @@ public class CheckTest
 		INVALID_FILE = new File(DIR, "xyz123");
 		FilePath.of(SOME_LINK).createLink().to(SOME_FILE);
 	}
-	
+
 	@Test
 	public void testElemsArray()
 	{
 		Check.elems(NAMES, "names").noneNull().notContains("c").contains("b").notEmpty();
 		Check.elems(Set.of(NAMES), "names").noneNull().notContains("c").contains("b");
-		
+
 		failCheck(() -> Check.elems(new String[] { null }, null).noneNull(), "arg contains null");
 		failCheck(() -> Check.elems(NAMES, "names").notContains("a"), "names contains \"a\"");
 		failCheck(() -> Check.elems(NAMES, "names").contains("x"), "names not contains \"x\"");
 		failCheck(() -> Check.elems(List.of(), "names").notEmpty(), "names is empty");
 	}
 
-	
+
 	@Test
 	public void testElemsCollection()
 	{
@@ -73,19 +73,20 @@ public class CheckTest
 		failCheck(() -> Check.elems(Arrays.asList((String)null), "names").noneNull(), "names contains null");
 	}
 
-	
+
 	@Test
 	public void testEqual()
 	{
 		Check.equal("a", "a");
 		failCheck(() -> Check.equal(1, 2), "1 not equal to 2");
 	}
-	
-	
+
+
 	@Test
 	public void testFile()
 	{
-		Check.file(DIR).isDir().exists(true);
+		assertSame(DIR, Check.file(DIR).get());
+		Check.file(DIR).isDir().exists();
 		Check.file(SOME_FILE).isFile().exists(true).length().equal(SOME_FILE.length());
 		Check.file(INVALID_FILE).exists(false);
 		failCheck(() -> Check.file(DIR).isFile(), DIR.getAbsolutePath() + " is not a file");
@@ -94,8 +95,8 @@ public class CheckTest
 		failCheck(() -> Check.file(SOME_FILE, "f").isDir(), "f " + SOME_FILE.getAbsolutePath() + " is not a directory");
 		failCheck(() -> Check.file(SOME_FILE).exists(false), SOME_FILE.getAbsolutePath() + " exists");
 	}
-	
-	
+
+
 	@Test
 	public void testIndex()
 	{
@@ -108,7 +109,7 @@ public class CheckTest
 		failCheck(() -> Check.index(4, "i").validFor(List.of(NAMES)), "index i is 4 >= size 2");
 	}
 
-	
+
 	@Test
 	public void testIsA() throws Exception
 	{
@@ -116,30 +117,30 @@ public class CheckTest
 		Check.isA("a", CharSequence.class, "name");
 		failCheck(() -> Check.isA("a", Integer.class), "java.lang.String \"a\" is not a java.lang.Integer");
 		failCheck(() -> Check.isA("a", Integer.class, "name"), "name java.lang.String \"a\" is not a java.lang.Integer");
-		
+
 		Class<?> c1 = CustomClassLoader.load();
 		Class<?> c2 = CustomClassLoader.load();
 		Object i1   = c1.getConstructor().newInstance();
 		failCheck(() -> Check.isA(i1, c2), c1.getName() + ' ' + i1 + " is not a " + c2.getName() + " and was loaded by " + c1.getClassLoader() + " and not by " + c2.getClassLoader());
 	}
-	
-	
+
+
 	@Test
 	public void testIsFalse()
 	{
 		Check.isFalse(false, "flag");
-		failCheck(() -> Check.isFalse(true, "flag"), "flag is true"); 
+		failCheck(() -> Check.isFalse(true, "flag"), "flag is true");
 	}
 
-		
+
 	@Test
 	public void testIsNull()
 	{
 		Check.isNull(null, "name");
 		failCheck(() -> Check.isNull("a", "name"), "name is \"a\" and not null");
 	}
-	
-	
+
+
 	@Test
 	public void testDerivedFrom() throws Exception
 	{
@@ -147,18 +148,18 @@ public class CheckTest
 		Class<CharSequence> result = Check.derivedFrom(arg, CharSequence.class);
 		assertSame(arg, result);
 		failCheck(() -> Check.derivedFrom(String.class, Number.class), "java.lang.String is not derived from java.lang.Number");
-		
+
 		Class<?> c1 = CustomClassLoader.load();
 		Class<?> c2 = CustomClassLoader.load();
 		failCheck(() -> Check.derivedFrom(c1, c2), c1.getName() + '[' + c1.getClassLoader() + "] is not derived from " + c2.getName() + '[' + c2.getClassLoader() + ']');
 	}
-	
-	
+
+
 	@Test
 	public void testIsTrue()
 	{
 		Check.isTrue(true, "flag");
-		failCheck(() -> Check.isTrue(false, "flag"), "flag is false"); 
+		failCheck(() -> Check.isTrue(false, "flag"), "flag is false");
 	}
 
 
@@ -166,7 +167,7 @@ public class CheckTest
 	public void testLengthArray()
 	{
 		Check.length(NAMES, "names").greater(0).lessEq(10);
-		failCheck(() -> Check.length(NAMES, "names").greaterEq(6), "names.length is 2, expected to be >= 6"); 
+		failCheck(() -> Check.length(NAMES, "names").greaterEq(6), "names.length is 2, expected to be >= 6");
 	}
 
 
@@ -180,23 +181,23 @@ public class CheckTest
 			.lessEq(3)
 			.equal(3)
 			.notEqual(5);
-		failCheck(() -> Check.length("abc", "name").greater(5), "name.length is 3, expected to be > 5"); 
+		failCheck(() -> Check.length("abc", "name").greater(5), "name.length is 3, expected to be > 5");
 	}
 
-	
+
 	@Test
 	public void testLengthValue()
 	{
 		Check.length(1, null).greater(0);
-		
+
 		CheckSize cs = Check.length(5, "len");
 		cs.indexValid(4).endValid(5);
-		
+
 		assertThatThrownBy(() -> cs.indexValid(5)).hasMessage("index is 5, expected to be >= 0 and < 5");
 		assertThatThrownBy(() -> cs.endValid(6)).hasMessage("end is 6, expected to be >= 0 and <= 5");
 	}
-	
-	
+
+
 	@Test
 	public void testLengthFile()
 	{
@@ -209,11 +210,11 @@ public class CheckTest
 	public void testNotBlankCharSequence()
 	{
 		Check.notBlank("abc", "name");
-		failCheck(() -> Check.notBlank(null, "name"), "name is null"); 
-		failCheck(() -> Check.notBlank("", "name"), "name is empty"); 
-		failCheck(() -> Check.notBlank(" ", "name"), "name is blank"); 
+		failCheck(() -> Check.notBlank(null, "name"), "name is null");
+		failCheck(() -> Check.notBlank("", "name"), "name is empty");
+		failCheck(() -> Check.notBlank(" ", "name"), "name is blank");
 	}
-	
+
 
 	@Test
 	public void testNotEmptyArray()
@@ -224,17 +225,17 @@ public class CheckTest
 		Check.notEmpty(new int[] { 1 }, null);
 		Check.notEmpty(new long[] { 1L }, null);
 		assertSame(NAMES, Check.notEmpty(NAMES, "names"));
-		failCheck(() -> Check.notEmpty((Object[])null, "names"), "names is null"); 
-		failCheck(() -> Check.notEmpty(new Object[0], null), "arg is empty"); 
+		failCheck(() -> Check.notEmpty((Object[])null, "names"), "names is null");
+		failCheck(() -> Check.notEmpty(new Object[0], null), "arg is empty");
 	}
-	
-	
+
+
 	@Test
 	public void testNotEmptyCharSequence()
 	{
 		assertSame("a", Check.notEmpty("a", "type"));
-		failCheck(() -> Check.notEmpty((CharSequence)null, null), "arg is null"); 
-		failCheck(() -> Check.notEmpty("", "type"), "type is empty"); 
+		failCheck(() -> Check.notEmpty((CharSequence)null, null), "arg is null");
+		failCheck(() -> Check.notEmpty("", "type"), "type is empty");
 	}
 
 
@@ -243,8 +244,8 @@ public class CheckTest
 	{
 		List<String> list = List.of("a");
 		assertSame(list, Check.notEmpty(list, "types"));
-		failCheck(() -> Check.notEmpty((List<?>)null, null), "arg is null"); 
-		failCheck(() -> Check.notEmpty(List.of(), "types"), "types is empty"); 
+		failCheck(() -> Check.notEmpty((List<?>)null, null), "arg is null");
+		failCheck(() -> Check.notEmpty(List.of(), "types"), "types is empty");
 	}
 
 
@@ -253,49 +254,49 @@ public class CheckTest
 	{
 		Map<String,String> map = Map.of("a", "1");
 		assertSame(map, Check.notEmpty(map, "types"));
-		failCheck(() -> Check.notEmpty((Map<?,?>)null, null), "arg is null"); 
-		failCheck(() -> Check.notEmpty(Map.of(), "map"), "map is empty"); 
+		failCheck(() -> Check.notEmpty((Map<?,?>)null, null), "arg is null");
+		failCheck(() -> Check.notEmpty(Map.of(), "map"), "map is empty");
 	}
 
-	
+
 	@Test
 	public void testNotEqual()
 	{
 		assertSame("a", Check.notEqual("a", "b"));
-		failCheck(() -> Check.notEqual("a", "a"), "\"a\" equal"); 
+		failCheck(() -> Check.notEqual("a", "a"), "\"a\" equal");
 	}
 
-	
+
 	@Test
 	public void testNotNull()
 	{
 		assertSame("a", Check.notNull("a", "name"));
-		failCheck(() -> Check.notNull(null, "name"), "name is null"); 
+		failCheck(() -> Check.notNull(null, "name"), "name is null");
 	}
 
-	
+
 	@Test
 	public void testNotSame()
 	{
 		assertSame("a", Check.notSame("a", "b"));
-		failCheck(() -> Check.notSame("a", "a"), "\"a\" same as other arg"); 
+		failCheck(() -> Check.notSame("a", "a"), "\"a\" same as other arg");
 	}
-	
-	
+
+
 	@Test
 	public void testPath() throws IOException
 	{
 		Path curDir = DIR.toPath();
 		Path someFile = SOME_FILE.toPath();
 		Path invalidFile = INVALID_FILE.toPath();
-		Check.path(curDir, LinkOption.NOFOLLOW_LINKS).isDir().exists(true);
+		Check.path(curDir, LinkOption.NOFOLLOW_LINKS).isDir().exists();
 		Check.path(someFile).isFile().exists(true);
 		failCheck(() -> Check.path(curDir, "arg").exists(false), "arg " + curDir.toAbsolutePath() + " exists");
 		failCheck(() -> Check.path(curDir).isFile(), curDir.toAbsolutePath() + " is not a file");
 		failCheck(() -> Check.path(curDir).isSymbolicLink(), curDir.toAbsolutePath() + " is not a symbolic link");
 		failCheck(() -> Check.path(someFile).isDir(), someFile.toAbsolutePath() + " is not a directory");
 		failCheck(() -> Check.path(invalidFile).exists(true), invalidFile.toAbsolutePath() + " does not exist");
-		
+
 		Check.path(FilePath.of(curDir)).isDir().size().equal(0);
 		Check.size(FilePath.of(curDir), "curDir").equal(0);
 		assertThatThrownBy(() -> Check.size(FilePath.of("doesnotexist"), "curDir").equal(0))
@@ -304,12 +305,12 @@ public class CheckTest
 			.cause().isInstanceOf(IOException.class);
 	}
 
-	
+
 	@Test
 	public void testSame()
 	{
 		assertSame("a", Check.same("a", "a"));
-		failCheck(() -> Check.same("a", null), "\"a\" not same as null"); 
+		failCheck(() -> Check.same("a", null), "\"a\" not same as null");
 	}
 
 
@@ -318,17 +319,17 @@ public class CheckTest
 	public void testSize()
 	{
 		Check.size(Map.of(), null).equals(0);
-		failCheck(() -> Check.size(List.of(), null).greater(6), "arg.size is 0, expected to be > 6"); 
+		failCheck(() -> Check.size(List.of(), null).greater(6), "arg.size is 0, expected to be > 6");
 	}
 
-	
+
 	@Test
 	public void testSizeValue()
 	{
 		Check.size(1, null).greater(0);
 	}
 
-	
+
 	@Test
 	public void testValueDecimal()
 	{
@@ -341,7 +342,7 @@ public class CheckTest
 		failCheck(() -> Check.value(1.0, null).equal(4.0), "arg is 1.0, expected to be == 4.0");
 	}
 
-	
+
 	@Test
 	public void testValueInt()
 	{
@@ -351,7 +352,7 @@ public class CheckTest
 		failCheck(() -> Check.value(4, "count").lessEq(3), "count is 4, expected to be <= 3");
 	}
 
-	
+
 	@Test
 	public void testValueLong()
 	{
@@ -361,8 +362,8 @@ public class CheckTest
 		failCheck(() -> Check.value(4L, "count").notEqual(4L), "count is 4, expected to be != 4");
 	}
 
-	
-	private static void failCheck(Executable executable, String msg) 
+
+	private static void failCheck(Executable executable, String msg)
 	{
 		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
 		assertEquals(msg, e.getMessage());
@@ -374,16 +375,16 @@ public class CheckTest
 	}
 
 
-	static class CustomClassLoader extends ClassLoader 
+	static class CustomClassLoader extends ClassLoader
 	{
 		public static Class<?> load() throws ClassNotFoundException
 		{
 			String name = CheckTest.class.getName() + "$Custom";
 			return new CustomClassLoader().loadClass(name, true);
 		}
-		
-		
-		@Override protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException 
+
+
+		@Override protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException
 		{
 			if (!name.endsWith("$Custom"))
 				return super.loadClass(name, resolve);
@@ -392,17 +393,17 @@ public class CheckTest
 			byte[] data = Bytes.from(url).read().unchecked().all();
             return defineClass(name, data, 0, data.length);
 		}
-		
-		
+
+
 	    @Override
-	    protected Class<?> findClass(String name) throws ClassNotFoundException 
+	    protected Class<?> findClass(String name) throws ClassNotFoundException
 	    {
 	        byte[] classData = loadClassData(name);
 	        return defineClass(name, classData, 0, classData.length);
 	    }
-	    
-	
-	    private byte[] loadClassData(String name) 
+
+
+	    private byte[] loadClassData(String name)
 	    {
         	String s = '/' + name.replace('.', '/');
         	return Resource.of().path(s).loadByCLOf(getClass()).read().unchecked().all();
