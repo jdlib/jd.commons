@@ -37,10 +37,10 @@ public class CharReadFrom<R,E extends Exception> implements CharFrom<R,E>
 	 * The handler.
 	 */
 	protected final IOHandler<CharSource,Reader,R,E> handler_;
-	
+
 
 	/**
-	 * Creates new CharReadFrom  
+	 * Creates new CharReadFrom
 	 * @param handler the handler
 	 */
 	public CharReadFrom(IOHandler<CharSource,Reader,R,E> handler)
@@ -48,14 +48,14 @@ public class CharReadFrom<R,E extends Exception> implements CharFrom<R,E>
 		handler_ = Check.notNull(handler, "handler");
 	}
 
-	
+
 	@Override
 	public R from(CharSource source) throws E
 	{
 		Check.notNull(source, "source");
 		return handler_.runSupplier(source);
 	}
-	
+
 
 	@Override
 	public R from(Reader in) throws E
@@ -63,11 +63,11 @@ public class CharReadFrom<R,E extends Exception> implements CharFrom<R,E>
 		Check.notNull(in, "in");
 		return handler_.runDirect(in);
 	}
-	
-	
+
+
 	/**
-	 * @return a new CharReadFrom which catches any exception and returns it as result of the 
-	 *      ByteWrite operation. No checked exception are thrown by the new ByteWrite.
+	 * @return a new CharReadFrom which catches any exception and returns it as result of the
+	 *      operation. No checked exception are thrown by the new CharReadFrom object.
 	 */
 	@CheckReturnValue
 	public CharReadFrom<Exception,RuntimeException> silent()
@@ -78,16 +78,16 @@ public class CharReadFrom<R,E extends Exception> implements CharFrom<R,E>
 
 	/**
 	 * @return a new CharReadFrom which catches any exception, forwards to the consumer
-	 * 		(which for instance may log the exception) and return the exception as result of the 
-	 *      ByteWrite operation. No checked exception is thrown by the new ByteWrite.
+	 * 		(which for instance may log the exception) and return the exception as result of the
+	 *      operation. No checked exception is thrown by the new CharReadFrom object.
 	 */
 	@CheckReturnValue
 	public CharReadFrom<Exception,RuntimeException> silent(Consumer<Exception> log)
 	{
 		return new CharReadFrom<>(new ErrorHandler<>(handler_, ErrorFunction.silent(log)));
 	}
-	
-	
+
+
 	/**
 	 * @return a new CharReadFrom which catches all exceptions thrown by this CharReadFrom
 	 * 		and rethrows it as RuntimeException.
@@ -103,7 +103,7 @@ public class CharReadFrom<R,E extends Exception> implements CharFrom<R,E>
 	 * Returns new CharReadFrom which converts thrown exceptions to a new type.
 	 * @param factory a factory which receives a thrown exception. It must either
 	 * 		throw an own exception of type F or create an exception of type F
-	 * 		(which is then thrown). The second case makes it easy to use 
+	 * 		(which is then thrown). The second case makes it easy to use
 	 * 		method handles to specify a factory (e.g. {@code IllegalStateException::new}).
 	 * @param <F> an exception type
 	 * @return the CharReadFrom
@@ -116,7 +116,7 @@ public class CharReadFrom<R,E extends Exception> implements CharFrom<R,E>
 
 
 	/**
-	 * @return a new CharReadFrom which wraps the Reader of this CharReadFrom in another 
+	 * @return a new CharReadFrom which wraps the Reader of this CharReadFrom in another
 	 * 		Reader.
 	 * @param wrapper wraps an Reader
 	 */

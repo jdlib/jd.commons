@@ -25,26 +25,26 @@ import jd.commons.io.fluent.handler.TransferBytesHandler;
 
 /**
  * A ByteSource can supply an {@link InputStream}.<br>
- * Default methods defined by this interface 
+ * Default methods defined by this interface
  * <ul>
  * <li>{@link #read()} the content provided by the InputStream.
  * <li>{@link #write()} the content to a {@link ByteTarget}
  * <li>decode the ByteSource and turn it into a {@link CharSource}
  * </ul>
- * See {@link IO#Bytes} for factory methods to create a ByteSource for 
+ * See {@link IO#Bytes} for factory methods to create a ByteSource for
  * various sources.
  */
 public interface ByteSource extends ByteWritable, AsCharset<CharSource>
 {
 	/**
-	 * Returns an InputStream. This should only be called once, 
+	 * Returns an InputStream. This should only be called once,
 	 * if this method is invoked a second time the result is undefined.
 	 * @return the InputStream
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public InputStream getInputStream() throws IOException;
 
-	
+
 	/**
 	 * @return a ByteSource which wraps the InputStream of this ByteSource
 	 * 		by another InputStream.
@@ -56,7 +56,7 @@ public interface ByteSource extends ByteWritable, AsCharset<CharSource>
 		return () -> wrapper.apply(getInputStream());
 	}
 
-	
+
 	/**
 	 * Returns a {@link CharSource} which is based on the InputStream
 	 * provided by this ByteSource, decoded using the given charset.
@@ -79,11 +79,11 @@ public interface ByteSource extends ByteWritable, AsCharset<CharSource>
 		return new ByteReadData<>(this, ErrorFunction.throwUncheckedOrIOE());
 	}
 
-	
+
 	/**
-	 * @return a ByteWrite object to specify a target to which
+	 * @return a ByteWriteTo object to specify a target to which
 	 * 		the content of this ByteSource should be written.
-	 * 		This initial ByteWrite does not return a result
+	 * 		This initial object does not return a result
 	 * 		and throws IOExceptions
 	 */
 	@Override

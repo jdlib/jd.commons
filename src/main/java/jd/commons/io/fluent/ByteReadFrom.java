@@ -34,21 +34,21 @@ import jd.commons.util.function.XFunction;
 public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 {
 	protected final IOHandler<ByteSource,InputStream,R,E> handler_;
-	
-	
+
+
 	public ByteReadFrom(IOHandler<ByteSource,InputStream,R,E> handler)
 	{
 		handler_ = Check.notNull(handler, "handler");
 	}
 
-	
+
 	@Override
 	public R from(ByteSource source) throws E
 	{
 		Check.notNull(source, "source");
 		return handler_.runSupplier(source);
 	}
-	
+
 
 	@Override
 	public R from(InputStream in) throws E
@@ -57,10 +57,10 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 		return handler_.runDirect(in);
 	}
 
-	
+
 	/**
-	 * @return a new ByteReadFrom which catches any exception and returns it as result of the 
-	 *      ByteWrite operation. No checked exception are thrown by the new ByteWrite.
+	 * @return a new ByteReadFrom which catches any exception and returns it as result of the
+	 *      operation. No checked exception are thrown by the new ByteReadFrom.
 	 */
 	@CheckReturnValue
 	public ByteReadFrom<Exception,RuntimeException> silent()
@@ -71,8 +71,8 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 
 	/**
 	 * @return a new ByteReadFrom which catches any exception, forwards to the consumer
-	 * 		(which for instance may log the exception) and return the exception as result of the 
-	 *      ByteWrite operation. No checked exception is thrown by the new ByteWrite.
+	 * 		(which for instance may log the exception) and return the exception as result of the
+	 *      operation. No checked exception is thrown by the new ByteReadFrom.
 	 * @param log receives the thrown exception
 	 */
 	@CheckReturnValue
@@ -86,7 +86,7 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 	 * Returns new ByteReadFrom which converts thrown exceptions to a new type.
 	 * @param factory a factory which receives a thrown exception. It must either
 	 * 		throw an own exception of type F or create an exception of type F
-	 * 		(which is then thrown). The second case makes it easy to use 
+	 * 		(which is then thrown). The second case makes it easy to use
 	 * 		method handles to specify a factory (e.g. {@code IllegalStateException::new}).
 	 * @param <F> an exception type
 	 * @return the ByteReadFrom
@@ -96,8 +96,8 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 	{
 		return new ByteReadFrom<>(new ErrorHandler<>(handler_, ErrorFunction.throwing(factory)));
 	}
-	
-	
+
+
 	/**
 	 * @return a new ByteReadFrom which catches all exceptions thrown by this ByteReadFrom
 	 * 		and rethrows it as RuntimeException.
@@ -110,7 +110,7 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 
 
 	/**
-	 * @return a new ByteReadFrom which wraps the InputStream of this ByteReadFrom in another 
+	 * @return a new ByteReadFrom which wraps the InputStream of this ByteReadFrom in another
 	 * 		InputStream.
 	 * @param wrapper wraps an InputStream
 	 */
@@ -119,8 +119,8 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 	{
 		return new ByteReadFrom<>(WrapHandler.forByteSource(handler_, wrapper));
 	}
-	
-	
+
+
 	/**
 	 * @return a string representation of this object.
 	 */

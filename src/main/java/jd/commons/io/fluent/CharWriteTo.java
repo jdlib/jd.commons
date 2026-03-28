@@ -31,7 +31,7 @@ import jd.commons.util.function.XFunction;
 
 /**
  * CharWriteTo allows you to specify a CharTarget or Writer to which character content is written.
- * Additionally it can be modified 
+ * Additionally it can be modified
  * <ul>
  * <li>to return the {@link #countChars() number of written chars},
  * <li>to turn IOExceptions into {@link #unchecked() unchecked exceptions}
@@ -48,8 +48,8 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 	 * The handler.
 	 */
 	protected final IOHandler<CharTarget,Writer,R,E> handler_;
-	
-	
+
+
 	/**
 	 * Creates a new CharWriteTo.
 	 * @param handler the handler implementing the write operations
@@ -58,12 +58,12 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 	{
 		handler_ = Check.notNull(handler, "handler");
 	}
-	
-	
+
+
 	/**
 	 * Instructs the CharWrite to encode the character content using the given charset.
 	 * @param charset a Charset
-	 * @return a new ByteWrite builder to specify where to write the byte content
+	 * @return a new ByteWriteTo builder to specify where to write the byte content
 	 */
 	@CheckReturnValue
 	@Override
@@ -73,33 +73,33 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 		return new ByteWriteTo<>(new EncodeHandler<>(handler_, charset));
 	}
 
-	
+
 	/**
 	 * Writes the char content to a Writer.
 	 * The Writer is not closed in this operation.<br>
 	 * Implementation note: Terminal implementations should flush the Writer.
 	 * (Rationale: Wrapping CharWrite implementations may wrap the original Writer
 	 * in a buffering Writer, so flushing the stream is needed to write any
-	 * content kept in memory).  
+	 * content kept in memory).
 	 * @param writer the Writer
 	 * @return the result returned by this CharWriteTo
-	 * @throws E if an error occurs 
+	 * @throws E if an error occurs
 	 */
-	@Override 
+	@Override
 	public R to(Writer writer) throws E
 	{
 		Check.notNull(writer, "writer");
 		return handler_.runDirect(writer);
 	}
 
-	
+
 	/**
 	 * Writes the content to the given CharTarget.
 	 * @param target a CharTarget, not null
 	 * @return the result returned by this CharWRite
-	 * @throws E if an error occurs 
+	 * @throws E if an error occurs
 	 */
-	@Override 
+	@Override
 	public R to(CharTarget target) throws E
 	{
 		/*
@@ -114,11 +114,11 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 		return handler_.runSupplier(target);
 	}
 
-	
+
 	/**
 	 * Returns the written content as String.
 	 * @return the string
-	 * @throws E if an error occurs 
+	 * @throws E if an error occurs
 	 */
 	public String toStr() throws E
 	{
@@ -126,11 +126,11 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 		to(sw);
 		return sw.toString();
 	}
-		
-	
+
+
 	/**
 	 * Returns a String representation of this CharWrite.
-	 * @deprecated this method is deprecated in order to warn you in case you wanted to call {@link #toStr()} 
+	 * @deprecated this method is deprecated in order to warn you in case you wanted to call {@link #toStr()}
 	 * 		to retrieve the CharWriteTo result as string.
 	 */
 	@Override
@@ -139,8 +139,8 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 	{
 		return handler_.toString();
 	}
-	
-	
+
+
 	/**
 	 * @return a new CharWrite which returns the number of chars written.
 	 */
@@ -165,7 +165,7 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 	 * Returns new CharWriteTo which converts thrown exceptions to a new type.
 	 * @param factory a factory which receives a thrown exception. It must either
 	 * 		throw an own exception of type F or create an exception of type F
-	 * 		(which is then thrown). The second case makes it easy to use 
+	 * 		(which is then thrown). The second case makes it easy to use
 	 * 		method handles to specify a factory (e.g. {@code IllegalStateException::new}).
 	 * @param <F> an exception type
 	 * @return the CharWriteTo
@@ -178,7 +178,7 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 
 
 	/**
-	 * @return a new CharWrite which catches any exception and returns as result of the 
+	 * @return a new CharWrite which catches any exception and returns as result of the
 	 *      CharWrite operation. No checked exception is thrown by the new CharWrite.
 	 */
 	@CheckReturnValue
@@ -189,17 +189,17 @@ public class CharWriteTo<R,E extends Exception> implements CharTo<R,E>, AsCharse
 
 
 	/**
-	 * @return a new CharWrite which catches any exception, forwards to the consumer
-	 * 		(which for instance may log the exception) and return the exception as result of the 
-	 *      ByteWrite operation. No checked exception is thrown by the new CharWrite.
+	 * @return a new CharWriteTo builder which catches any exception, forwards to the consumer
+	 * 		(which for instance may log the exception) and return the exception as result of the
+	 *      operation. No checked exception is thrown by the new builder.
 	 */
 	@CheckReturnValue
 	public CharWriteTo<Exception,RuntimeException> silent(Consumer<Exception> log)
 	{
 		return new CharWriteTo<>(new ErrorHandler<>(handler_, ErrorFunction.silent(log)));
 	}
-	
-	
+
+
 	/**
 	 * @return a new CharWrite which wraps the Writer of this CharWrite
 	 * 		by another Writer.
