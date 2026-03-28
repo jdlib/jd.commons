@@ -192,7 +192,10 @@ public class FilePathTest
 		assertEquals(2, tempDir.children().size());
 
 		// .filter.list
-		files = tempDir.children().filter(fp -> fp.getName().endsWith(".link")).toList();
+		files = tempDir.children()
+			.filter(null) // coverage of filter with null predicate
+			.filter(fp -> true) // test that nexgt filter is merged
+			.filter(fp -> fp.getName().endsWith(".link")).toList();
 		assertThat(files).containsExactly(tempLink);
 
 		// .forEach, also tests .apply()
