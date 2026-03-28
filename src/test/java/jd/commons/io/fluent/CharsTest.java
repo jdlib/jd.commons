@@ -42,8 +42,8 @@ public class CharsTest
 	{
 		assertEquals("abc",Chars.from('a', 'b', 'c').read().all());
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryFromClob() throws Exception
 	{
@@ -60,14 +60,14 @@ public class CharsTest
 			assertSame(reader, blobReader);
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryFromLines() throws Exception
 	{
 		CharWritable cc  = Chars.fromLines(List.of("a", "b"));
-		String expected = 'a' + System.lineSeparator() + 'b' + System.lineSeparator(); 
-		
+		String expected = 'a' + System.lineSeparator() + 'b' + System.lineSeparator();
+
 		// write.to(OutputStream)
 		byte[] actual = cc.write().asUtf8().toByteArray();
 		byte[] exp    = expected.getBytes(StandardCharsets.UTF_8);
@@ -78,8 +78,8 @@ public class CharsTest
 		cc.write().to(Chars.to(sw));
 		assertEquals(expected, sw.toString());
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryFromReader() throws Exception
 	{
@@ -87,21 +87,21 @@ public class CharsTest
 		{
 			assertThat(reader).isInstanceOf(OpenReader.class);
 		}
-		
+
 		try (Reader reader = Chars.from(new StringReader("abc"), false).getReader())
 		{
 			assertThat(reader).isInstanceOf(StringReader.class);
 		}
 	}
 
-	
+
 	@Test
 	public void testFromString() throws Exception
 	{
 		assertEquals("abc", Chars.fromString("abc").read().all());
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryToClob() throws Exception
 	{
@@ -118,8 +118,8 @@ public class CharsTest
 			assertSame(writer, blobWriter);
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryToWriter() throws Exception
 	{
@@ -131,29 +131,29 @@ public class CharsTest
 		{
 			assertThat(writer).isInstanceOf(OpenWriter.class);
 		}
-		
+
 		try (Writer writer = Chars.to(new StringWriter(), false).getWriter())
 		{
 			assertThat(writer).isInstanceOf(StringWriter.class);
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testReadResultApply() throws Exception
 	{
-		SQLException e = new SQLException(); 
+		SQLException e = new SQLException();
 		assertThatThrownBy(() -> Chars.fromString("abc").read().apply(r -> { throw e; }))
 			.isInstanceOf(IOException.class)
 			.cause().isSameAs(e);
 	}
-	
-	
+
+
 	@Test
 	public void testReadResultLines() throws Exception
 	{
 		CharSource src = Chars.fromString("a\nb");
-		
+
 		assertThat(src.read().lines().toList()).containsExactly("a", "b");
 		assertThat(src.read().lines().toArray()).containsExactly("a", "b");
 		assertEquals("ab", src.read().lines().apply(st -> st.collect(joining())));
@@ -163,19 +163,19 @@ public class CharsTest
 		assertThat(src.read().lines().toList()).containsExactly("a", "", "b");
 		assertThat(src.read().lines().removeBlank().toList()).containsExactly("a", "b");
 	}
-	
-	
+
+
 	@Test
 	public void testReadResultUnchecked() throws Exception
 	{
 		// implicitly also tests throwing()
-		
+
 		// no exception thrown
 		assertEquals("abc", Chars.fromString("abc").read().unchecked().all());
 		assertEquals("x", Chars.fromString("abc").read().unchecked().apply(in -> "x"));
 
 		// exception thrown
-		UnsupportedOperationException uoe = new UnsupportedOperationException("hallo"); 
+		UnsupportedOperationException uoe = new UnsupportedOperationException("hallo");
 		CharSource cs = () -> { throw uoe; };
 		assertThatThrownBy(() -> cs.read().unchecked().all()).isSameAs(uoe);
 		assertThatThrownBy(() -> cs.read().unchecked().apply(in -> null)).isSameAs(uoe);
@@ -190,7 +190,7 @@ public class CharsTest
 		assertSame(br, Chars.from(br, false).getBufferedReader());
 	}
 
-	
+
 	@Test
 	public void testSourceWrap() throws Exception
 	{
@@ -221,12 +221,13 @@ public class CharsTest
 			assertInstanceOf(OpenWriter.class, writer);
 		}
 	}
-	
-	
+
+
 	@Test
-	public void testWriteAs()
+	public void testWriteAs() throws IOException
 	{
 		// coverage for EncodeHandler.toString
 		assertEquals("Encode->TransferChars", Chars.fromString("abc").write().asUtf8().handler_.toString());
+		assertArrayEquals("abc".getBytes(), Chars.fromString("abc").write().asLatin1().toByteArray());
 	}
 }
