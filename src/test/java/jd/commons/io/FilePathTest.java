@@ -203,6 +203,9 @@ public class FilePathTest
 		// .forEach throwing an exception
 		IOException ioe = new IOException();
 		assertThatThrownBy(() -> tempDir.children().forEach(fp -> { throw ioe; })).isSameAs(ioe);
+
+		// children of a regular file
+		assertEquals(0, tempFile.children().size());
 	}
 
 
@@ -290,6 +293,13 @@ public class FilePathTest
 
 
 	@Test
+	public void testGetFileName() throws Exception
+	{
+		assertEquals(tempFile.getName(), tempFile.getFileName().toString());
+	}
+
+
+	@Test
 	public void testGetType() throws Exception
 	{
 		assertSame(FilePath.Type.DIRECTORY, tempDir.getType());
@@ -361,8 +371,6 @@ public class FilePathTest
 		assertTrue(tempFile.existsNoFollowLinks());
 		assertNotNull(tempFile.getFileStore());
 		assertNotNull(tempFile.getFileSystem());
-		assertEquals("txt", tempFile.getExtension());
-		assertEquals("?", tempDir.getExtensionOr("?"));
 		assertEquals("test.txt", tempFile.getName());
 		assertEquals(tempDir, tempFile.getParent());
 		assertNotNull(tempFile.getRoot());

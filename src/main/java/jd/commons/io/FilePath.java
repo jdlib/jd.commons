@@ -693,6 +693,9 @@ public class FilePath implements Comparable<FilePath>
 		public <T> T apply(XFunction<Stream<FilePath>,T,IOException> fn) throws IOException
 		{
 			Check.notNull(fn, "fn");
+			if (isRegularFile(LinkOption.NOFOLLOW_LINKS))
+				return fn.apply(Stream.empty());
+
 			try (DirectoryStream<Path> dirs = open())
 			{
 				Stream<FilePath> stream = StreamSupport.stream(dirs.spliterator(), false).map(FilePath::of);
@@ -916,23 +919,15 @@ public class FilePath implements Comparable<FilePath>
 
 
 	/**
-	 * @return the extension of the file name or "" if the file name does not have a extension.
+	 * Returns the name of the file or directory denoted by this path as a
+	 * {@code FileName} object. If you want to get the name as a String, use {@link #getName()}.
+	 * @return the FileName object
+	 * @see Path#getFileName()
+	 * @see #getName()
 	 */
-	public String getExtension()
+	public FileName getFileName()
 	{
-		return getExtensionOr("");
-	}
-
-
-	/**
-	 * @param defaultValue a default value
-	 * @return the extension of the file name or the default value if the extensiopn is empty.
-	 */
-	public String getExtensionOr(String defaultValue)
-	{
-		String name = getName();
-		int p = name.lastIndexOf('.');
-		return p >= 0 ? name.substring(p + 1) : defaultValue;
+		return new FileName(getName());
 	}
 
 
@@ -958,12 +953,11 @@ public class FilePath implements Comparable<FilePath>
 
 
 	/**
-	 * Returns the name of the file or directory denoted by this path as a
-	 * {@code Path} object. The file name is the <em>farthest</em> element from
-	 * the root in the directory hierarchy.
-	 * @return  a path representing the name of the file or directory, or
-	 *          empty string if this path has zero elements
+	 * Returns the name of the file or directory denoted by this path as a String.
+	 * If you want to get the name as a FileName object, use {@link #getFileName()}.
+	 * @return the name
 	 * @see Path#getFileName()
+	 * @see #getFileName()
 	 */
 	public String getName()
 	{
