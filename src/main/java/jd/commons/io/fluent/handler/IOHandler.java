@@ -20,7 +20,7 @@ import jd.commons.util.Utils;
 public abstract class IOHandler<AS,AD extends Closeable,R,E extends Exception>
 {
 	public abstract R runSupplier(AS arg) throws E;
-	
+
 
 	public abstract R runDirect(AD arg) throws E;
 
@@ -42,17 +42,21 @@ public abstract class IOHandler<AS,AD extends Closeable,R,E extends Exception>
 		return sb.toString();
 	}
 
-	
+
 	protected String describe()
 	{
-		return Utils.cutEnd(getClass().getSimpleName(), "Handler");
+		Class<?> c = getClass();
+		String name = c.getSimpleName();
+		if (Utils.isBlank(name))
+			name = Utils.afterLastOr(c.getName(), '.', c.getName());
+		return Utils.cutEnd(name, "Handler");
 	}
-	
+
 
 	private void toString(StringBuilder sb)
 	{
 		sb.append(describe());
-		IOHandler<?,?,?,?> inner = getInner(); 
+		IOHandler<?,?,?,?> inner = getInner();
 		if (inner != null)
 		{
 			sb.append("->");

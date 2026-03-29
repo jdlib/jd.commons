@@ -14,6 +14,7 @@ package jd.commons.io.fluent;
 
 
 import static jd.commons.io.fluent.IO.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -36,8 +37,8 @@ public class ByteReadFromTest
 			return "x";
 		}
 	};
-	
-	
+
+
 	@Test
 	public void test() throws Exception
 	{
@@ -47,5 +48,6 @@ public class ByteReadFromTest
 		new ByteReadFrom<>(HANDLER).throwing(SQLException::new);
 		new ByteReadFrom<>(HANDLER).unchecked();
 		new ByteReadFrom<>(HANDLER).wrap(BufferedInputStream::new).from(InputStream.nullInputStream());
+		assertEquals("ByteReadFromTest$1", new ByteReadFrom<>(HANDLER).toString());
 	}
 }
