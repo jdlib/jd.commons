@@ -25,7 +25,7 @@ import jd.commons.util.UncheckedException;
  * @param <E> the type of the Exception
  */
 @FunctionalInterface
-public interface XConsumer<T,E extends Exception> 
+public interface XConsumer<T,E extends Exception>
 {
 	/**
      * Performs this operation on the given argument.
@@ -40,8 +40,8 @@ public interface XConsumer<T,E extends Exception>
      * operation followed by the {@code after} operation.
      * @param after another XConsumer
      * @return the composed consumer
-     */ 
-    default XConsumer<T,E> andThen(XConsumer<? super T, E> after) 
+     */
+    default XConsumer<T,E> andThen(XConsumer<? super T, E> after)
     {
         Check.notNull(after, "after");
         return (T t) -> { accept(t); after.accept(t); };
@@ -67,7 +67,7 @@ public interface XConsumer<T,E extends Exception>
     		}
     	};
     }
-    
+
 
     /**
      * Turns this XConsumer into a XFunction which always returns null.

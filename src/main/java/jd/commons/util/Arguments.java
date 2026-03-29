@@ -34,7 +34,7 @@ public class Arguments
 {
 	/**
 	 * Creates an Arguments object.
-	 * @param args the string arguments passed to the main method 
+	 * @param args the string arguments passed to the main method
 	 */
 	public Arguments(String... args)
 	{
@@ -47,8 +47,8 @@ public class Arguments
 			}
 		}
     }
-    
-    
+
+
     /**
 	 * Creates an Arguments object.
      * @param args a list of arguments
@@ -64,8 +64,8 @@ public class Arguments
 			}
 		}
 	}
-    
-    
+
+
     /**
      * Loops over all arguments and replaces any argument starting with "@"
      * with the content of the associated file.
@@ -76,8 +76,8 @@ public class Arguments
     {
     	return resolveIncludes("@");
     }
-     
-     
+
+
     /**
      * Loops over all arguments and replaces any argument starting with the given prefix
      * with the content of the associated file.
@@ -90,8 +90,8 @@ public class Arguments
     	Check.notNull(prefix, "prefix");
     	return resolveIncludes(prefix, 0, new HashSet<>());
     }
-   
-    
+
+
     private Arguments resolveIncludes(String prefix, int i, Set<File> seen) throws IOException
     {
     	while (i < args_.size())
@@ -105,7 +105,7 @@ public class Arguments
     			if (seen.contains(file))
     				throw new IllegalArgumentException("circular inclusion of file " + file);
     			seen.add(file);
-    			
+
     			List<String> includeArgs = readIncludeArgs(Bytes.from(file).asUtf8());
     			args_.remove(i);
    				args_.addAll(i, includeArgs);
@@ -113,8 +113,8 @@ public class Arguments
     	}
     	return this;
     }
-    
-    
+
+
     private List<String> readIncludeArgs(CharSource source) throws IOException
     {
     	List<String> result = new ArrayList<>();
@@ -137,8 +137,8 @@ public class Arguments
 	{
 		return index_ < args_.size();
 	}
-	
-	
+
+
 	/**
 	 * @param count the count
 	 * @return if there are at least count more arguments.
@@ -148,8 +148,8 @@ public class Arguments
 		Check.value(count, "count").greater(0);
 		return index_ + count <= args_.size();
 	}
-	
-	
+
+
 	/**
 	 * @return the index of the current argument.
 	 */
@@ -157,8 +157,8 @@ public class Arguments
 	{
 		return index_;
 	}
-        
- 
+
+
 	/**
 	 * @return the size of the argument list
 	 */
@@ -167,7 +167,7 @@ public class Arguments
 		return args_.size();
 	}
 
-	
+
 	/**
 	 * @return the current argument or null if there are no more arguments.
 	 */
@@ -185,8 +185,8 @@ public class Arguments
 	{
 		return args_.subList(index_, args_.size());
 	}
-	
-	
+
+
 	/**
 	 * @return all arguments.
 	 */
@@ -195,11 +195,11 @@ public class Arguments
 		return args_;
 	}
 
-	
+
     /**
 	 * @return if the next argument matches the given string. If true, the string is consumed, i.e.
-	 * the arguments list advances to the next argument. 
-	 * @param s a string 
+	 * the arguments list advances to the next argument.
+	 * @param s a string
 	 */
 	public boolean consume(String s)
 	{
@@ -215,7 +215,7 @@ public class Arguments
 
     /**
 	 * @return if the current argument matches any of the given strings. If yes the argument is consumed
-	 * @param any the strings  
+	 * @param any the strings
 	 */
 	public boolean consumeAny(String... any)
 	{
@@ -227,7 +227,7 @@ public class Arguments
 		return false;
 	}
 
-	
+
 	/**
 	 * @return a GetValue object which allows to access the next argument and convert to other types
 	 * @throws IllegalArgumentException if there are no more arguments
@@ -250,7 +250,7 @@ public class Arguments
 		return GetString.of(args_.get(index_++), what);
 	}
 
-	
+
 	/**
 	 * @return if the next argument starts matches the given pattern.
 	 * @param pattern a pattern
@@ -261,7 +261,7 @@ public class Arguments
 		return hasMore() && pattern.matcher(get()).matches();
 	}
 
-	
+
 	/**
 	 * @return if the next argument matches the given test
 	 * @param test a test
@@ -271,8 +271,8 @@ public class Arguments
 		Check.notNull(test, "test");
 		return hasMore() && test.test(get());
 	}
-	
-	
+
+
 	/**
 	 * @return if the next argument starts with the given string.
 	 * @param s a string
@@ -282,7 +282,7 @@ public class Arguments
 		return hasMore() && get().startsWith(s);
 	}
 
-   
+
 	/**
 	 * Replaces the current argument with the given replacement string.
 	 * @param replacement a string
@@ -296,11 +296,11 @@ public class Arguments
 			args_.set(index_, replacement);
 			return true;
 		}
-		else 
+		else
 			return false;
 	}
 
-	
+
 	/**
 	 * @return a IllegalArgumentException created from the parameters.
 	 * @param what describes the argument
@@ -315,8 +315,8 @@ public class Arguments
 		s.append("arg ").append(msg);
 		return new IllegalArgumentException(s.toString(), cause);
 	}
-	
-	
+
+
 	private final List<String> args_ = new ArrayList<>();
 	private int index_;
 }

@@ -28,7 +28,7 @@ public class XBiFunctionTest
 	{
 		XBiFunction<String,String,String,SQLException> f  = (s1,s2) -> s1 + s2;
 		assertEquals("st", f.apply("s", "t"));
-		
+
 		XBiFunction<String,String,String,SQLException> f2 = f.andThen(s -> s + '!');
 		assertEquals("st!", f2.apply("s", "t"));
 	}
@@ -39,7 +39,7 @@ public class XBiFunctionTest
 	{
 		XBiFunction<String,String,String,IOException> c1 = (s1,s2) -> s1 + s2;
 		XBiFunction<String,String,String,IOException> c2 = (s1,s2) -> { throw new IOException(); };
-		
+
 		assertEquals("ab", c1.unchecked().apply("a", "b"));
 		assertThatThrownBy(() -> c2.unchecked().apply("a", "b"))
 			.isInstanceOf(UncheckedException.class);

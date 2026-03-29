@@ -31,8 +31,8 @@ import jd.commons.io.FilePath;
  * Typically you will pass a variable and a description or the name of that variable:
  * <code>
  * String title = ...
- * Check.notNull(title, "title"); 
- * </code> 
+ * Check.notNull(title, "title");
+ * </code>
  * If the check fails a IllegalArgumentException with a descriptive message is thrown.
  * In the above example, if title is null then a IEA with message "title is null" will be thrown.
  * <p>
@@ -59,8 +59,8 @@ public interface Check
 		// can't use List.of(arg) since it does not allow null elems
 		return new CheckElems<>(Arrays.asList(notNull(arg, what)), what);
 	}
-	
-	
+
+
 	/**
 	 * @return a CheckElems object which allows to check the elements of the given Iterable.
 	 * @param arg the iterable
@@ -72,7 +72,7 @@ public interface Check
 		return new CheckElems<>(arg, what);
 	}
 
-	
+
 	/**
 	 * Checks that two objects are equal.
 	 * @param arg1 the first argument
@@ -91,14 +91,14 @@ public interface Check
 
 	/**
 	 * @return a CheckFile object which allows to check the given File argument.
-	 * @param arg a file 
+	 * @param arg a file
 	 */
 	public static CheckFile file(File arg)
 	{
 		return file(arg, null);
 	}
-	
-	
+
+
 	/**
 	 * @return a CheckFile object which allows to check the given File argument.
 	 * @param arg a file
@@ -108,11 +108,11 @@ public interface Check
 	{
 		return new CheckFile(arg, what);
 	}
-	
-	
+
+
 	/**
 	 * @return a CheckIndex object which allows to check the given index argument.
-	 * @param arg a index argument 
+	 * @param arg a index argument
 	 */
 	public static CheckIndex index(int arg)
 	{
@@ -122,7 +122,7 @@ public interface Check
 
 	/**
 	 * @return a CheckIndex object which allows to check the given index argument.
-	 * @param arg a index argument 
+	 * @param arg a index argument
 	 * @param what describes the index or null
 	 */
 	public static CheckIndex index(int arg, String what)
@@ -130,7 +130,7 @@ public interface Check
 		return new CheckIndex(arg, what);
 	}
 
-	
+
 	/**
 	 * Checks that an object is an instance of a class.
 	 * @param arg the argument
@@ -144,7 +144,7 @@ public interface Check
 		return isA(arg, type, null);
 	}
 
-	
+
 	/**
 	 * Checks that an object is an instance of a class.
 	 * @param arg the argument
@@ -171,7 +171,7 @@ public interface Check
 		StringBuilder msg = new StringBuilder();
 		if (what != null)
 			msg.append(CheckHelper.normWhat(what)).append(' ');
-		msg.append(actual.getName()).append(' ').append(CheckHelper.argString(arg));	
+		msg.append(actual.getName()).append(' ').append(CheckHelper.argString(arg));
 		msg.append(" is not a ").append(expected.getName());
 		if (actual.getName().equals(expected.getName()) &&
 			actual.getClassLoader() != expected.getClassLoader())
@@ -209,7 +209,7 @@ public interface Check
 
 
 	/**
-	 * Checks that {@code argType} is derived from the {@code superType} 
+	 * Checks that {@code argType} is derived from the {@code superType}
 	 * i.e. that {@code superType} is {@link Class#isAssignableFrom(Class)} from {@code argType}.
 	 * @param argType a argument type, not null
 	 * @param superType a potential super class or interface of {@code argType}
@@ -231,26 +231,26 @@ public interface Check
 
 	private static IllegalArgumentException derivedFromError(Class<?> argType, Class<?> superType)
 	{
-		boolean showLoader = 
-			argType.getName().equals(superType.getName()) && 
+		boolean showLoader =
+			argType.getName().equals(superType.getName()) &&
 			argType.getClassLoader() != superType.getClassLoader();
-		
+
 		StringBuilder sb = new StringBuilder();
 		describeClass(argType, showLoader, sb);
 		sb.append(" is not derived from ");
 		describeClass(superType, showLoader, sb);
 		return new IllegalArgumentException(sb.toString());
 	}
-	
-	
+
+
 	private static void describeClass(Class<?> c, boolean showLoader, StringBuilder s)
 	{
 		s.append(c.getName());
 		if (showLoader)
 			s.append('[').append(c.getClassLoader()).append(']');
 	}
-	
-	
+
+
 	/**
 	 * Checks that a boolean argument is true.
 	 * @param arg the argument
@@ -275,8 +275,8 @@ public interface Check
 		notNull(arg, what);
 		return size(arg.length(), what, false);
 	}
-	
-	
+
+
 	/**
 	 * Returns a CheckSize object which allows to check the CharSequence length.
 	 * @param arg a CharSequence
@@ -289,7 +289,7 @@ public interface Check
 		return size(arg.length(), what, false);
 	}
 
-	
+
 	/**
 	 * Returns a CheckSize object which allows to check the array length.
 	 * @param arg an array
@@ -302,7 +302,7 @@ public interface Check
 		return size(arg.length, what, false);
 	}
 
-	
+
 	/**
 	 * Returns a CheckLong object which allows to check the length value.
 	 * @param arg a length value. The value is automatically checked to be &gt;= 0.
@@ -316,7 +316,7 @@ public interface Check
 		return cs;
 	}
 
-	
+
 	/**
 	 * Checks that a CharSequence argument is not blank, i.e. is not null and not empty and not whitespace
 	 * only.
@@ -346,7 +346,7 @@ public interface Check
 		return true;
 	}
 
-	
+
 	/**
 	 * Checks that an array argument is not null and not empty, i.e. has length &gt; 0.
 	 * @param arg the argument
@@ -377,7 +377,7 @@ public interface Check
 		return arg;
 	}
 
-	
+
 	/**
 	 * Checks that an array argument is not null and not empty, i.e. has length &gt; 0.
 	 * @param arg the argument
@@ -392,7 +392,7 @@ public interface Check
 		return arg;
 	}
 
-	
+
 	/**
 	 * Checks that an array argument is not null and not empty, i.e. has length &gt; 0.
 	 * @param arg the argument
@@ -407,7 +407,7 @@ public interface Check
 		return arg;
 	}
 
-	
+
 	/**
 	 * Checks that an array argument is not null and not empty, i.e. has length &gt; 0.
 	 * @param arg the argument
@@ -422,7 +422,7 @@ public interface Check
 		return arg;
 	}
 
-	
+
 	/**
 	 * Checks that an array argument is not null and not empty, i.e. has length &gt; 0.
 	 * @param arg the argument
@@ -437,7 +437,7 @@ public interface Check
 		return arg;
 	}
 
-	
+
 	/**
 	 * Checks that a CharSequence argument is not null and not empty, i.e. has length &gt; 0.
 	 * @param arg the argument
@@ -499,7 +499,7 @@ public interface Check
 		return length;
 	}
 
-	
+
 	/**
 	 * Checks that two objects are not equal.
 	 * @param arg1 the first argument
@@ -515,7 +515,7 @@ public interface Check
 		return arg1;
 	}
 
-	
+
 	/**
 	 * Checks that an argument object is not null.
 	 * @param arg the argument
@@ -547,21 +547,21 @@ public interface Check
 		return arg1;
 	}
 
-	
+
 	/**
 	 * @return a PathCheck object which allows to check the given Path.
-	 * @param path a Path 
+	 * @param path a Path
 	 * @param options LinkOptions used in the checks
 	 */
 	public static CheckPath path(Path path, LinkOption... options)
 	{
 		return path(path, null, options);
 	}
-	
-	
+
+
 	/**
 	 * @return a PathCheck object which allows to check the given Path argument.
-	 * @param path a Path 
+	 * @param path a Path
 	 * @param what describes the argument
 	 * @param options LinkOptions used in the checks
 	 */
@@ -570,16 +570,16 @@ public interface Check
 		return new CheckPath(path, what, options);
 	}
 
-	
+
 	public static CheckPath path(FilePath path, LinkOption... options)
 	{
 		return path(path, null, options);
 	}
-	
-	
+
+
 	/**
 	 * @return a PathCheck object which allows to check the given FilePath argument.
-	 * @param path a Path 
+	 * @param path a Path
 	 * @param what describes the argument
 	 * @param options LinkOptions used in the checks
 	 */
@@ -587,8 +587,8 @@ public interface Check
 	{
 		return new CheckPath(Check.notNull(path, "path").toNioPath(), what, options);
 	}
-	
-	
+
+
 	/**
 	 * Checks that two objects are the same.
 	 * @param arg1 the first argument
@@ -603,8 +603,8 @@ public interface Check
 			throw new IllegalArgumentException(argString(arg1) + " not same as " + argString(arg2));
 		return arg1;
 	}
-	
-	
+
+
 	/**
 	 * Returns a CheckSize object which allows to check the collection size.
 	 * @param arg a Collection
@@ -616,8 +616,8 @@ public interface Check
 		notNull(arg, what);
 		return size(arg.size(), what, true);
 	}
-	
-	
+
+
 	/**
 	 * Returns a CheckSize object which allows to check the map size.
 	 * @param arg a Map
@@ -630,7 +630,7 @@ public interface Check
 		return size(arg.size(), what, true);
 	}
 
-	
+
 	/**
 	 * Returns a CheckSize object which allows to check the Path size.
 	 * @param arg a Path
@@ -649,8 +649,8 @@ public interface Check
 			throw new IllegalArgumentException("can't access size of " + arg, e);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Returns a CheckSize object which allows to check the Path size.
 	 * @param arg a Path
@@ -663,7 +663,7 @@ public interface Check
 		return size(arg.toNioPath(), what);
 	}
 
-	
+
 	/**
 	 * Returns a CheckSize object which allows to check the size value.
 	 * @param arg a size value. The value is automatically checked to be &gt;= 0.
@@ -677,13 +677,13 @@ public interface Check
 		return cs;
 	}
 
-	
+
 	private static CheckSize size(long size, String what, boolean isSize)
 	{
 		return new CheckSize(size, what, isSize);
 	}
-	
-	
+
+
 	/**
 	 * Returns a CheckDouble object which allows to check the double argument.
 	 * This can also be used to check float values.
@@ -695,8 +695,8 @@ public interface Check
 	{
 		return new CheckDouble(value, what);
 	}
-	
-	
+
+
 	/**
 	 * Returns a CheckInt object which allows to check the int argument.
 	 * @param value the value
@@ -708,7 +708,7 @@ public interface Check
 		return new CheckInt(value, what);
 	}
 
-	
+
 	/**
 	 * Returns a CheckLong object which allows to check the long argument.
 	 * @param value the value

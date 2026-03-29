@@ -22,19 +22,19 @@ public interface Mock<T>
 	{
 		return new MockImpl<>(type);
 	}
-	
-	
+
+
 	public T create();
-	
-	
+
+
 	public Then<T> when(String methodName, Object... args);
-	
-	
+
+
 	public interface Then<T>
 	{
 		public Mock<T> thenReturn(Object value);
 
-	
+
 		public Mock<T> thenThrow(Exception e);
 	}
 }

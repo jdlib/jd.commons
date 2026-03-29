@@ -34,22 +34,22 @@ public class CheckIndex extends CheckIntBase<CheckIndex>
 		super(index, what);
 		greaterEq(0);
 	}
-	
-	
+
+
 	/**
-	 * Checks if this index is valid with respect to the length of the 
+	 * Checks if this index is valid with respect to the length of the
 	 * given CharSequence.
-	 * @param s a CharSequence 
+	 * @param s a CharSequence
 	 * @return this
 	 */
 	public CheckIndex validFor(CharSequence s)
 	{
 		return validFor(Check.notNull(s, "s").length(), false);
 	}
-	
-	
+
+
 	/**
-	 * Checks if this index is valid with respect to the length of the 
+	 * Checks if this index is valid with respect to the length of the
 	 * given array.
 	 * @param array an array
 	 * @param<T> the type of the array elements
@@ -60,9 +60,9 @@ public class CheckIndex extends CheckIntBase<CheckIndex>
 		return validFor(Check.notNull(array, "array").length, false);
 	}
 
-	
+
 	/**
-	 * Checks if this index is valid with respect to the size of the 
+	 * Checks if this index is valid with respect to the size of the
 	 * given collection.
 	 * @param collection a Collection
 	 * @return this
@@ -73,15 +73,15 @@ public class CheckIndex extends CheckIntBase<CheckIndex>
 		return validFor(collection.size(), true);
 	}
 
-	
+
 	private CheckIndex validFor(int size, boolean isSize)
 	{
 		if (value_ >= size)
 			throw validForFailed(size, isSize);
 		return this;
 	}
-	
-	
+
+
 	private IllegalArgumentException validForFailed(int size, boolean isSize)
 	{
 		StringBuilder s = new StringBuilder();
@@ -91,8 +91,8 @@ public class CheckIndex extends CheckIntBase<CheckIndex>
 		s.append(" is ").append(value_).append(" >= ").append(isSize ? "size" : "length").append(' ').append(size);
 		return new IllegalArgumentException(s.toString());
 	}
-	
-	
+
+
 	@Override
 	protected String what()
 	{

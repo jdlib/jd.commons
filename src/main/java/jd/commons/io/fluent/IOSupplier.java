@@ -21,13 +21,13 @@ import jd.commons.util.function.XSupplier;
 class IOSupplier<T> implements XSupplier<T,IOException>
 {
 	private final XSupplier<T,?> wrapped_;
-	
-	
+
+
 	public IOSupplier(XSupplier<T,?> wrapped)
 	{
 		wrapped_ = Check.notNull(wrapped, "wrapped");
 	}
-	
+
 
 	@Override
 	public T get() throws IOException
@@ -44,12 +44,12 @@ class IOSupplier<T> implements XSupplier<T,IOException>
 		{
 			// compiler complains if this goes into an own catch block
 			if (e instanceof IOException)
-				throw (IOException)e; 
+				throw (IOException)e;
 			throw new IOException(e);
 		}
 	}
-	
-	
+
+
 	@Override
 	public String toString()
 	{

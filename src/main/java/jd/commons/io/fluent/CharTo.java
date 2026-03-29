@@ -23,14 +23,14 @@ import jd.commons.util.function.XSupplier;
  * CharTo allows to specify a target for character output.
  * <ul>
  * <li>Directly specify a {@link #to(Writer) Writer}
- * <li>Directly specify a {@link #to(CharTarget) CharTarget} 
+ * <li>Directly specify a {@link #to(CharTarget) CharTarget}
  * <li>Specify IO related objects which
  *     can be turned into a Writer or CharTarget. The default implementations
  *     of these methods forward them to {@link #to(Writer)} or {@link #to(CharTarget)}
  * </ul>
  * The return value computed from the Writer or CharTarget depends on the implementation.
  * @param<T> the result type
- * @param<E> the exception thrown by the CharTo methods 
+ * @param<E> the exception thrown by the CharTo methods
  */
 public interface CharTo<T,E extends Exception>
 {
@@ -41,8 +41,8 @@ public interface CharTo<T,E extends Exception>
 	 * @throws E if an error occurs
 	 */
 	public T to(CharTarget target) throws E;
-	
-	
+
+
 	/**
 	 * Accepts a Writer.
 	 * The Writer will not be closed by subsequent IO operations.
@@ -51,8 +51,8 @@ public interface CharTo<T,E extends Exception>
 	 * @throws E if an error occurs
 	 */
 	public T to(Writer writer) throws E;
-	
-	
+
+
 	/**
 	 * Accepts a Appendable.
 	 * @param appendable a Appendable, not null
@@ -63,8 +63,8 @@ public interface CharTo<T,E extends Exception>
 	{
 		return to(IOHelper.toWriter(appendable));
 	}
-	
-	
+
+
 	/**
 	 * Accepts a Clob.
 	 * @param clob a Clob, not null
@@ -75,8 +75,8 @@ public interface CharTo<T,E extends Exception>
 	{
 		return to(clob, 1);
 	}
-	
-	
+
+
 	/**
 	 * Accepts a Clob.
 	 * @param clob a Clob, not null
@@ -89,9 +89,9 @@ public interface CharTo<T,E extends Exception>
 		Check.notNull(clob, "clob");
 		Check.value(pos, "pos").greaterEq(1);
 		return toSupplier(() -> clob.setCharacterStream(pos));
-	}	
-	
-	
+	}
+
+
 	/**
 	 * Creates a CharTarget which throws the exception when a Writer is requested.
 	 * @param e either an exception (which is turned into a RuntimeException or IOException),
@@ -104,7 +104,7 @@ public interface CharTo<T,E extends Exception>
 		return toSupplier(IOHelper.getThrowsIOorRTException(e));
 	}
 
-	
+
 	/**
 	 * Forwards {@link Writer#nullWriter()} to {@link #to(Writer)}.
 	 * @return the computed result
@@ -115,7 +115,7 @@ public interface CharTo<T,E extends Exception>
 		return to(Writer.nullWriter());
 	}
 
-	
+
 	/**
 	 * Accepts a supplier whose writer will be used in write operations.
 	 * @param supplier a supplier, not null, allowed to throw any exception

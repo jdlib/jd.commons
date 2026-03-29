@@ -26,8 +26,8 @@ public class DecodeHandler<R,E extends Exception> extends IOHandler<ByteSource,I
 {
 	private final IOHandler<CharSource,Reader,R,E> charHandler_;
 	private final Charset charset_;
-	
-	
+
+
 	public DecodeHandler(IOHandler<CharSource,Reader,R,E> charHandler, Charset charset)
 	{
 		charHandler_	= Check.notNull(charHandler, "charHandler");
@@ -40,8 +40,8 @@ public class DecodeHandler<R,E extends Exception> extends IOHandler<ByteSource,I
 	{
 		return charHandler_.runSupplier(() -> new InputStreamReader(source.getInputStream(), charset_));
 	}
-	
-	
+
+
 	@Override
 	public R runDirect(InputStream in) throws E
 	{

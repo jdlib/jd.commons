@@ -29,14 +29,14 @@ public interface CharTarget
 	/**
 	 * @return a Writer.
 	 * This should only be called once, if this method is invoked a second time the result is undefined.
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public Writer getWriter() throws IOException;
 
 
 	/**
 	 * @return a PrintWriter.
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public default PrintWriter getPrintWriter() throws IOException
 	{
@@ -47,7 +47,7 @@ public interface CharTarget
 	/**
 	 * @return a PrintWriter.
 	 * @param autoFlush the auto flush flag of the PrintStream
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public default PrintWriter getPrintWriter(boolean autoFlush) throws IOException
 	{

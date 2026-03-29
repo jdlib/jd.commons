@@ -29,7 +29,7 @@ import jd.commons.util.function.XFunction;
 
 /**
  * ByteWriteTo allows to specify a ByteTarget or OutputStream to which binary content is written.
- * Additionally it can be modified 
+ * Additionally it can be modified
  * <ul>
  * <li>to return the {@link #countBytes() number of written bytes},
  * <li>to turn IOExceptions into {@link #unchecked() unchecked exceptions}
@@ -46,8 +46,8 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 	 * The handler.
 	 */
 	protected final IOHandler<ByteTarget,OutputStream,R,E> handler_;
-	
-	
+
+
 	/**
 	 * Creates a new ByteWriteTo.
 	 * @param handler the handler implementing the write operations
@@ -56,13 +56,13 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 	{
 		handler_ = Check.notNull(handler, "handler");
 	}
-	
-	
+
+
 	/**
 	 * Writes the bytes to the OutputStream of the given target.
 	 * @param target the target
 	 * @return the computed result
-	 * @throws E if an error occurs 
+	 * @throws E if an error occurs
 	 */
 	/*
 	in theory we would like have a default implementation of this method like:
@@ -83,17 +83,17 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 		return handler_.runSupplier(target);
 	}
 
-	
+
 	/**
 	 * Writes the bytes to a OutputStream.
 	 * The OutputStream is/should not be closed in this operation.
 	 * Implementation note: Terminal implementations should flush the OutputStream.
 	 * (Rationale: Wrapping ByteWriteTo implementations may wrap the original OutputStream
 	 * in a buffering OutputStream, so flushing the stream is needed to write any
-	 * content kept in memory).  
+	 * content kept in memory).
 	 * @param out the OutputStream
 	 * @return the number of bytes written
-	 * @throws E if an error occurs 
+	 * @throws E if an error occurs
 	 */
 	@Override
 	public R to(OutputStream out) throws E
@@ -105,7 +105,7 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 	/**
 	 * Writes the bytes to a byte array.
 	 * @return the array
-	 * @throws E if an error occurs 
+	 * @throws E if an error occurs
 	 */
 	public byte[] toByteArray() throws E
 	{
@@ -113,8 +113,8 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 		to(out);
 		return out.toByteArray();
 	}
-	
-	
+
+
 	/**
 	 * @return a new ByteWriteTo which returns the number of bytes written as Long.
 	 */
@@ -126,7 +126,7 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 
 
 	/**
-	 * @return a new ByteWriteTo which wraps the OutputStream of this write in another 
+	 * @return a new ByteWriteTo which wraps the OutputStream of this write in another
 	 * 		OutputStream.
 	 * @param wrapper wraps an OutputStream
 	 */
@@ -136,7 +136,7 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 		return new ByteWriteTo<>(WrapHandler.forByteTarget(handler_, wrapper));
 	}
 
-	
+
 	/**
 	 * @return a new ByteWriteTo which catches all exceptions thrown by this ByteWriteTo
 	 * 		and rethrows it as RuntimeException.
@@ -152,7 +152,7 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 	 * Returns new ByteWriteTo which converts thrown exceptions to a new type.
 	 * @param factory a factory which receives a thrown exception. It must either
 	 * 		throw an own exception of type F or create an exception of type F
-	 * 		(which is then thrown). The second case makes it easy to use 
+	 * 		(which is then thrown). The second case makes it easy to use
 	 * 		method handles to specify a factory (e.g. {@code IllegalStateException::new}).
 	 * @param <F> an exception type
 	 * @return the ByteWriteTo
@@ -165,7 +165,7 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 
 
 	/**
-	 * @return a new ByteWriteTo which catches any exception and returns it as result of the 
+	 * @return a new ByteWriteTo which catches any exception and returns it as result of the
 	 *      ByteWriteTo operation. No checked exception are thrown by the new ByteWrite.
 	 */
 	@CheckReturnValue
@@ -177,7 +177,7 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 
 	/**
 	 * @return a new ByteWrite which catches any exception, forwards to the consumer
-	 * 		(which for instance may log the exception) and return the exception as result of the 
+	 * 		(which for instance may log the exception) and return the exception as result of the
 	 *      ByteWrite operation. No checked exception is thrown by the new ByteWrite.
 	 * @param logger receives any thrown exception
 	 */
@@ -186,8 +186,8 @@ public class ByteWriteTo<R,E extends Exception> implements ByteTo<R,E>
 	{
 		return new ByteWriteTo<>(new ErrorHandler<>(handler_, ErrorFunction.silent(logger)));
 	}
-	
-	
+
+
 	@Override
 	public String toString()
 	{

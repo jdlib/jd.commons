@@ -16,7 +16,7 @@ package jd.commons.io.fluent.handler;
 import java.io.Closeable;
 
 
-public class NopHandler<AS,AD extends Closeable> extends IOHandler<AS,AD,Void,RuntimeException> 
+public class NopHandler<AS,AD extends Closeable> extends IOHandler<AS,AD,Void,RuntimeException>
 {
 	@Override
 	public Void runSupplier(AS arg)

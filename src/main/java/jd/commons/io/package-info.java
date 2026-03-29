@@ -12,6 +12,6 @@
  */
 /**
  * Contains IO related classes.
- */ 
+ */
 package jd.commons.io;
 

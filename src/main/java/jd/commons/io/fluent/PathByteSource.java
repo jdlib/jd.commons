@@ -26,8 +26,8 @@ class PathByteSource implements ByteSource
 {
 	private final Path path_;
 	private final OpenOption[] options_;
-	
-	
+
+
 	public PathByteSource(Path path, OpenOption[] options)
 	{
 		path_	 = path;
@@ -40,15 +40,15 @@ class PathByteSource implements ByteSource
 	{
 		return Files.newInputStream(path_, options_);
 	}
-	
-	
-	@Override 
+
+
+	@Override
 	public ByteReadData<IOException> read()
 	{
 		return new PathByteReadData<>(ErrorFunction.throwUncheckedOrIOE());
 	}
-	
-	
+
+
 	// a ByteReadData implementation which optimizes #all
 	class PathByteReadData<E extends Exception> extends ByteReadData<E>
 	{
@@ -57,13 +57,13 @@ class PathByteSource implements ByteSource
 			super(PathByteSource.this, rethrow);
 		}
 
-		
+
 		@Override
 		public byte[] all() throws E
 		{
 			if (options_.length > 0)
 				return super.all();
-			
+
 			try
 			{
 				// call the optimized implementation
@@ -74,11 +74,11 @@ class PathByteSource implements ByteSource
 				error_.handleException(e);
 				return null;
 			}
-		}	
+		}
 	}
-	
 
-	@Override 
+
+	@Override
 	public PathCharSource as(Charset charset)
 	{
 		// returning a specialized CharSource/CharRead which has a optimized implementations

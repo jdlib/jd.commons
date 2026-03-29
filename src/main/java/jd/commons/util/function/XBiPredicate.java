@@ -37,29 +37,29 @@ public interface XBiPredicate<T, U, E extends Exception>
      */
     boolean test(T t, U u) throws E;
 
-    
+
     /**
      * Returns a composed predicate that represents a short-circuiting logical
-     * AND of this predicate and another. 
+     * AND of this predicate and another.
      * @param other another predicate
-     * @return a composed predicate 
+     * @return a composed predicate
      */
     default XBiPredicate<T,U,E> and(XBiPredicate<? super T,? super U,E> other)
     {
         Check.notNull(other, "other");
         return (T t, U u) -> test(t, u) && other.test(t, u);
     }
-    
+
 
     /**
      * @return a predicate that represents the logical negation of this
      * predicate.
      */
-    default XBiPredicate<T,U,E> negate() 
+    default XBiPredicate<T,U,E> negate()
     {
         return (T t, U u) -> !test(t, u);
     }
-    
+
 
     /**
      * Returns a composed predicate that represents a short-circuiting logical
@@ -67,7 +67,7 @@ public interface XBiPredicate<T, U, E extends Exception>
      * @param other another predicate
      * @return the composed predicate
      */
-    default XBiPredicate<T,U,E> or(XBiPredicate<? super T,? super U,E> other) 
+    default XBiPredicate<T,U,E> or(XBiPredicate<? super T,? super U,E> other)
     {
         Check.notNull(other, "other");
         return (T t, U u) -> test(t, u) || other.test(t, u);

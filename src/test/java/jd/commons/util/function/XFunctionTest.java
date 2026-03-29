@@ -31,7 +31,7 @@ public class XFunctionTest
 
 		XFunction<String,String,SQLException> pSize  = s -> String.valueOf(s.length());
 		assertEquals("1", pSize.apply("s"));
-		
+
 		XFunction<String,String,SQLException> pSize2 = pSize.andThen(pSize);
 		assertEquals("1", pSize2.apply("s"));
 		assertEquals("2", pSize2.apply(Utils.repeat('a', 33)));
@@ -43,7 +43,7 @@ public class XFunctionTest
 	{
 		XFunction<String,String,IOException> f1 = s -> s + s;
 		XFunction<String,String,IOException> f2 = s -> { throw new IOException(); };
-		
+
 		assertEquals("aa", f1.unchecked().apply("a"));
 		assertThatThrownBy(() -> f2.unchecked().apply("a"))
 			.isInstanceOf(UncheckedException.class);
@@ -55,7 +55,7 @@ public class XFunctionTest
 	{
 		XFunction<String,String,IOException> f1 = XFunction.of(String::trim);
 		XFunction<String,String,IOException> f2 = s -> { throw new IOException(); };
-		
+
 		assertEquals("a", f1.unchecked().apply(" a "));
 		assertThatThrownBy(() -> f2.unchecked().apply("a"))
 			.isInstanceOf(UncheckedException.class);

@@ -30,8 +30,8 @@ public class ByteReadData<E extends Exception> //implements AsCharset<CharReadDa
 {
 	protected final ByteSource source_;
 	protected final ErrorFunction<Void,Void,E> error_;
-	
-	
+
+
 	/**
 	 * Creates a ByteReadData instance which reads from a ByteSource and throws
 	 * the specified type of exceptions
@@ -43,12 +43,12 @@ public class ByteReadData<E extends Exception> //implements AsCharset<CharReadDa
 		source_  = Check.notNull(source, "source");
 		error_   = Check.notNull(error, "error");
 	}
-	
-	
+
+
 	/**
 	 * Reads and returns the whole content as byte array.
 	 * @return the byte array
-	 * @throws E if an error occurs 
+	 * @throws E if an error occurs
 	 * @see InputStream#readAllBytes()
 	 */
 	public byte[] all() throws E
@@ -68,7 +68,7 @@ public class ByteReadData<E extends Exception> //implements AsCharset<CharReadDa
 	 * Reads and returns the first len bytes of the binary content.
 	 * @param len the number of bytes to read
 	 * @return the byte array
-	 * @throws E if an error occurs 
+	 * @throws E if an error occurs
 	 * @see InputStream#readNBytes(int)
 	 */
 	public byte[] first(int len) throws E
@@ -76,14 +76,14 @@ public class ByteReadData<E extends Exception> //implements AsCharset<CharReadDa
 		Check.value(len, "len").greaterEq(0);
 		return apply(in -> in.readNBytes(len));
 	}
-	
+
 
 	/**
 	 * Opens an InputStream to the content, forwards to the function
-	 * and returns the function result. 
+	 * and returns the function result.
 	 * @return the result
 	 * @param <T> the result type
-	 * @param fn a function 
+	 * @param fn a function
 	 * @throws E if an error occurs
 	 */
 	public <T> T apply(XFunction<InputStream,T,?> fn) throws E
@@ -117,7 +117,7 @@ public class ByteReadData<E extends Exception> //implements AsCharset<CharReadDa
 	 * Returns new ByteReadData which converts thrown exceptions to a new type.
 	 * @param factory a factory which receives a thrown exception. It must either
 	 * 		throw an own exception of type F or create an exception of type F
-	 * 		(which is then thrown). The second case makes it easy to use 
+	 * 		(which is then thrown). The second case makes it easy to use
 	 * 		method handles to specify a factory (e.g. {@code IllegalStateException::new}).
 	 * @param <F> an exception type
 	 * @return the ByteReadData

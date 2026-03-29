@@ -26,7 +26,7 @@ public class XRunnableTest
 	{
 		XRunnable<IOException> r1 = () -> {};
 		XRunnable<IOException> r2 = () -> { throw new IOException(); };
-		
+
 		r1.unchecked().run();
 		assertThatThrownBy(() -> r2.unchecked().run())
 			.isInstanceOf(UncheckedException.class);

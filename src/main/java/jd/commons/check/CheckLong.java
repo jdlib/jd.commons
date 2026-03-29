@@ -22,12 +22,12 @@ public class CheckLong extends CheckHelper
 	 * The long value.
 	 */
 	protected final long value_;
-	
+
 	/**
 	 * Describes the value.
 	 */
 	protected final String what_;
-	
+
 
 	/**
 	 * Creates a new CheckLong.
@@ -39,8 +39,8 @@ public class CheckLong extends CheckHelper
 		value_ = value;
 		what_  = what;
 	}
-	
-	
+
+
 	/**
 	 * @return the value of this Check object.
 	 */
@@ -48,8 +48,8 @@ public class CheckLong extends CheckHelper
 	{
 		return value_;
 	}
-	
-	
+
+
 	/**
 	 * Checks that the size is greater than the given value.
 	 * @param other a value to compare
@@ -59,8 +59,8 @@ public class CheckLong extends CheckHelper
 	{
 		return compare(other, CheckOp.GREATER);
 	}
-	
-	
+
+
 	/**
 	 * Checks that the size is greater than or equal to the given value.
 	 * @param other a value to compare
@@ -70,8 +70,8 @@ public class CheckLong extends CheckHelper
 	{
 		return compare(other, CheckOp.GREATER_EQ);
 	}
-	
-	
+
+
 	/**
 	 * Checks that the size is less than the given value.
 	 * @param other a value to compare
@@ -81,8 +81,8 @@ public class CheckLong extends CheckHelper
 	{
 		return compare(other, CheckOp.LESS);
 	}
-	
-	
+
+
 	/**
 	 * Checks that the size is less than or equal to the given value.
 	 * @param other a value to compare
@@ -93,7 +93,7 @@ public class CheckLong extends CheckHelper
 		return compare(other, CheckOp.LESS_EQ);
 	}
 
-	
+
 	/**
 	 * Checks that the size is equal to the given value.
 	 * @param other a value to compare
@@ -104,7 +104,7 @@ public class CheckLong extends CheckHelper
 		return compare(other, CheckOp.EQ);
 	}
 
-	
+
 	/**
 	 * Checks that the size is not equal to the given value.
 	 * @param other a value to compare
@@ -115,7 +115,7 @@ public class CheckLong extends CheckHelper
 		return compare(other, CheckOp.NOT_EQ);
 	}
 
-	
+
 	/**
 	 * Compares this long value to another using the given operator
 	 * and throws an exception if the comparison returns falsee
@@ -129,8 +129,8 @@ public class CheckLong extends CheckHelper
 			throw failCompareEx(what(), value_, other, op);
 		return this;
 	}
-	
-	
+
+
 	/**
 	 * @return what normed.
 	 */

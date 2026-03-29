@@ -27,56 +27,56 @@ public class ClassLoad<T>
 	protected final String className_;
 	protected Class<T> derivedFrom_;
 	protected ClassLoader classLoader_ = ClassLoad.class.getClassLoader();
-	
+
 
 	/**
-	 * @return a new ClassLoad object 
+	 * @return a new ClassLoad object
 	 * @param className the name of the class to be loaded
      */
 	public static ClassLoad<?> forName(String className)
 	{
 		return new ClassLoad<>(className);
 	}
-	
-	
+
+
 	protected ClassLoad(String className)
 	{
 		className_ = Check.notEmpty(className, "className");
 	}
-	
+
 
 	/**
 	 * Specifies a super class of the class to be loaded.
 	 * @param derivedFrom a superclass
 	 * @return this
 	 * @param <D> the super class type
-	 */ 
+	 */
 	@SuppressWarnings("unchecked")
 	public <D> ClassLoad<D> derivedFrom(Class<D> derivedFrom)
 	{
 		derivedFrom_ = (Class<T>)derivedFrom;
 		return (ClassLoad<D>)this;
 	}
-	
-	
+
+
 	/**
 	 * Specifies the ClassLoader used to load the class.
-	 * @param classLoader a ClassLoader, not null 
+	 * @param classLoader a ClassLoader, not null
 	 * @return this
 	 * @see ClassLoader#loadClass(String)
-	 */ 
+	 */
 	public ClassLoad<T> using(ClassLoader classLoader)
 	{
 		classLoader_ = Check.notNull(classLoader, "classLoader");
 		return this;
 	}
 
-	
+
 	/**
 	 * Loads and returns the specified class.
 	 * @return the class
-	 * @throws ClassNotFoundException if the class was not found 
-	 * @throws IllegalArgumentException if the class is not derived from the given superClass. 
+	 * @throws ClassNotFoundException if the class was not found
+	 * @throws IllegalArgumentException if the class is not derived from the given superClass.
 	 */
 	@SuppressWarnings("unchecked")
 	public Class<? extends T> get() throws ClassNotFoundException, ClassCastException
@@ -86,8 +86,8 @@ public class ClassLoad<T>
 			Check.derivedFrom(raw, derivedFrom_) :
 			(Class<T>)raw;
 	}
-	
-	
+
+
 	public Class<? extends T> orNull()
 	{
 		try

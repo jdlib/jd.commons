@@ -25,13 +25,13 @@ public class TranslateConfig extends ProxyConfig
 {
 	private final Function<String,String> norm_;
 
-	
+
 	public static Config norm(Config wrapped)
 	{
 		return new TranslateConfig(wrapped, Utils::norm);
 	}
-	
-	
+
+
 	public TranslateConfig(Config wrapped, Function<String,String> fn)
 	{
 		super(wrapped);
@@ -45,7 +45,7 @@ public class TranslateConfig extends ProxyConfig
 		return getInternal(key) != null;
 	}
 
-	
+
 	@Override
 	protected String getInternal(String key)
 	{

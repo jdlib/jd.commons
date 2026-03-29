@@ -30,26 +30,26 @@ public class IOSupplierTest
 	{
 		IllegalArgumentException iae = new IllegalArgumentException();
 		IOException ioe = new IOException();
-		SQLException sqle = new SQLException(); 
-		
+		SQLException sqle = new SQLException();
+
 		assertThrown(iae).isSameAs(iae);
 		assertThrown(ioe).isSameAs(ioe);
 		assertThrown(sqle).isInstanceOf(IOException.class).hasCause(sqle);
 	}
-	
-	
+
+
 	@Test
 	public void testToString()
 	{
-		XSupplier<String,?> ts = () -> "x"; 
-		assertEquals(ts.toString(), new IOSupplier<>(ts).toString());  
+		XSupplier<String,?> ts = () -> "x";
+		assertEquals(ts.toString(), new IOSupplier<>(ts).toString());
 	}
-	
-	
+
+
 	private AbstractThrowableAssert<?,? extends Throwable> assertThrown(Exception e)
 	{
 		IOSupplier<?> supplier = new IOSupplier<>(() -> { throw e; });
-		ThrowingCallable callable = () -> supplier.get(); 
+		ThrowingCallable callable = () -> supplier.get();
 		return assertThatThrownBy(callable);
 	}
 }

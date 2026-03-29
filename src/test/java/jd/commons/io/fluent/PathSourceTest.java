@@ -29,7 +29,7 @@ import jd.commons.io.fluent.handler.ErrorFunction;
 
 
 /**
- * Tests PathCharSource and PathByteSource 
+ * Tests PathCharSource and PathByteSource
  */
 public class PathSourceTest
 {
@@ -38,7 +38,7 @@ public class PathSourceTest
 	private static FilePath fpNotExists;
 	private static final byte[] abcBytes = "abc".getBytes();
 
-	
+
 	@BeforeAll
 	public static void beforeAll(@TempDir File temp) throws Exception
 	{
@@ -47,9 +47,9 @@ public class PathSourceTest
 		fpExists.write().bytes(abcBytes);
 		fpNotExists = dir.resolve("b.txt");
 	}
-	
-	
-	// make sure that PathCharReadData is used 
+
+
+	// make sure that PathCharReadData is used
 	@Test
 	public void testCharReadAs() throws Exception
 	{
@@ -58,16 +58,16 @@ public class PathSourceTest
 		assertEquals("abc", crd.all());
 		assertThatThrownBy(() -> fpNotExists.read().asUtf8().all()).isInstanceOf(NoSuchFileException.class);
 
-		// coverage: specifying options leads to fallback to default read 
+		// coverage: specifying options leads to fallback to default read
 		assertEquals("abc", Bytes.from(fpExists, StandardOpenOption.READ).asUtf8().read().all());
-		
+
 		// coverage
 		PathCharSource source = assertInstanceOf(PathCharSource.class, Bytes.from(fpNotExists).asUtf8());
 		assertNull(source.new PathCharReadData<>(ErrorFunction.swallow()).all());
 	}
 
 
-	// make sure that PathByteReadData is used 
+	// make sure that PathByteReadData is used
 	@Test
 	public void testByteReadAs() throws Exception
 	{
@@ -75,9 +75,9 @@ public class PathSourceTest
 		assertArrayEquals(abcBytes, fpExists.read().all());
 		assertThatThrownBy(() -> fpNotExists.read().asUtf8().all()).isInstanceOf(NoSuchFileException.class);
 
-		// coverage: specifying options leads to fallback to default read 
+		// coverage: specifying options leads to fallback to default read
 		assertArrayEquals(abcBytes, Bytes.from(fpExists, StandardOpenOption.READ).read().all());
-		
+
 		// coverage
 		PathByteSource source = assertInstanceOf(PathByteSource.class, Bytes.from(fpNotExists));
 		assertNull(source.new PathByteReadData<>(ErrorFunction.swallow()).all());

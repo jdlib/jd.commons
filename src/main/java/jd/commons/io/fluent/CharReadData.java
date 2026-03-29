@@ -35,16 +35,16 @@ import jd.commons.util.function.XFunction;
 public class CharReadData<E extends Exception>
 {
 	/**
-	 * The CharSource. 
+	 * The CharSource.
 	 */
 	protected final CharSource source_;
 
 	/**
-	 * The ErrorFunction to handle errors. 
+	 * The ErrorFunction to handle errors.
 	 */
 	protected final ErrorFunction<Void,Void,E> error_;
-	
-	
+
+
 	/**
 	 * Creates a CharReadData which reads from a CharSource.
 	 * @param source a CharSource, not null
@@ -56,11 +56,11 @@ public class CharReadData<E extends Exception>
 		error_	= Check.notNull(error, "error");
 	}
 
-	
+
 	/**
 	 * @return the character content as String.
-	 * @throws E if an error occurs 
-	 */ 
+	 * @throws E if an error occurs
+	 */
 	public String all() throws E
 	{
 		return apply(StringWriter2::readAll);
@@ -71,21 +71,21 @@ public class CharReadData<E extends Exception>
 	 * Reads the character content and appends to the StringBuilder.
 	 * @param sb a StringBuilder, can be null
 	 * @return the StringBuilder or a new instance if the given StringBuilder was null
-	 * @throws E if an error occurs 
-	 */ 
+	 * @throws E if an error occurs
+	 */
 	public StringBuilder all(StringBuilder sb) throws E
 	{
 		return apply(reader -> StringWriter2.readAll(reader, sb));
 	}
 
-	
+
 	/**
 	 * Applies the function to a Reader provided by the CharSource of this CharReadData
 	 * and returns the result.
 	 * @param fn a function
 	 * @return the function result
-	 * @throws E if an error occurs 
-	 */ 
+	 * @throws E if an error occurs
+	 */
 	public <T> T apply(XFunction<Reader,T,?> fn) throws E
 	{
 		Check.notNull(fn, "fn");
@@ -116,14 +116,14 @@ public class CharReadData<E extends Exception>
 	 * Returns new CharReadData which converts thrown exceptions to a new type.
 	 * @param factory a factory which receives a thrown exception. It must either
 	 * 		throw an own exception of type F or create an exception of type F
-	 * 		(which is then thrown). The second case makes it easy to use 
+	 * 		(which is then thrown). The second case makes it easy to use
 	 * 		method handles to specify a factory (e.g. {@code IllegalStateException::new}).
 	 * @param <F> an exception type
 	 * @return the CharReadData
 	 */
 	@CheckReturnValue
 	public <F extends Exception> CharReadData<F> throwing(XFunction<Exception,F,F> factory)
-	{	
+	{
 		return new CharReadData<>(source_, ErrorFunction.throwing(factory));
 	}
 
@@ -136,8 +136,8 @@ public class CharReadData<E extends Exception>
 	{
 		return new Lines<>(this);
 	}
-	
-	
+
+
 	/**
 	 * A builder class which lets you define how to read the lines of this CharSource.
 	 * @see CharReadData#lines()
@@ -147,7 +147,7 @@ public class CharReadData<E extends Exception>
 		private final CharReadData<E> read_;
 		private boolean trim_;
 		private boolean removeBlank_;
-		
+
 
 		/**
 		 * Creates a new Lines object from the CharRead.
@@ -157,8 +157,8 @@ public class CharReadData<E extends Exception>
 		{
 			read_ = Check.notNull(read, "read");
 		}
-		
-		
+
+
 		/**
 		 * Applies a trim to all lines.
 		 * @return this
@@ -169,7 +169,7 @@ public class CharReadData<E extends Exception>
 			return this;
 		}
 
-		
+
 		/**
 		 * Removes all blank lines, i.e. lines which are all whitespace.
 		 * @return this
@@ -180,32 +180,32 @@ public class CharReadData<E extends Exception>
 			return this;
 		}
 
-		
+
 		/**
 		 * @return the first line or null if this CharSource is empty
-		 * @throws E if an error occurs 
+		 * @throws E if an error occurs
 		 */
 		public String first() throws E
 		{
 			return apply(Stream::findFirst).orElse(null);
 		}
 
-		
+
 		/**
 		 * @return the lines as List
-		 * @throws E if an error occurs 
+		 * @throws E if an error occurs
 		 */
 		public List<String> toList() throws E
 		{
 			return toList(new ArrayList<>());
 		}
 
-		
+
 		/**
 		 * Reads the lines and adds them to the provided list.
 		 * @param list a List which receives the lines
 		 * @return the provided list
-		 * @throws E if an error occurs 
+		 * @throws E if an error occurs
 		 */
 		public List<String> toList(List<String> list) throws E
 		{
@@ -213,23 +213,23 @@ public class CharReadData<E extends Exception>
 			forEach(list::add);
 			return list;
 		}
-		
-		
+
+
 		/**
 		 * @return the lines as array
-		 * @throws E if an error occurs 
+		 * @throws E if an error occurs
 		 */
 		public String[] toArray() throws E
 		{
 			List<String> list = toList();
 			return list.toArray(new String[list.size()]);
 		}
-		
-		
+
+
 		/**
 		 * Invokes the consumer for every line of the CharSource.
 		 * @param consumer a consumer
-		 * @throws E if an error occurs 
+		 * @throws E if an error occurs
 		 */
 		public void forEach(Consumer<String> consumer) throws E
 		{
@@ -237,13 +237,13 @@ public class CharReadData<E extends Exception>
 			apply(lines -> { lines.forEach(consumer); return null; });
 		}
 
-	
+
 		/**
 		 * Passes a Stream containing all lines to a function and returns the result.
 		 * @param fn a function
 		 * @param<T> the function result
 		 * @return the function result
-		 * @throws E if an error occurs 
+		 * @throws E if an error occurs
 		 */
 		public <T> T apply(Function<Stream<String>,T> fn) throws E
 		{

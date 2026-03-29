@@ -42,7 +42,7 @@ class CheckHelper
 			return arg.toString();
 	}
 
-	
+
 	/**
 	 * @return a IllegalArgumentException which describes a failed comparison between number values
 	 * @param what describes the actual argument

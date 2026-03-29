@@ -18,7 +18,7 @@ import java.io.OutputStream;
 
 
 /**
- * CountingOutputStream wraps another OutputStream and 
+ * CountingOutputStream wraps another OutputStream and
  * counts how many bytes were written.
  */
 public class CountingOutputStream extends FilterOutputStream2
@@ -27,7 +27,7 @@ public class CountingOutputStream extends FilterOutputStream2
 
 
 	/**
-	 * Creates a new CountingOutputStream. 
+	 * Creates a new CountingOutputStream.
 	 * @param out the wrapped stream
 	 */
 	public CountingOutputStream(OutputStream out)
@@ -52,7 +52,7 @@ public class CountingOutputStream extends FilterOutputStream2
 		count_++;
 	}
 
-	
+
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException
 	{

@@ -30,7 +30,7 @@ public class IOHelperTest
 	{
 		Appendable a1 = Writer.nullWriter();
 		assertSame(a1, IOHelper.toWriter(a1));
-		
+
 		Appendable a2 = new StringBuilder();
 		assertInstanceOf(AppendableWriter.class, IOHelper.toWriter(a2));
 	}
@@ -45,8 +45,8 @@ public class IOHelperTest
 		SQLException e2 = new SQLException();
 		assertGetThrowsIOorRTException(e2).isInstanceOf(IOException.class).cause().isSameAs(e2);
 	}
-	
-	
+
+
 	private AbstractThrowableAssert<?,? extends Throwable> assertGetThrowsIOorRTException(Object e)
 	{
 		return assertThatThrownBy(() -> IOHelper.getThrowsIOorRTException(e).get());

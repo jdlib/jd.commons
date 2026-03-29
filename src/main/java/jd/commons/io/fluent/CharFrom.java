@@ -25,14 +25,14 @@ import jd.commons.util.function.XSupplier;
  * CharFrom allows to specify a source for character input.
  * <ul>
  * <li>Directly specify a {@link #from(Reader) Reader}
- * <li>Directly specify a {@link #from(CharSource) CharSource} 
+ * <li>Directly specify a {@link #from(CharSource) CharSource}
  * <li>Specify IO related objects which
  *     can be turned into a Reader or CharSource. The default implementations
  *     of these methods forward them to {@link #from(Reader)} or {@link #from(CharSource)}
  * </ul>
  * The return value computed from the Reader or CharSource depends on the implementation.
  * @param<T> the result type
- * @param<E> the exception thrown by the CharFrom methods 
+ * @param<E> the exception thrown by the CharFrom methods
  */
 public interface CharFrom<T,E extends Exception>
 {
@@ -44,7 +44,7 @@ public interface CharFrom<T,E extends Exception>
 	 */
 	public T from(CharSource source) throws E;
 
-	
+
 	/**
 	 * Accepts a Reader.
 	 * @param reader a Reader, not null
@@ -52,7 +52,7 @@ public interface CharFrom<T,E extends Exception>
 	 * @throws E if an error occurs
 	 */
 	public T from(Reader reader) throws E;
-	
+
 
 	/**
 	 * Creates a {@link CharArrayReader} and forwards to {@link #from(Reader)}.
@@ -67,8 +67,8 @@ public interface CharFrom<T,E extends Exception>
 		// can be called repeatedly
 		return from(() -> new CharArrayReader(chars));
 	}
-	
-	
+
+
 	/**
 	 * Creates a {@link StringReader} for the string and forwards to {@link #from(Reader)}.
 	 * @param s a String, not null
@@ -83,7 +83,7 @@ public interface CharFrom<T,E extends Exception>
 		return from(() -> new StringReader(s));
 	}
 
-	
+
 	/**
 	 * Creates a CharSource to read from a Clob and forwards to {@link CharFrom#from(CharSource)}.
 	 * @param clob a Clob, not null
@@ -95,8 +95,8 @@ public interface CharFrom<T,E extends Exception>
 		Check.notNull(clob, "clob");
 		return fromSupplier(clob::getCharacterStream);
 	}
-	
-	
+
+
 	/**
 	 * Creates a CharSource to read from a Clob and forwards to {@link CharFrom#from(CharSource)}.
 	 * @param clob a Clob, not null
@@ -110,9 +110,9 @@ public interface CharFrom<T,E extends Exception>
 		Check.notNull(clob, "clob");
 		Check.value(pos, "pos").greaterEq(1);
 		return fromSupplier(() -> clob.getCharacterStream(pos, length));
-	}	
-	
-	
+	}
+
+
 	/**
 	 * Creates a CharSource which throws the exception when a Reader is requested.
 	 * @param e either an exception (which is turned into a RuntimeException or IOException),
@@ -125,7 +125,7 @@ public interface CharFrom<T,E extends Exception>
 		return fromSupplier(IOHelper.getThrowsIOorRTException(e));
 	}
 
-	
+
 	/**
 	 * Creates a CharSource which returns the Reader provided by the supplier.
 	 * @param supplier a supplier, not null, allowed to throw any exception

@@ -27,13 +27,13 @@ public class CountingOutputStreamTest
 		{
 			long expected = 0;
 			assertEquals(expected, out.count());
-			
+
 			out.write(17);
 			expected = assertCount(expected, 1, out);
-			
+
 			out.write(new byte[4]);
 			expected = assertCount(expected, 4, out);
-			
+
 			out.write(new byte[15], 1, 2);
 			expected = assertCount(expected, 2, out);
 		}

@@ -21,43 +21,43 @@ import jd.commons.check.Check;
  */
 public class ImmutableConfig extends ProxyConfig
 {
-	public static final ImmutableConfig EMPTY = new ImmutableConfig(new MapConfig());  
-		
-		
+	public static final ImmutableConfig EMPTY = new ImmutableConfig(new MapConfig());
+
+
 	public static Config of(Config config)
 	{
 		Check.notNull(config, "wrapped");
 		return !config.isImmutable() ? new ImmutableConfig(config) : config;
 	}
 
-	
+
 	public ImmutableConfig(Config wrapped)
 	{
 		super(wrapped);
 	}
-	
-	
+
+
 	@Override
 	public boolean isImmutable()
 	{
 		return true;
 	}
 
-	
+
 	@Override
 	protected void setInternal(String key, String value)
 	{
 		throw createImmutableEx();
 	}
-	
-	
+
+
 	@Override
 	public Config clear()
 	{
 		throw createImmutableEx();
 	}
 
-	
+
 	@Override
 	protected void describeSelf(StringBuilder s)
 	{

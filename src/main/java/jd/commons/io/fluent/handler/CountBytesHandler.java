@@ -24,14 +24,14 @@ public class CountBytesHandler<E extends Exception>
 	extends IOHandler<ByteTarget,OutputStream,Long,E>
 {
 	protected final IOHandler<ByteTarget,OutputStream,?,E> inner_;
-	
-	
+
+
 	public CountBytesHandler(IOHandler<ByteTarget,OutputStream,?,E> inner)
 	{
 		inner_ = Check.notNull(inner, "inner");
 	}
-	
-	
+
+
 	@Override
 	public Long runSupplier(ByteTarget target) throws E
 	{
@@ -39,7 +39,7 @@ public class CountBytesHandler<E extends Exception>
 		inner_.runSupplier(() -> holder.set(new CountingOutputStream(target.getOutputStream())));
 		return holder.has() ? holder.get().count() : Long.valueOf(0L);
 	}
-	
+
 
 	@Override
 	public Long runDirect(OutputStream out) throws E

@@ -21,14 +21,14 @@ class ConcatConfig extends Config
 {
 	private final Config[] configs_;
 
-	
+
 	public ConcatConfig(Config... configs)
 	{
 		Check.elems(configs, "configs").notEmpty().noneNull();
 		configs_ = configs;
 	}
 
-	
+
 	@Override
 	protected boolean containsInternal(String key)
 	{
@@ -59,7 +59,7 @@ class ConcatConfig extends Config
 		return true;
 	}
 
-	
+
 	@Override protected void setInternal(String key, String value)
 	{
 		throw createImmutableEx();
@@ -72,8 +72,8 @@ class ConcatConfig extends Config
 		throw createImmutableEx();
 	}
 
-	
-	@Override 
+
+	@Override
 	public Stream<String> keys()
 	{
 		Stream<String> keys = configs_[0].keys();

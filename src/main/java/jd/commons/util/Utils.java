@@ -48,7 +48,7 @@ public interface Utils
 		return result;
 	}
 
-	
+
 	/**
 	 * Creates a new array, with the given items appended to the end.
 	 * @param array an array, if null or empty then the new items are returned
@@ -68,8 +68,8 @@ public interface Utils
 		System.arraycopy(newItems, 0, result, array.length, newItems.length);
 		return result;
 	}
-		
-		
+
+
 	/**
 	 * Returns the part of the string after the given character
 	 * or the defaultResult if the input does not contain the character.
@@ -84,7 +84,7 @@ public interface Utils
 		return p == -1 ? defaultResult : s.substring(p + 1);
 	}
 
-	
+
 	/**
 	 * Returns the part of the string after the last given character
 	 * or the defaultResult if the input does not contain the character.
@@ -99,7 +99,7 @@ public interface Utils
 		return p == -1 ? defaultResult : s.substring(p + 1);
 	}
 
-	
+
 	/**
 	 * Returns the part of the string before the given character
 	 * or the defaultResult if the input does not contain
@@ -115,7 +115,7 @@ public interface Utils
 		return p == -1 ? defaultResult : s.substring(0, p);
 	}
 
-	
+
 	/**
 	 * Returns the part of the string before the last given character
 	 * or the defaultResult if the input does not contain
@@ -133,7 +133,7 @@ public interface Utils
 
 
 	/**
-	 * Returns the given string with the suffix removed from its end. 
+	 * Returns the given string with the suffix removed from its end.
 	 * If the string is null or does not end with the suffix it is returned unchanged.
 	 * @param s a string
 	 * @param suffix a suffix
@@ -144,9 +144,9 @@ public interface Utils
 		return (s != null) && s.endsWith(suffix) ? s.substring(0, s.length() - suffix.length()) : s;
 	}
 
-	
+
 	/**
-	 * Returns the given string with the prefix removed from its start. 
+	 * Returns the given string with the prefix removed from its start.
 	 * If the string is null or does not start with the prefix it is returned unchanged.
 	 * @param s a string
 	 * @param prefix a prefix
@@ -160,11 +160,11 @@ public interface Utils
 
 	/**
 	 * Translates a Enum name into an Enum object.
-	 * If the Enum name is null or not defined, then the default value is returned. This helps 
+	 * If the Enum name is null or not defined, then the default value is returned. This helps
 	 * to avoid the IllegalArgumentException thrown by Enum.valueOf
 	 * @param enumClass the enum class
 	 * @param name the name of an enum entry
-	 * @param defaultValue a default value 
+	 * @param defaultValue a default value
 	 * @param <T> the enum type
 	 * @return the enum
 	 */
@@ -181,8 +181,8 @@ public interface Utils
 		}
 		return defaultValue;
 	}
-	
-	
+
+
 	/**
 	 * Translates a Enum name into an Enum object.
 	 * If the Enum name is null or not defined, then null is returned.
@@ -214,8 +214,8 @@ public interface Utils
 		else
 			return !s.endsWith(suffix) ? s + suffix : s;
 	}
-	
-	
+
+
 	/**
 	 * Returns a string which starts with the given prefix.
 	 * If the string is null, the prefix is returned. If the string already starts with
@@ -253,7 +253,7 @@ public interface Utils
 		return -1;
 	}
 
-	
+
 	/**
 	 * @return tests if the object is an instance of the given class.
 	 * @param object an object
@@ -267,7 +267,7 @@ public interface Utils
 		return object != null && type != null && type.isInstance(object);
 	}
 
-	
+
 	/**
 	 * @return if the String is null, empty or blank, i.e.
 	 * contains only {@link Character#isWhitespace(int) white space} codepoints.
@@ -279,7 +279,7 @@ public interface Utils
 		return s == null || s.isBlank();
 	}
 
-	
+
 	/**
 	 * @return if the CharSequence is null or empty.
 	 * @param s a CharSequence
@@ -289,7 +289,7 @@ public interface Utils
 		return s == null || s.length() == 0;
 	}
 
-	
+
 	/**
 	 * @return if the array is null or empty.
 	 * @param array an array
@@ -298,7 +298,7 @@ public interface Utils
 	{
 		return array == null || array.length == 0;
 	}
-	
+
 
 	/**
 	 * @return if the collection is null or empty.
@@ -352,7 +352,7 @@ public interface Utils
 
 	/**
 	 * Creates a new HashSet and adds the values to it.
-	 * Of course there is {@link Set#of(Object...)} but that method returns 
+	 * Of course there is {@link Set#of(Object...)} but that method returns
 	 * an unmodifiable Set which also does not allow nulls.
 	 * @param <T> the type of the values
 	 * @param values some values
@@ -365,9 +365,9 @@ public interface Utils
 		return set;
 	}
 
-	
+
 	/**
-	 * If the String is not null, it it is trimmed. If the trimmed String is 
+	 * If the String is not null, it it is trimmed. If the trimmed String is
 	 * empty it is set to null.
 	 * @param s a String
 	 * @return the trimmed String, or null if it was null or the trimmed String is empty
@@ -380,20 +380,20 @@ public interface Utils
 			if (s.length() == 0)
 				s = null;
 		}
-		return s; 
+		return s;
 	}
 
-	
+
 	/**
 	 * @return the String itself if it is not null, else returns the empty string.
 	 * @param s a String
 	 */
 	public static String notNull(String s)
 	{
-		return s != null ? s : ""; 
+		return s != null ? s : "";
 	}
-	
-	
+
+
 	/**
 	 * Returns the package part of the name of a class.
 	 * @param type a class
@@ -416,11 +416,11 @@ public interface Utils
 		Check.notNull(className, "className");
 		return beforeLastOr(className, '.', "");
 	}
-	
-	
+
+
 	/**
 	 * Pads the given string on the end with the specified character until the string reaches the requested length.
-	 * If the string is longer than the requested length it is returned unchanged.	
+	 * If the string is longer than the requested length it is returned unchanged.
 	 * @param s the original string to be padded
 	 * @param newlen the requested minimal length of the resulting string
 	 * @param fillChar the character to pad the string with
@@ -430,11 +430,11 @@ public interface Utils
 	{
 		return pad(s, newlen, fillChar, false);
 	}
-		
-	
+
+
 	/**
 	 * Pads the given string on the end with a space character until the string reaches the requested length.
-	 * If the string is longer than the requested length it is returned unchanged.	
+	 * If the string is longer than the requested length it is returned unchanged.
 	 * @param s the original string to be padded
 	 * @param newlen the requested minimal length of the resulting string
 	 * @return the new string
@@ -444,7 +444,7 @@ public interface Utils
 		return padEnd(s, newlen, ' ');
 	}
 
-	
+
 	/**
 	 * Converts the number to a string nad pads on the end with a '0' character until the string reaches the requested length.
 	 * @param n a number
@@ -459,7 +459,7 @@ public interface Utils
 
 	/**
 	 * Pads the given string on the start with a space character until the string reaches the requested length.
-	 * If the string is longer than the requested length it is returned unchanged.	
+	 * If the string is longer than the requested length it is returned unchanged.
 	 * @param s the original string to be padded
 	 * @param newlen the requested minimal length of the resulting string
 	 * @return the new string
@@ -469,10 +469,10 @@ public interface Utils
 		return padStart(s, newlen, ' ');
 	}
 
-	
+
 	/**
 	 * Pads the given string on the start with the specified character until the string reaches the desired length.
-	 * If the string is longer than the requested length it is returned unchanged.	
+	 * If the string is longer than the requested length it is returned unchanged.
 	 * @param s the original string to be padded
 	 * @param newlen the requested minimal length of the resulting string
 	 * @param fillChar the character to pad the string with
@@ -508,7 +508,7 @@ public interface Utils
 		return padStart(String.valueOf(n), newlen, fillChar);
 	}
 
-	
+
 	private static String pad(String s, int newlen, char padChar, boolean start)
 	{
 		int curlen = s.length();
@@ -521,7 +521,7 @@ public interface Utils
 			return s;
 	}
 
-	
+
 	/**
 	 * @return a character replicated certain times.
 	 * @param c a character
@@ -566,7 +566,7 @@ public interface Utils
 			Character.toLowerCase(s.charAt(0)) + s.substring(1);
 	}
 
-	
+
 	/**
 	 * @return a string which starts with an upper case character. If the string is empty
 	 * 		or null it is simply returned.
@@ -578,10 +578,10 @@ public interface Utils
 			s :
 			Character.toUpperCase(s.charAt(0)) + s.substring(1);
 	}
-	
+
 
 	/**
-	 * @return the String with whitespace removed from its end. 
+	 * @return the String with whitespace removed from its end.
 	 * @param s a String
 	 */
 	public static String trimEnd(String s)
@@ -590,10 +590,10 @@ public interface Utils
 		{
 			int last = s.length() - 1;
 			int i = last;
-	
+
 			while ((i >= 0) && Character.isWhitespace(s.charAt(i)))
 				i--;
-	
+
 			if (i < last)
 				return s.substring(0, i + 1);
 		}
@@ -602,7 +602,7 @@ public interface Utils
 
 
 	/**
-	 * @return the String with whitespace removed from its start. 
+	 * @return the String with whitespace removed from its start.
 	 * @param s a String
 	 */
 	public static String trimStart(String s)
@@ -611,7 +611,7 @@ public interface Utils
 		{
 			int len = s.length();
 			int i = 0;
-	
+
 			while ((i < len) && Character.isWhitespace(s.charAt(i)))
 				i++;
 
@@ -623,7 +623,7 @@ public interface Utils
 
 
 	/**
-	 * @return the provided items as array. 
+	 * @return the provided items as array.
 	 * @param <T> the item type
 	 * @param items the items
 	 */

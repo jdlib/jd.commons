@@ -34,7 +34,7 @@ import jd.commons.util.function.XSupplier;
 /**
  * ByteFrom allows to specify a {@link ByteSource} for byte input.
  * <ul>
- * <li>Directly specify a {@link #from(ByteSource) ByteSource} 
+ * <li>Directly specify a {@link #from(ByteSource) ByteSource}
  * <li>Directly provide a {@link #from(InputStream) InputStream} to be used as ByteSource
  * <li>Specify IO related objects which
  *     can be turned into a InputStream or ByteSource. The default implementations
@@ -42,7 +42,7 @@ import jd.commons.util.function.XSupplier;
  * </ul>
  * The return value computed from the InputStream or ByteSource depends on the implementation.
  * @param<R> the result type
- * @param<E> the exception thrown by the ByteFrom methods 
+ * @param<E> the exception thrown by the ByteFrom methods
  */
 public interface ByteFrom<R,E extends Exception>
 {
@@ -54,7 +54,7 @@ public interface ByteFrom<R,E extends Exception>
 	 */
 	public R from(ByteSource source) throws E;
 
-	
+
 	/**
 	 * Accepts a InputStream.
 	 * @param in a InputStream, not null
@@ -63,7 +63,7 @@ public interface ByteFrom<R,E extends Exception>
 	 */
 	public R from(InputStream in) throws E;
 
-	
+
 	/**
 	 * Creates a ByteSource for the InputStream provided by the Path.
 	 * @param path a path, not null
@@ -77,7 +77,7 @@ public interface ByteFrom<R,E extends Exception>
 		return from(new PathByteSource(Check.notNull(path, "path"), options));
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource for the InputStream provided by the FilePath.
 	 * Forwards the call to {@link #from(Path, OpenOption...)} using the Path contained in the FilePath.
@@ -92,7 +92,7 @@ public interface ByteFrom<R,E extends Exception>
 		return from(Check.notNull(path, "path").toNioPath(), options);
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource which returns a FileInputStream for the File.
 	 * @param file a file, not null
@@ -106,7 +106,7 @@ public interface ByteFrom<R,E extends Exception>
 		return from(() -> new FileInputStream(file));
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource to read from the file with the given name.
 	 * @param fileName a file name, not null or empty
@@ -120,7 +120,7 @@ public interface ByteFrom<R,E extends Exception>
 		return from(new File(fileName));
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource to return the given bytes
 	 * @param bytes the bytes, not null
@@ -135,9 +135,9 @@ public interface ByteFrom<R,E extends Exception>
 		return from(() -> new ByteArrayInputStream(bytes));
 	}
 
-	
+
 	/**
-	 * Creates a ByteSource to read from a URL. 
+	 * Creates a ByteSource to read from a URL.
 	 * @param url the URL, not null
 	 * @return the computed result
 	 * @throws E if an error occurs
@@ -147,9 +147,9 @@ public interface ByteFrom<R,E extends Exception>
 		return from(Check.notNull(url, "url")::openStream);
 	}
 
-	
+
 	/**
-	 * Creates a ByteSource to read from a URLConnection. 
+	 * Creates a ByteSource to read from a URLConnection.
 	 * @param con the connection, not null
 	 * @return the computed result
 	 * @throws E if an error occurs
@@ -159,7 +159,7 @@ public interface ByteFrom<R,E extends Exception>
 		return from(Check.notNull(con, "con")::getInputStream);
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource to read from the URI.
 	 * @param uri a URI, not null
@@ -171,7 +171,7 @@ public interface ByteFrom<R,E extends Exception>
 		return from(Path.of(Check.notNull(uri, "uri")));
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource to read from the channel.
 	 * @param channel a channel, not null
@@ -184,7 +184,7 @@ public interface ByteFrom<R,E extends Exception>
 		return from(() -> Channels.newInputStream(channel));
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource to read the socket.
 	 * @param socket a socket, not null
@@ -197,7 +197,7 @@ public interface ByteFrom<R,E extends Exception>
 		return from(socket::getInputStream);
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource to read the Blob.
 	 * @param blob a blob, not null
@@ -210,7 +210,7 @@ public interface ByteFrom<R,E extends Exception>
 		return fromSupplier(blob::getBinaryStream);
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource to read Blob.
 	 * @param blob a blob, not null
@@ -227,7 +227,7 @@ public interface ByteFrom<R,E extends Exception>
 		return fromSupplier(() -> blob.getBinaryStream(pos, length));
 	}
 
-	
+
 	/**
 	 * Creates a ByteSource which throws the exception when a InputStream is requested.
 	 * @param e either an exception (which is turned into a RuntimeException or IOException),
@@ -239,8 +239,8 @@ public interface ByteFrom<R,E extends Exception>
 	{
 		return fromSupplier(IOHelper.getThrowsIOorRTException(e));
 	}
-	
-	
+
+
 	/**
 	 * Creates a ByteSource which invokes the given supplier to return an InputStream.
 	 * @param supplier a supplier, not null

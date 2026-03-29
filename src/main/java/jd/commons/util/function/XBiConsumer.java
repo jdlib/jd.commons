@@ -28,7 +28,7 @@ import jd.commons.util.UncheckedException;
  * @see BiConsumer
  */
 @FunctionalInterface
-public interface XBiConsumer<T, U, E extends Exception> 
+public interface XBiConsumer<T, U, E extends Exception>
 {
     /**
      * Performs this operation on the given arguments.
@@ -38,7 +38,7 @@ public interface XBiConsumer<T, U, E extends Exception>
      */
     void accept(T t, U u) throws E;
 
-    
+
     /**
      * Returns a composed {@code BiConsumer} that performs, in sequence, this
      * operation followed by the {@code after} operation. If performing either
@@ -50,10 +50,10 @@ public interface XBiConsumer<T, U, E extends Exception>
      * @return a composed {@code BiConsumer} that performs in sequence this
      * operation followed by the {@code after} operation
      */
-    default XBiConsumer<T, U, E> andThen(XBiConsumer<? super T, ? super U, E> after) 
+    default XBiConsumer<T, U, E> andThen(XBiConsumer<? super T, ? super U, E> after)
     {
     	Check.notNull(after, "after");
-        return (l, r) -> { 
+        return (l, r) -> {
             accept(l, r);
             after.accept(l, r);
         };

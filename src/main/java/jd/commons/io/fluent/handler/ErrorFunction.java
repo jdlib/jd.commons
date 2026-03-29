@@ -27,16 +27,16 @@ import jd.commons.util.function.XFunction;
  * It either
  * <ul>
  * <li>takes a thrown exception, converts it to an exception of another type and throws that exception.
- * 	   By default IO operations either throw IOException or RuntimeExceptions. 
- *     Most operations can be made {@link ByteWriteTo#unchecked() unchecked}, i.e. only runtime 
+ * 	   By default IO operations either throw IOException or RuntimeExceptions.
+ *     Most operations can be made {@link ByteWriteTo#unchecked() unchecked}, i.e. only runtime
  *     exceptions are thrown, and any checked exception is wrapped into a IllegalStateException.
  * <li>silences an exception, i.e. it takes a thrown exception, optionally logs it, and just
  * 		returns the exception as result of the IO operation.
  * </ul>
- * @param<RI> the type of results passed to this error handler 
- * @param<RO> the result type of this error handler 
+ * @param<RI> the type of results passed to this error handler
+ * @param<RO> the result type of this error handler
  * @param<E> the type of the checked exception thrown by this ExceptionRethrow or a type
- * 		derived from RuntimeException if this ExceptionRethrow only throws RuntimeExceptions 
+ * 		derived from RuntimeException if this ExceptionRethrow only throws RuntimeExceptions
  */
 public abstract class ErrorFunction<RI,RO,E extends Exception>
 {
@@ -50,14 +50,14 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 	{
 		return new SilentErrorFunction<>(log);
 	}
-	
-	
+
+
 	/**
 	 * Creates a ErrorFunction from a factory function which when given a caugth exepction
 	 * either creates a new exception or itself throws an exception.<br>
-	 * The first case allows to easily specify a ErrorFunction using method lambdas, 
-	 * e.g. {@code ErrorFunction.throwing(SQLException::new)}. 
-	 * @param <E> the exception type 
+	 * The first case allows to easily specify a ErrorFunction using method lambdas,
+	 * e.g. {@code ErrorFunction.throwing(SQLException::new)}.
+	 * @param <E> the exception type
 	 * @param factory a factory.
 	 * @return the ErrorFunction
 	 */
@@ -65,8 +65,8 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 	{
 		return new ThrowingErrorFunction<>(factory);
 	}
-	
-	
+
+
 	/**
 	 * @return a ErrorFunction which takes an exception and rethrows it as {@link UncheckedIOException}.
 	 * @param<R> allows to cast the returned ErrorFunction
@@ -76,7 +76,7 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 	{
 		return (ErrorFunction<R,R,RuntimeException>)THROW_UNCHECKED;
 	}
-	
+
 
 	/**
 	 * @return a ErrorFunction which takes an exception and rethrows it as unchecked exception or IOException.
@@ -88,11 +88,11 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 		return (ErrorFunction<R,R,IOException>)THROW_UNCHECKED_OR_IOE;
 	}
 
-	
+
 	private static final ErrorFunction<?,?,RuntimeException> THROW_UNCHECKED = throwing(UncheckedException::create);
 	private static final ErrorFunction<?,?,IOException> THROW_UNCHECKED_OR_IOE = throwing(ErrorFunction::throwIOEorRT);
 
-	
+
 	private static IOException throwIOEorRT(Exception e) throws IOException
 	{
 		if (e instanceof RuntimeException)
@@ -102,7 +102,7 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 		else
 			throw new IOException(e);
 	};
-	
+
 
 	/**
 	 * @return a ErrorFunction which swallows any exception and always returns null.
@@ -115,7 +115,7 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 		return (ErrorFunction<R,R,RuntimeException>)SWALLOW;
 	}
 
-	
+
 	private static final ErrorFunction<?,?,RuntimeException> SWALLOW = new ErrorFunction<>()
 	{
 		@Override
@@ -136,8 +136,8 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 			return "Swallow";
 		}
 	};
-	
-	
+
+
 	/**
 	 * @return accepts a result and converts it to the target resulz.
 	 * @param result the result
@@ -158,24 +158,24 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 }
 
 
-class ThrowingErrorFunction<R,E extends Exception> extends ErrorFunction<R,R,E> 
+class ThrowingErrorFunction<R,E extends Exception> extends ErrorFunction<R,R,E>
 {
 	private final XFunction<Exception,E,E> factory_;
-	
-	
+
+
 	public ThrowingErrorFunction(XFunction<Exception,E,E> factory)
 	{
 		factory_ = Check.notNull(factory, "factory");
 	}
-	
-	
+
+
 	@Override
 	public R handleResult(R result)
 	{
 		return result;
 	}
-	
-	
+
+
 	@Override
 	public R handleException(Exception e) throws E
 	{
@@ -195,24 +195,24 @@ class ThrowingErrorFunction<R,E extends Exception> extends ErrorFunction<R,R,E>
 }
 
 
-class SilentErrorFunction<R> extends ErrorFunction<R,Exception,RuntimeException> 
+class SilentErrorFunction<R> extends ErrorFunction<R,Exception,RuntimeException>
 {
 	private final Consumer<Exception> log_;
-	
-	
+
+
 	public SilentErrorFunction(Consumer<Exception> log)
 	{
 		log_ = log;
 	}
-	
-	
+
+
 	@Override
 	public Exception handleResult(R result)
 	{
 		return null;
 	}
-	
-	
+
+
 	@Override
 	public Exception handleException(Exception e)
 	{

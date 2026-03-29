@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 public class UtilsTest
 {
 	@Test
-	public void testAddFirst() 
+	public void testAddFirst()
 	{
 		String[] array = {"a", "b", "c"};
 		String[] newItems = {"1", "2"};
@@ -35,14 +35,14 @@ public class UtilsTest
 		assertSame(array, Utils.addFirst(array));
 		assertSame(array, Utils.addFirst(array, (String[])null));
 		assertSame(newItems, Utils.addFirst(null, newItems));
-		
+
 		String[] result = Utils.addFirst(array, newItems);
 		assertThat(result).containsExactly("1", "2", "a", "b", "c");
 	}
 
 
 	@Test
-	public void testAddLast() 
+	public void testAddLast()
 	{
 		String[] array = {"a", "b", "c"};
 		String[] newItems = {"1", "2"};
@@ -51,13 +51,13 @@ public class UtilsTest
 		assertSame(array, Utils.addLast(array));
 		assertSame(array, Utils.addLast(array, (String[])null));
 		assertSame(newItems, Utils.addLast(null, newItems));
-		
+
 		String[] result = Utils.addLast(array, newItems);
 		assertThat(result).containsExactly("a", "b", "c", "1", "2");
 	}
 
 
-	@Test 
+	@Test
 	public void testAfterOr()
 	{
 		assertNull(Utils.afterOr(null, '=', null));
@@ -69,7 +69,7 @@ public class UtilsTest
 	}
 
 
-	@Test 
+	@Test
 	public void testAfterLastOr()
 	{
 		assertNull(Utils.afterLastOr(null, '=', null));
@@ -78,8 +78,8 @@ public class UtilsTest
 		assertEquals("", 	Utils.afterLastOr("1.2.", '.', null));
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testBeforeOr()
 	{
 		assertNull(Utils.beforeOr(null, '=', null));
@@ -89,8 +89,8 @@ public class UtilsTest
 		assertEquals("", 	Utils.beforeOr(null, '=', ""));
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testBeforeLastOr()
 	{
 		assertNull(Utils.beforeLastOr(null, '=', null));
@@ -101,8 +101,8 @@ public class UtilsTest
 		assertEquals("", 	Utils.beforeLastOr(null, '=', ""));
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testCut()
 	{
 		assertNull(Utils.cutStart(null, "x"));
@@ -115,8 +115,8 @@ public class UtilsTest
 		assertEquals("",	Utils.cutEnd("x", "x"));
 		assertEquals("xa",	Utils.cutEnd("xa", "x"));
 	}
-	
-	
+
+
 	@Test
 	public void testEnumOf()
 	{
@@ -125,8 +125,8 @@ public class UtilsTest
 		assertSame(AccessMode.READ, Utils.enumOf(AccessMode.class, "xy", AccessMode.READ));
 		assertSame(AccessMode.WRITE, Utils.enumOf(AccessMode.class, "WRITE", AccessMode.READ));
 	}
-	
-	
+
+
 	@Test
 	public void testIndexOf()
 	{
@@ -136,7 +136,7 @@ public class UtilsTest
 		assertEquals(1, Utils.indexOf("a", "b", "a", "c"));
 	}
 
-	
+
 	@Test
 	public void testIsA() throws Exception
 	{
@@ -145,7 +145,7 @@ public class UtilsTest
 		assertFalse(Utils.isA("a", null));
 		assertFalse(Utils.isA("a", Integer.class));
 		assertTrue(Utils.isA("a", CharSequence.class));
-		
+
 		// test annotations
 		Annotation testAnno = getClass().getMethod("testIsA").getAnnotations()[0];
 		assertTrue(Utils.isA(testAnno, Test.class));
@@ -153,7 +153,7 @@ public class UtilsTest
 		assertFalse(Utils.isA(testAnno, null));
 		assertFalse(Utils.isA(null, Test.class));
 	}
-	
+
 
 	@Test
 	public void testIsBlank() throws Exception
@@ -164,8 +164,8 @@ public class UtilsTest
 		assertFalse(Utils.isBlank(" \t\r\na "));
 		assertFalse(Utils.isBlank("a "));
 	}
-	
-	
+
+
 	@Test
 	public void testIsEmpty()
 	{
@@ -185,9 +185,9 @@ public class UtilsTest
 		assertTrue(Utils.isEmpty(Map.of()));
 		assertFalse(Utils.isEmpty(Map.of("a", "1")));
 	}
-	
-	
-	@Test 
+
+
+	@Test
 	public void testHave()
 	{
 		assertEquals("x",	Utils.haveStart(null, "x"));
@@ -202,7 +202,7 @@ public class UtilsTest
 	}
 
 
-	@Test 
+	@Test
 	public void testNewArray()
 	{
 		String[] s5 = Utils.newArray(String.class, 5);
@@ -212,15 +212,15 @@ public class UtilsTest
 		assertEquals(6, s6.length);
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testNewHashSet()
 	{
 		assertThat(Utils.newHashSet("a", "b")).containsExactlyInAnyOrder("a", "b");
 	}
-	
 
-	@Test 
+
+	@Test
 	public void testNorm()
 	{
 		assertNull(Utils.norm(null));
@@ -228,27 +228,27 @@ public class UtilsTest
 		assertNull(Utils.norm(" "));
 		assertEquals("a", Utils.norm(" a "));
 	}
-	
-	
+
+
 	@Test
 	public void testNotNull()
 	{
 		assertSame("a", Utils.notNull("a"));
 		assertSame("", Utils.notNull(null));
 	}
-	
-	
+
+
 	@Test
-	public void testPackageName() 
+	public void testPackageName()
 	{
 		assertEquals("jd.commons.util", Utils.packageName(Utils.class));
 		assertEquals("jd.commons.util", Utils.packageName("jd.commons.util.Utils"));
 		assertEquals("", Utils.packageName("Utils"));
 		assertEquals("", Utils.packageName(""));
 	}
-	
-	
-	@Test 
+
+
+	@Test
 	public void testPad()
 	{
 		assertEquals("a..", Utils.padEnd("a", 3, '.'));
@@ -264,21 +264,21 @@ public class UtilsTest
 		assertEquals("123", Utils.padStart(123, 2));
 		assertEquals("!1",  Utils.padStart(1, 2, '!'));
 	}
-	
-	
-	@Test 
+
+
+	@Test
 	public void testRepeat()
 	{
 		StringBuilder sb = new StringBuilder();
 		assertSame(sb, Utils.repeat('0', 3, sb));
 		assertEquals("000", sb.toString());
-		
+
 		assertEquals("aa", Utils.repeat('a', 2));
 		assertEquals("", Utils.repeat('a', -15));
 	}
-	
-	
-	@Test 
+
+
+	@Test
 	public void testStartCase()
 	{
 		assertNull(Utils.startLowerCase(null));
@@ -292,8 +292,8 @@ public class UtilsTest
 		assertEquals("ABC", Utils.startUpperCase("aBC"));
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testTrimEnd()
 	{
 		assertNull(Utils.trimEnd(null));
@@ -301,8 +301,8 @@ public class UtilsTest
 		assertEquals(" a b", Utils.trimEnd(" a b \t\r\n"));
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testTrimStart()
 	{
 		assertNull(Utils.trimStart(null));

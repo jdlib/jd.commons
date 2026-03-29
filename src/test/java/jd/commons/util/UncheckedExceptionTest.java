@@ -37,8 +37,8 @@ public class UncheckedExceptionTest
 	{
 		IllegalArgumentException iae = new IllegalArgumentException();
 		IOException ioe = new IOException();
-		UncheckedException uioe = (UncheckedException)UncheckedException.create(ioe);  
-		
+		UncheckedException uioe = (UncheckedException)UncheckedException.create(ioe);
+
 		assertThatThrownBy(() -> UncheckedException.rethrow(iae, IOException.class)).isSameAs(iae);
 		assertThatThrownBy(() -> UncheckedException.rethrow(ioe, IOException.class)).isSameAs(ioe);
 		assertThatThrownBy(() -> UncheckedException.rethrow(uioe,IOException.class)).isSameAs(ioe);

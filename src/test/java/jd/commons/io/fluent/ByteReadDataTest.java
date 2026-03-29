@@ -29,7 +29,7 @@ public class ByteReadDataTest
 	{
 		assertThatThrownBy(() -> Bytes.fromError("err").read().throwing(SQLException::new).all())
 			.isInstanceOf(SQLException.class).cause().isInstanceOf(IOException.class);
-		
+
 		// coverage for apply catch clause
 		assertNull(new ByteReadData<>(Bytes.fromError("err"), ErrorFunction.swallow()).all());
 	}

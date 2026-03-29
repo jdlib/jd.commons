@@ -19,16 +19,16 @@ import jd.commons.check.Check;
 
 
 /**
- * FilterOutputStream2 is OutputStream which forwards all method calls 
+ * FilterOutputStream2 is OutputStream which forwards all method calls
  * to another OutputStream. Subclasses of this class
  * may override some of the methods to provide additional functionality.
  * This class is similar to java.io.FilterOutputStream with these differences:
  * <ul>
- * <li>In order to modify write calls you need to override both {@link #write(int)} 
- *     and {@link #write(byte[], int, int)} (whereas java.io.FilterOutputStream 
+ * <li>In order to modify write calls you need to override both {@link #write(int)}
+ *     and {@link #write(byte[], int, int)} (whereas java.io.FilterOutputStream
  *     allows to intercept all write calls by only overriding write(int)).
  * <li>FilterOutputStream2 does not track if the stream was already closed. All calls to {@link #close()}
- * 		are forwarded to the wrapped OutputStream.  
+ * 		are forwarded to the wrapped OutputStream.
  * </ul>
  */
 public class FilterOutputStream2 extends OutputStream
@@ -43,42 +43,42 @@ public class FilterOutputStream2 extends OutputStream
      * Creates a FilterOutputStream2.
      * @param out the wrapped OutputStream.
      */
-    public FilterOutputStream2(OutputStream out) 
+    public FilterOutputStream2(OutputStream out)
     {
         out_ = Check.notNull(out, "out");
     }
 
 
     @Override
-    public void write(int b) throws IOException 
+    public void write(int b) throws IOException
     {
         out_.write(b);
     }
-    
+
 
     @Override
-    public void write(byte[] b) throws IOException 
+    public void write(byte[] b) throws IOException
     {
         write(b, 0, b.length);
     }
-    
+
 
     @Override
-    public void write(byte[] b, int off, int len) throws IOException 
+    public void write(byte[] b, int off, int len) throws IOException
     {
     	out_.write(b, off, len);
     }
-    
+
 
     @Override
-    public void flush() throws IOException 
+    public void flush() throws IOException
     {
         out_.flush();
     }
-    
+
 
     @Override
-    public void close() throws IOException 
+    public void close() throws IOException
     {
     	out_.close();
     }

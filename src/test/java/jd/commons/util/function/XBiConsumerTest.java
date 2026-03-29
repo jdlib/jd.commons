@@ -30,7 +30,7 @@ public class XBiConsumerTest
 		XBiConsumer<String,String,SQLException> c  = (s1,s2) -> b.append(s1).append(s2);
 		c.accept("a", "b");
 		assertEquals("ab", b.toString());
-		
+
 		XBiConsumer<String,String,SQLException> c2 = c.andThen(c);
 		b.setLength(0);
 		c2.accept("a", "b");
@@ -43,7 +43,7 @@ public class XBiConsumerTest
 	{
 		XBiConsumer<String,String,IOException> c1 = (s1,s2) -> {};
 		XBiConsumer<String,String,IOException> c2 = (s1,s2) -> { throw new IOException(); };
-		
+
 		c1.unchecked().accept("a", "b");
 		assertThatThrownBy(() -> c2.unchecked().accept("a", "b"))
 			.isInstanceOf(UncheckedException.class);

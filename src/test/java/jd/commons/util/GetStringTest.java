@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 public class GetStringTest
 {
-	@Test 
+	@Test
 	public void testAsBoolean()
 	{
 		assertTrue(of("true").asBoolean());
@@ -34,8 +34,8 @@ public class GetStringTest
 		assertIAE(() -> of("a").asBoolean(), "\"a\" can't be converted to boolean (true/false)");
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testAsBooleanYesNo()
 	{
 		assertTrue(of("yes").asBoolean("yes", "no"));
@@ -50,7 +50,7 @@ public class GetStringTest
 		assertIAE(() -> of("a", "test").asByte(), "test \"a\" can't be converted to byte");
 	}
 
-	
+
 	@Test public void testAsChar()
 	{
 		assertEquals('a', of("a").asChar());
@@ -89,14 +89,14 @@ public class GetStringTest
 		assertIAE(() -> of("xyz").asEnum(AccessMode.class), "No enum constant java.nio.file.AccessMode.xyz");
 	}
 
-	
+
 	@Test public void testAsFile()
 	{
 		assertEquals("123.txt", of("123.txt").asFile().getName());
 		assertNull(of(null).asFile());
 	}
 
-	
+
 	@Test public void testAsInt()
 	{
 		assertEquals(123, of("123").asInt());
@@ -112,7 +112,7 @@ public class GetStringTest
 		assertThat(of("a,b").asSplit(",")).containsExactly("a", "b");
 	}
 
-	
+
 	@Test public void testAsLong()
 	{
 		assertEquals(1234L, of("1234").asLong());
@@ -120,16 +120,16 @@ public class GetStringTest
 		assertEquals(1L, of(null).asLongOr(1));
 		assertIAE(() -> of("a").asLong(), "\"a\" can't be converted to long");
 	}
-	
-	
+
+
 	@Test public void testAsResult()
 	{
 		assertEquals((short)123, of("123").asResult(Short::parseShort).shortValue());
 		assertIAE(() -> of("a").asResult(Short::parseShort), "\"a\" can't be converted");
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testProps()
 	{
 		GetString a = of("a");
@@ -148,20 +148,20 @@ public class GetStringTest
 		assertEquals("x", n.replaceNull("x").value());
 		assertIAE(() -> n.notNull(), "value is null");
 		assertIAE(() -> n.notEmpty(), "value is null");
-		
+
 		GetString nw = of(null, "what");
 		assertIAE(() -> nw.notNull(), "what is null");
-		
+
 		GetString e = of("");
 		assertFalse(e.isNull());
 		assertTrue(e.isEmpty());
 		assertIAE(() -> e.notEmpty(), "value is empty");
-		
+
 		GetString ew = of("", "what");
 		assertIAE(() -> ew.notEmpty(), "what is empty");
 	}
-	
-	
+
+
 	@Test
 	public void testHelperDisplay()
 	{
@@ -171,8 +171,8 @@ public class GetStringTest
 		String s = Utils.repeat('.', 60);
 		assertEquals('"' + Utils.repeat('.', 50) + '"' + "+<10 more>", Helper.toDisplay(s));
 	}
-	
-	
+
+
 	@Test
 	public void testSimple()
 	{
@@ -181,14 +181,14 @@ public class GetStringTest
 		assertEquals("some", of("a", "some").what());
 	}
 
-	
+
 	@Test public void testAsURI()
 	{
 		assertEquals("a", of("a").asURI().toString());
 		assertNull(of(null).asURI());
 	}
 
-	
+
 	@Test public void testAsURL()
 	{
 		assertEquals("http://a.com", of("http://a.com").asURL().toString());
@@ -198,8 +198,8 @@ public class GetStringTest
 			.hasMessage("no protocol: a")
 			.cause().isInstanceOf(MalformedURLException.class);
 	}
-	
-	
+
+
 	private static void assertIAE(ThrowingCallable callable, String msg)
 	{
 		assertThatThrownBy(callable).isInstanceOf(IllegalArgumentException.class).hasMessage(msg);

@@ -23,13 +23,13 @@ import java.util.Map;
 class MockHandler implements InvocationHandler
 {
 	private final Map<MockInvocation,MockAction> map_;
-	
-	
+
+
 	public MockHandler(Map<MockInvocation,MockAction> map)
 	{
 		map_ = map;
 	}
-	
+
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable

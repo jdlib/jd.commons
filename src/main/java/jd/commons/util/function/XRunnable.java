@@ -21,7 +21,7 @@ import jd.commons.util.UncheckedException;
  * to throw a checked exception.
  */
 @FunctionalInterface
-public interface XRunnable<E extends Exception> 
+public interface XRunnable<E extends Exception>
 {
 	/**
 	 * Runs the runnable.
@@ -41,7 +41,7 @@ public interface XRunnable<E extends Exception>
     	return () -> {
     		try
     		{
-    			run(); 
+    			run();
     		}
     		catch (Exception e)
     		{

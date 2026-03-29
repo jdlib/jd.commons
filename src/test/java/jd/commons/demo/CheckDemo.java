@@ -25,7 +25,7 @@ import com.google.common.base.Preconditions;
  */
 public class CheckDemo
 {
-	public void jdCommons(String id, List<String> names, double percent) 
+	public void jdCommons(String id, List<String> names, double percent)
 	{
 	    Check.notNull(id, "id");
 	    Check.elems(names, "names").notEmpty().noneNull();
@@ -33,7 +33,7 @@ public class CheckDemo
 	}
 
 
-	public void jdkObjects(String id, List<String> names, double percent) 
+	public void jdkObjects(String id, List<String> names, double percent)
 	{
 		Objects.requireNonNull(id, "id");
 		Objects.requireNonNull(names, "names");
@@ -42,8 +42,8 @@ public class CheckDemo
 		if (percent < 0.0 || percent > 100.0)
 			throw new IllegalArgumentException("percent must be >= 0.0 and <= 100.0, is " + percent);
 	}
-	
-	
+
+
 	public void guava(String id, List<String> names, double percent)
 	{
 		Preconditions.checkNotNull(id, "id");

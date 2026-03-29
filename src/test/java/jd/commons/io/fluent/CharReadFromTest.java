@@ -39,9 +39,9 @@ public class CharReadFromTest
 			return "x";
 		}
 	};
-	private static final CharReadFrom<String,Exception> FROM = new CharReadFrom<>(HANDLER); 
+	private static final CharReadFrom<String,Exception> FROM = new CharReadFrom<>(HANDLER);
 
-	
+
 	@Test
 	public void testCoverage() throws Exception
 	{

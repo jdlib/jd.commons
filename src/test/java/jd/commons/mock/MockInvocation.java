@@ -23,25 +23,25 @@ class MockInvocation
 	public final String methodName;
 	public final Object[] args;
 	private final int hashCode;
-	
-	
+
+
 	public MockInvocation(String methodName, Object[] args)
 	{
 		if (Utils.isEmpty(args))
 			args = null;
 		this.methodName = methodName;
 		this.args = args;
-		this.hashCode = methodName.hashCode() ^ Objects.hash(this.args); 
+		this.hashCode = methodName.hashCode() ^ Objects.hash(this.args);
 	}
-	
-	
+
+
 	@Override
 	public int hashCode()
 	{
 		return hashCode;
 	}
-	
-	
+
+
 	@Override
 	public boolean equals(Object other)
 	{

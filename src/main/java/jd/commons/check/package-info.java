@@ -11,6 +11,6 @@
  * Copyright 2025 the original author or authors.
  */
 /**
- * Contains a class for validating method arguments. 
+ * Contains a class for validating method arguments.
  */
 package jd.commons.check;

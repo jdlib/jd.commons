@@ -20,8 +20,8 @@ public class CheckDouble extends CheckHelper
 {
 	private final double value_;
 	private final String what_;
-	
-	
+
+
 	/**
 	 * Creates a new CheckDouble.
 	 * @param value the decimal value
@@ -32,8 +32,8 @@ public class CheckDouble extends CheckHelper
 		value_ = value;
 		what_  = what;
 	}
-	
-	
+
+
 	/**
 	 * @return the value of this Check object.
 	 */
@@ -41,8 +41,8 @@ public class CheckDouble extends CheckHelper
 	{
 		return value_;
 	}
-	
-	
+
+
 	/**
 	 * Checks that this value is greater than the given value.
 	 * @param other a value to compare
@@ -52,8 +52,8 @@ public class CheckDouble extends CheckHelper
 	{
 		return compare(other, CheckOp.GREATER);
 	}
-	
-	
+
+
 	/**
 	 * Checks that this value is greater than or equal to the given value.
 	 * @param other a value to compare
@@ -63,8 +63,8 @@ public class CheckDouble extends CheckHelper
 	{
 		return compare(other, CheckOp.GREATER_EQ);
 	}
-	
-	
+
+
 	/**
 	 * Checks that this value is less than the given value.
 	 * @param other a value to compare
@@ -74,8 +74,8 @@ public class CheckDouble extends CheckHelper
 	{
 		return compare(other, CheckOp.LESS);
 	}
-	
-	
+
+
 	/**
 	 * Checks that this value is less than or equal to the given value.
 	 * @param other a value to compare
@@ -86,7 +86,7 @@ public class CheckDouble extends CheckHelper
 		return compare(other, CheckOp.LESS_EQ);
 	}
 
-	
+
 	/**
 	 * Checks that this value is equal to the given value.
 	 * @param other a value to compare
@@ -97,7 +97,7 @@ public class CheckDouble extends CheckHelper
 		return compare(other, CheckOp.EQ);
 	}
 
-	
+
 	/**
 	 * Checks that this value is finite.
 	 * @return this
@@ -109,7 +109,7 @@ public class CheckDouble extends CheckHelper
 		return this;
 	}
 
-	
+
 	/**
 	 * Checks that this value is negative.
 	 * @return this
@@ -118,8 +118,8 @@ public class CheckDouble extends CheckHelper
 	{
 		return less(0);
 	}
-	
-	
+
+
 	/**
 	 * Checks that this value is not equal to the given value.
 	 * @param other a value to compare
@@ -130,7 +130,7 @@ public class CheckDouble extends CheckHelper
 		return compare(other, CheckOp.NOT_EQ);
 	}
 
-	
+
 	/**
 	 * Checks that this value is not NaN.
 	 * @return this
@@ -142,7 +142,7 @@ public class CheckDouble extends CheckHelper
 		return this;
 	}
 
-	
+
 	/**
 	 * Checks that this value is positive.
 	 * @return this
@@ -152,7 +152,7 @@ public class CheckDouble extends CheckHelper
 		return greater(0);
 	}
 
-	
+
 	private CheckDouble compare(double other, CheckOp op)
 	{
 		if (!op.compare(value_, other))

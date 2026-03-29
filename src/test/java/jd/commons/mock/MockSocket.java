@@ -25,22 +25,22 @@ public class MockSocket extends Socket
     public final ByteArrayInputStream in;
     public final ByteArrayOutputStream out;
 
-    
-    public MockSocket(byte... bytes) 
+
+    public MockSocket(byte... bytes)
     {
         in  = new ByteArrayInputStream(bytes);
         out = new ByteArrayOutputStream();
     }
 
     @Override
-    public InputStream getInputStream() 
+    public InputStream getInputStream()
     {
         return in;
     }
-    
+
 
     @Override
-    public OutputStream getOutputStream() 
+    public OutputStream getOutputStream()
     {
         return out;
     }

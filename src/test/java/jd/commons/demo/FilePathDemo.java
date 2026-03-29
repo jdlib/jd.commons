@@ -31,7 +31,7 @@ public class FilePathDemo
 			System.out.println("Usage: java " + FilePathDemo.class.getName() + " <filepath> [attrPattern]");
 			return;
 		}
-		
+
 		FilePath path = FilePath.of(args[0]);
 		String attrPattern = args.length > 1 ? args[1] : "*";
 
@@ -41,11 +41,11 @@ public class FilePathDemo
 
 		System.out.print("filestore: ");
 		System.out.println(path.getFileStore());
-		
+
 		System.out.println("attributes:");
 		Map<String,Object> attrs = path.attrsNoFollowLinks().map(attrPattern);
 		List<String> names = new ArrayList<>(attrs.keySet());
-		names.sort(null); 
+		names.sort(null);
 		for (String name : names)
 		{
 			System.out.print(" - ");

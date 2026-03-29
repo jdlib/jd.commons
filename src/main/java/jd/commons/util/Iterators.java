@@ -27,28 +27,28 @@ public interface Iterators
 {
 	/**
 	 * @param <T> the element type
-	 * @return an empty Iterator. 
+	 * @return an empty Iterator.
 	 */
 	public static <T> Iterator<T> empty()
 	{
-		return List.<T>of().iterator(); 
+		return List.<T>of().iterator();
 	}
 
-	
+
 	/**
 	 * @param array the array
 	 * @param <T> the element type
-	 * @return an Iterator for an array. 
+	 * @return an Iterator for an array.
 	 */
 	@SafeVarargs
 	public static <T> Iterator<T> of(T... array)
 	{
 		return of(array, 0, array != null ? array.length : 0);
 	}
-	
+
 
 	/**
-	 * @return an Iterator for an array slice. 
+	 * @return an Iterator for an array slice.
 	 * @param array an array
 	 * @param start the start index
 	 * @param end the end index.
@@ -59,11 +59,11 @@ public interface Iterators
 		return new ArrayIt<>(array, start, end);
 	}
 
-	
+
 	/**
 	 * @return an Iterator which returns zero or one values.
 	 * @param value the value. If it is not null, the iterator wiull returns
-	 * 		this values, else it returns no value. 
+	 * 		this values, else it returns no value.
 	 * @param <T> the element type
 	 */
 	public static <T> Iterator<T> optional(T value)
@@ -71,7 +71,7 @@ public interface Iterators
 		return value != null ? of(value) : empty();
 	}
 
-	
+
 	/**
 	 * @param iterators a list of iterators
 	 * @param <T> the element type
@@ -83,9 +83,9 @@ public interface Iterators
 		return new JoinIt<>(iterators);
 	}
 
-	
+
 	/**
-	 * @return an immutable iterator. 
+	 * @return an immutable iterator.
 	 * @param it an iterator
 	 * @param <T> the element type
 	 */
@@ -94,20 +94,20 @@ public interface Iterators
 		return new ImmutableIt<>(it);
 	}
 
-	
+
 	/**
 	 * @param iterable a Iterable
-	 * @return an immutable iterator for an iterator of the iterable. 
+	 * @return an immutable iterator for an iterator of the iterable.
 	 * @param <T> the element type
 	 */
 	public static <T> Iterator<T> immutable(Iterable<T> iterable)
 	{
 		return immutable(iterable.iterator());
 	}
-	
-	
+
+
 	/**
-	 * @return an enumeration which wraps an iterator. 
+	 * @return an enumeration which wraps an iterator.
 	 * @param it an iterator
 	 * @param <T> the element type
 	 */
@@ -166,18 +166,18 @@ class ImmutableIt<T> implements Iterator<T>
 {
 	private final Iterator<T> it_;
 
-	
+
 	public ImmutableIt(Iterator<T> it)
 	{
 		it_	= Check.notNull(it, "iterator");
 	}
-	
-	
+
+
 	@Override public boolean hasNext()
 	{
 		return it_.hasNext();
 	}
-	
+
 
 	@Override public T next()
 	{
@@ -193,8 +193,8 @@ class JoinIt<T> implements Iterator<T>
 		iterators_	= Check.notNull(iterators, "iterators");
 		initNext();
 	}
-	
-	
+
+
 	private boolean initNext()
 	{
 		if (next_ < iterators_.length)
@@ -208,8 +208,8 @@ class JoinIt<T> implements Iterator<T>
 			return false;
 		}
 	}
-	
-	
+
+
 	@Override public boolean hasNext()
 	{
 		while(current_ != null)
@@ -220,7 +220,7 @@ class JoinIt<T> implements Iterator<T>
 		}
 		return false;
 	}
-	
+
 
 	@Override public T next()
 	{
@@ -233,7 +233,7 @@ class JoinIt<T> implements Iterator<T>
 		throw new NoSuchElementException();
 	}
 
-	
+
 	@Override public void remove()
 	{
 		if (current_ != null)
@@ -241,8 +241,8 @@ class JoinIt<T> implements Iterator<T>
 		else
 			throw new NoSuchElementException();
 	}
-	
-	
+
+
 	private Iterator<T>[] iterators_;
 	private Iterator<T> current_;
 	private int next_;

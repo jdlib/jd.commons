@@ -33,7 +33,7 @@ public class ConfigTest
 		Config ro  = map.immutable();
 		assertNotSame(ro, map);
 		assertSame(ro, ro.immutable());
-		
+
 		ConfigAssert.of(ro)
 			.immutable(true)
 			.contains("a", false)
@@ -51,10 +51,10 @@ public class ConfigTest
 			.when("lookup", "b").thenReturn(null)
 			.when("lookup", "c").thenThrow(new NamingException("invalid key"))
 			.create();
-		
+
 		JndiConfig jc = new JndiConfig(context);
 		assertSame(context, jc.getContext());
-		
+
 		ConfigAssert.of(jc)
 			.immutable(true)
 			.contains("a", true)
@@ -66,11 +66,11 @@ public class ConfigTest
 			.toString("Config[jndi]");
 	}
 
-	
+
 	@Test
 	public void testJndiConfigCreate() throws Exception
 	{
-		InitialContext ic = new InitialContext(); 
+		InitialContext ic = new InitialContext();
 
 		assertNull(JndiConfig.createOrNull(null));
 		assertSame(ic, JndiConfig.createOrNull(ic).getContext());
@@ -78,8 +78,8 @@ public class ConfigTest
 		assertSame(ImmutableConfig.EMPTY, JndiConfig.createOrEmpty(null));
 		assertSame(ic, assertInstanceOf(JndiConfig.class, JndiConfig.createOrEmpty(ic)).getContext());
 	}
-	
-	
+
+
 	@Test
 	public void testConcat()
 	{
@@ -90,11 +90,11 @@ public class ConfigTest
 		c2.setValue("b", "b2");
 		Config c3 = new MapConfig();
 		c3.setValue("c", "c3");
-		
+
 		assertNull(Config.concat(null, null));
 		assertSame(c1, Config.concat(c1, null));
 		assertSame(c2, Config.concat(null, c2));
-		
+
 		ConfigAssert.of(Config.concat(c1, c2))
 			.immutable(true)
 			.contains("a", true)
@@ -108,12 +108,12 @@ public class ConfigTest
 		ConfigAssert.of(Config.concat(c2, c1))
 			.get("a", "a2")
 			.get("b", "b2");
-		
+
 		assertNull(Config.concat((Config[])null));
 		assertNull(Config.concat());
 		assertNull(Config.concat((Config)null));
 		assertSame(c1, Config.concat(c1));
-		
+
 		ConfigAssert.of(Config.concat(c1, c2, c3))
 			.immutable(true)
 			.contains("a", true)
@@ -126,21 +126,21 @@ public class ConfigTest
 			.keys("a", "b", "c");
 	}
 
-	
+
 	@Test
 	public void testMapConfig()
 	{
 		MapConfig c = MapConfig.env();
 		assertNotNull(c.getMap()); 		// covers .getMap()
 		assertTrue(c.isImmutable());
-		
+
 		ConfigAssert.of(new MapConfig().set("a").to(1))
 			.get("a", "1")
 			.keys("a")
 			.immutable(false)
 			.clear()
 			.get("a", null);
-		
+
 		ConfigAssert.of(new MapConfig(Map.of()))
 			.immutable(true);
 
@@ -177,7 +177,7 @@ public class ConfigTest
 	public void testPropsConfig() throws Exception
 	{
 		assertEquals(System.getProperty("user.dir"), PropsConfig.system().getValue("user.dir"));
-		
+
 		PropsConfig pc = new PropsConfig();
 		assertNotNull(pc.getProperties());
 		pc.setValue("a", "1");
@@ -192,23 +192,23 @@ public class ConfigTest
 			.toString("Config[props]")
 			.clear()
 			.get("a", null);
-		
+
 		ByteArrayOutputStream propsBAOS = new ByteArrayOutputStream();
 		pc.write().comment("hello").to(Bytes.to(propsBAOS));
 		byte[] propsBytes  = pc.write().comment("hello").toByteArray();
 		assertArrayEquals(propsBAOS.toByteArray(), propsBytes);
 		byte[] xmlBytes    = pc.write().xml().toByteArray();
-		
-		PropsConfig pcread1a = PropsConfig.readProps().from(propsBytes); 
-		PropsConfig pcread1b = PropsConfig.readProps().from(Bytes.from(propsBytes)); 
+
+		PropsConfig pcread1a = PropsConfig.readProps().from(propsBytes);
+		PropsConfig pcread1b = PropsConfig.readProps().from(Bytes.from(propsBytes));
 		PropsConfig pcread2  = PropsConfig.readProps().xml().from(xmlBytes);
-		
+
 		assertEquals(pc.getProperties(), pcread1a.getProperties());
 		assertEquals(pc.getProperties(), pcread1b.getProperties());
 		assertEquals(pc.getProperties(), pcread2.getProperties());
 	}
-	
-	
+
+
 	@Test
 	public void testProxyConfig()
 	{
@@ -221,9 +221,9 @@ public class ConfigTest
 			.set("a", "1")
 			.get("a", "1");
 	}
-	
-	
-	
+
+
+
 	@Test
 	public void testTranslateConfig()
 	{

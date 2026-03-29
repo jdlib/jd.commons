@@ -26,7 +26,7 @@ import jd.commons.util.UncheckedException;
  * @param <E> the type of the Exception
  */
 @FunctionalInterface
-public interface XFunction<T, R, E extends Exception> 
+public interface XFunction<T, R, E extends Exception>
 {
     /**
      * Applies this function to the given argument.
@@ -44,23 +44,23 @@ public interface XFunction<T, R, E extends Exception>
      * @param next a next function
      * @return the composed function
      */
-    default <V> XFunction<T,V,E> andThen(XFunction<? super R, ? extends V, E> next) 
+    default <V> XFunction<T,V,E> andThen(XFunction<? super R, ? extends V, E> next)
     {
         Check.notNull(next, "next");
         return (T t) -> next.apply(apply(t));
     }
 
-    
+
     /**
      * @param <T> the input type
      * @return the identity function
      */
-    static <T> XFunction<T, T, RuntimeException> identity() 
+    static <T> XFunction<T, T, RuntimeException> identity()
     {
         return t -> t;
     }
-    
-    
+
+
     /**
      * Returns a XFunction. Convinience method to obtain a XFunction from a lambda
      * or method handle.
@@ -74,8 +74,8 @@ public interface XFunction<T, R, E extends Exception>
     {
     	return Check.notNull(fn, "fn");
     }
-    
-    
+
+
 	/**
 	 * Turn this function into a unchecked function.
 	 * Any checked exception thrown by the function is

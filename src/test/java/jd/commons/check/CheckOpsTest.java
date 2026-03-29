@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 
-// perfect coverage 
+// perfect coverage
 public class CheckOpsTest
 {
 	@Test

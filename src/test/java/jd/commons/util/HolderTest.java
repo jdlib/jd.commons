@@ -23,7 +23,7 @@ public class HolderTest
 	public void test()
 	{
 		Holder<String> holder;
-		
+
 		holder = new Holder<>("a");
 		assertTrue(holder.has("a"));
 		assertFalse(holder.has(null));
@@ -31,7 +31,7 @@ public class HolderTest
 		assertEquals("a", holder.get());
 		assertEquals("a", holder.getOr("b"));
 		assertEquals("b", holder.apply("b"));
-		
+
 		holder.clear();
 		assertNull(holder.get());
 		assertNull(holder.getOr(null));

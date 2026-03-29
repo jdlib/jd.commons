@@ -35,16 +35,16 @@ public class WrapHandler<AS,AD extends Closeable,R,E extends Exception>
 		forByteSource(IOHandler<ByteSource, InputStream,R,E> inner, Function<InputStream,? extends InputStream> wrapper)
 	{
 		// explicit since javac has problems
-		BiFunction<ByteSource,Function<InputStream,? extends InputStream>,ByteSource> adapter = ByteSource::wrap; 
+		BiFunction<ByteSource,Function<InputStream,? extends InputStream>,ByteSource> adapter = ByteSource::wrap;
 		return new WrapHandler<>(inner, wrapper, adapter);
 	}
 
-	
+
 	public static <R,E extends Exception> WrapHandler<CharSource,Reader,R,E>
 		forCharSource(IOHandler<CharSource,Reader,R,E> inner, Function<Reader,? extends Reader> wrapper)
 	{
 		// explicit since javac has problems
-		BiFunction<CharSource,Function<Reader,? extends Reader>,CharSource> adapter = CharSource::wrap; 
+		BiFunction<CharSource,Function<Reader,? extends Reader>,CharSource> adapter = CharSource::wrap;
 		return new WrapHandler<>(inner, wrapper, adapter);
 	}
 
@@ -53,25 +53,25 @@ public class WrapHandler<AS,AD extends Closeable,R,E extends Exception>
 		forByteTarget(IOHandler<ByteTarget, OutputStream,R,E> inner, Function<OutputStream,? extends OutputStream> wrapper)
 	{
 		// explicit since javac has problems
-		BiFunction<ByteTarget,Function<OutputStream,? extends OutputStream>,ByteTarget> adapter = ByteTarget::wrap; 
+		BiFunction<ByteTarget,Function<OutputStream,? extends OutputStream>,ByteTarget> adapter = ByteTarget::wrap;
 		return new TargetWrapHandler<>(inner, wrapper, adapter, IO.Bytes::to);
 	}
 
-	
+
 	public static <R,E extends Exception> WrapHandler<CharTarget,Writer,R,E>
 		forCharTarget(IOHandler<CharTarget,Writer,R,E> inner, Function<Writer,? extends Writer> wrapper)
 	{
 		// explicit since javac has problems
-		BiFunction<CharTarget,Function<Writer,? extends Writer>,CharTarget> adapter = CharTarget::wrap; 
+		BiFunction<CharTarget,Function<Writer,? extends Writer>,CharTarget> adapter = CharTarget::wrap;
 		return new TargetWrapHandler<>(inner, wrapper, adapter, IO.Chars::to);
 	}
 
-	
+
 	protected final IOHandler<AS,AD,R,E> inner_;
 	protected final Function<AD,? extends AD> wrapper_;
 	protected final BiFunction<AS,Function<AD,? extends AD>,AS> adapter_;
-	
-	
+
+
 	public WrapHandler(IOHandler<AS,AD,R,E> inner, Function<AD,? extends AD> wrapper,
 		BiFunction<AS,Function<AD,? extends AD>,AS> adapter)
 	{
@@ -79,14 +79,14 @@ public class WrapHandler<AS,AD extends Closeable,R,E extends Exception>
 		wrapper_ = Check.notNull(wrapper, "wrapper");
 		adapter_ = Check.notNull(adapter, "adapter");
 	}
-	
-	
+
+
 	@Override
 	public R runSupplier(AS arg) throws E
 	{
 		return inner_.runSupplier(adapter_.apply(arg, wrapper_));
 	}
-	
+
 
 	@Override
 	public R runDirect(AD arg) throws E
@@ -107,12 +107,12 @@ public class WrapHandler<AS,AD extends Closeable,R,E extends Exception>
 }
 
 
-class TargetWrapHandler<AS,AD extends Closeable,R,E extends Exception> 
+class TargetWrapHandler<AS,AD extends Closeable,R,E extends Exception>
 	extends WrapHandler<AS,AD,R,E>
 {
 	private final Function<AD,AS> factory_;
-	
-	
+
+
 	public TargetWrapHandler(IOHandler<AS,AD,R,E> inner,
 		Function<AD,? extends AD> wrapper,
 		BiFunction<AS,Function<AD,? extends AD>,AS> adapter,
@@ -121,12 +121,12 @@ class TargetWrapHandler<AS,AD extends Closeable,R,E extends Exception>
 		super(inner, wrapper, adapter);
 		factory_ = factory;
 	}
-	
+
 
 	@Override
 	public R runDirect(AD arg) throws E
 	{
-		// we could just do 
+		// we could just do
 		//     inner_.runDirect(wrapper_.apply(arg));
 		// but in case the wrapping OutputStream/Writer caches output
 		// which it only flushes completely when closed

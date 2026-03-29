@@ -24,7 +24,7 @@ import jd.commons.check.Check;
  * By design it is immutable i.e. does not allow to modify the JNDI context.<br>
  * It never {@link Context#close() closes} its Context, so in case this is needed
  * the owner of the JndiConfig must control the lifecycle of the Context and close
- * by own means. 
+ * by own means.
  */
 // about prefixing:
 // when JndiConfig#prefixed is called, JndiConfig could switch to Context bound to the prefix
@@ -33,8 +33,8 @@ import jd.commons.check.Check;
 public class JndiConfig extends Config
 {
 	private final Context context_;
-	
-	
+
+
 	/**
 	 * Creates a new JndiConfig.
 	 * @param context a Context
@@ -45,7 +45,7 @@ public class JndiConfig extends Config
 		return context != null ? new JndiConfig(context) : null;
 	}
 
-	
+
 	/**
 	 * Creates a new Config.
 	 * @param context a Context
@@ -56,7 +56,7 @@ public class JndiConfig extends Config
 		return context != null ? new JndiConfig(context) : ImmutableConfig.EMPTY;
 	}
 
-	
+
 	/**
 	 * Creates a new JndiConfig.
 	 * @param context a Context, not null
@@ -65,8 +65,8 @@ public class JndiConfig extends Config
 	{
 		context_ = Check.notNull(context, "context");
 	}
-	
-	
+
+
 	/**
 	 * @return the context used by this JndiConfig.
 	 */
@@ -74,16 +74,16 @@ public class JndiConfig extends Config
 	{
 		return context_;
 	}
-		
 
-	@Override 
+
+	@Override
 	protected boolean containsInternal(String key)
 	{
 		return getInternal(key) != null;
 	}
-	
-	
-	@Override 
+
+
+	@Override
 	protected String getInternal(String key)
 	{
 		try
@@ -104,13 +104,13 @@ public class JndiConfig extends Config
 		return true;
 	}
 
-	
+
 	@Override protected void setInternal(String key, String value)
 	{
 		throw createImmutableEx();
 	}
-	
-	
+
+
 	@Override
 	public Config clear()
 	{

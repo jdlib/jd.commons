@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 public class SetStringTest
 {
-	private static final SetString<String> set_ = new SetString<>() 
+	private static final SetString<String> set_ = new SetString<>()
 	{
 		@Override
 		public String to(String s)
@@ -27,7 +27,7 @@ public class SetStringTest
 			return s;
 		}
 	};
-	                                                       
+
 	@Test
 	public void test()
 	{

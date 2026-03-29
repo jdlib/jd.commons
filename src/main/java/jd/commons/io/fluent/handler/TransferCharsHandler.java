@@ -25,14 +25,14 @@ public class TransferCharsHandler<E extends Exception>
 	extends IOHandler<CharTarget,Writer,Void,IOException>
 {
 	protected final CharSource source_;
-	
-	
+
+
 	public TransferCharsHandler(CharSource source)
 	{
 		source_ = Check.notNull(source, "source");
 	}
-	
-	
+
+
 	@Override
 	public Void runSupplier(CharTarget target) throws IOException
 	{
@@ -43,7 +43,7 @@ public class TransferCharsHandler<E extends Exception>
 		}
 		return null;
 	}
-	
+
 
 	@Override
 	public Void runDirect(Writer writer) throws IOException
@@ -52,8 +52,8 @@ public class TransferCharsHandler<E extends Exception>
 		{
 			reader.transferTo(writer);
 			// since we don't close the writer and it might be buffering in memory
-			// we need to flush 
-			writer.flush(); 
+			// we need to flush
+			writer.flush();
 		}
 		return null;
 	}

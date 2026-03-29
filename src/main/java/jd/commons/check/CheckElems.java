@@ -25,8 +25,8 @@ public class CheckElems<T> extends CheckHelper
 {
 	private final Iterable<T> iterable_;
 	private final String what_;
-	
-	
+
+
 	/**
 	 * Creates a new CheckElems.
 	 * @param it the iterator
@@ -37,7 +37,7 @@ public class CheckElems<T> extends CheckHelper
 		iterable_	= Check.notNull(it, what);
 		what_ 		= what;
 	}
-	
+
 
 	/**
 	 * Checks that the elements are not empty.
@@ -50,7 +50,7 @@ public class CheckElems<T> extends CheckHelper
 		return this;
 	}
 
-	
+
 	/**
 	 * Checks that none of the elements is null.
 	 * @return this
@@ -85,12 +85,12 @@ public class CheckElems<T> extends CheckHelper
 			throw new IllegalArgumentException(normWhat(what_) + " not contains " + argString(value));
 		return this;
 	}
-	
-	
+
+
 	private boolean doesContain(T value)
 	{
 		// JDK immutable collections throw a NPE for null values
-		// therefore if value_ is null, fall back to iteration	
+		// therefore if value_ is null, fall back to iteration
 		if ((value != null) && (iterable_ instanceof Collection))
 			return ((Collection<T>)iterable_).contains(value);
 

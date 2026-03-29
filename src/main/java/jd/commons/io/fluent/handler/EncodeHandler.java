@@ -26,8 +26,8 @@ public class EncodeHandler<R,E extends Exception> extends IOHandler<ByteTarget,O
 {
 	private final IOHandler<CharTarget,Writer,R,E> charHandler_;
 	private final Charset charset_;
-	
-	
+
+
 	public EncodeHandler(IOHandler<CharTarget,Writer,R,E> charHandler, Charset charset)
 	{
 		charHandler_ = Check.notNull(charHandler, "charHandler");
@@ -40,8 +40,8 @@ public class EncodeHandler<R,E extends Exception> extends IOHandler<ByteTarget,O
 	{
 		return charHandler_.runSupplier(() -> new OutputStreamWriter(target.getOutputStream(), charset_));
 	}
-	
-	
+
+
 	@Override
 	public R runDirect(OutputStream out) throws E
 	{

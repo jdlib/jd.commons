@@ -33,10 +33,10 @@ public class ErrorHandler<AS,AD extends Closeable,RI,RO,E extends Exception>
 {
 	private final IOHandler<AS,AD,RI,?> inner_;
 	private final ErrorFunction<RI,RO,E> error_;
-	
-	
+
+
 	/**
-	 * Creates a new ErrorHandler. 
+	 * Creates a new ErrorHandler.
 	 * @param inner an inner IOHandler
 	 * @param error the error function
 	 */
@@ -55,8 +55,8 @@ public class ErrorHandler<AS,AD extends Closeable,RI,RO,E extends Exception>
 	{
 		return inner_;
 	}
-	
-	
+
+
 	@Override
 	public RO runSupplier(AS arg) throws E
 	{
@@ -69,8 +69,8 @@ public class ErrorHandler<AS,AD extends Closeable,RI,RO,E extends Exception>
 			return error_.handleException(e);
 		}
 	}
-	
-	
+
+
 	@Override
 	public RO runDirect(AD arg) throws E
 	{
@@ -83,8 +83,8 @@ public class ErrorHandler<AS,AD extends Closeable,RI,RO,E extends Exception>
 			return error_.handleException(e);
 		}
 	}
-	
-	
+
+
 	@Override
 	protected String describe()
 	{

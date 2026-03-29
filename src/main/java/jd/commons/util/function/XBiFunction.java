@@ -30,7 +30,7 @@ import jd.commons.util.UncheckedException;
  * @see BiFunction
  */
 @FunctionalInterface
-public interface XBiFunction<T, U, R, E extends Exception> 
+public interface XBiFunction<T, U, R, E extends Exception>
 {
     /**
      * Applies this function to the given arguments.
@@ -55,7 +55,7 @@ public interface XBiFunction<T, U, R, E extends Exception>
      * applies the {@code after} function
      * @throws NullPointerException if after is null
      */
-    default <V> XBiFunction<T, U, V, E> andThen(XFunction<? super R, ? extends V, E> after) 
+    default <V> XBiFunction<T, U, V, E> andThen(XFunction<? super R, ? extends V, E> after)
     {
         Check.notNull(after, "after");
         return (T t, U u) -> after.apply(apply(t, u));

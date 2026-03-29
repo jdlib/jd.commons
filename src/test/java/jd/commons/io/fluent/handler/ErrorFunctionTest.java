@@ -28,15 +28,15 @@ public class ErrorFunctionTest
 		IllegalArgumentException iae = new IllegalArgumentException();
 		IOException ioe = new IOException();
 		SQLException sqe = new SQLException();
-		
+
 		ErrorFunction<Void,Void,IOException> ef = ErrorFunction.throwUncheckedOrIOE();
 		assertThatThrownBy(() -> ef.handleException(iae)).isSameAs(iae);
 		assertThatThrownBy(() -> ef.handleException(ioe)).isSameAs(ioe);
 		assertThatThrownBy(() -> ef.handleException(sqe)).isInstanceOf(IOException.class).cause().isSameAs(sqe);
 		assertEquals("Throwing", ef.toString());
 	}
-	
-	
+
+
 	@Test
 	public void testSwallow() throws Exception
 	{
@@ -45,8 +45,8 @@ public class ErrorFunctionTest
 		assertNull(sw.handleException(new IOException()));
 		assertEquals("Swallow", sw.toString());
 	}
-	
-	
+
+
 	@Test
 	public void testThrowing() throws Exception
 	{

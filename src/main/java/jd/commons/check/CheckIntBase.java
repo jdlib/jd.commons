@@ -19,20 +19,20 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 	 * The int value.
 	 */
 	protected final int value_;
-	
+
 	/**
 	 * Describes the value.
 	 */
 	protected final String what_;
-	
-	
+
+
 	protected CheckIntBase(int value, String what)
 	{
 		value_ = value;
 		what_  = what;
 	}
-	
-	
+
+
 	/**
 	 * @return the value of this Check object.
 	 */
@@ -40,8 +40,8 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 	{
 		return value_;
 	}
-	
-	
+
+
 	/**
 	 * Checks that the size is greater than the given value.
 	 * @param other a value to compare
@@ -51,8 +51,8 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 	{
 		return compare(other, CheckOp.GREATER);
 	}
-	
-	
+
+
 	/**
 	 * Checks that the size is greater than or equal to the given value.
 	 * @param other a value to compare
@@ -62,8 +62,8 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 	{
 		return compare(other, CheckOp.GREATER_EQ);
 	}
-	
-	
+
+
 	/**
 	 * Checks that the size is less than the given value.
 	 * @param other a value to compare
@@ -73,8 +73,8 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 	{
 		return compare(other, CheckOp.LESS);
 	}
-	
-	
+
+
 	/**
 	 * Checks that the size is less than or equal to the given value.
 	 * @param other a value to compare
@@ -85,7 +85,7 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 		return compare(other, CheckOp.LESS_EQ);
 	}
 
-	
+
 	/**
 	 * Checks that the size is equal to the given value.
 	 * @param other a value to compare
@@ -96,7 +96,7 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 		return compare(other, CheckOp.EQ);
 	}
 
-	
+
 	/**
 	 * Checks that the size is not equal to the given value.
 	 * @param other a value to compare
@@ -107,12 +107,12 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 		return compare(other, CheckOp.NOT_EQ);
 	}
 
-	
+
 	/**
 	 * Checks that this value equals true when compared to the other value using the operator.
 	 * @param other the other value
 	 * @param op the Operator
-	 * @return the value under test 
+	 * @return the value under test
 	 * @throws IllegalArgumentException if the comparison fails
 	 */
 	@SuppressWarnings("unchecked")
@@ -122,8 +122,8 @@ abstract class CheckIntBase<T extends CheckIntBase<T>> extends CheckHelper
 			throw failCompareEx(what(), value_, other, op);
 		return (T)this;
 	}
-	
-	
+
+
 	/**
 	 * @return the {@link #normWhat(String) normed what description}.
 	 */

@@ -36,7 +36,7 @@ public class OpenInputStream extends FilterInputStream
 	/**
 	 * Does nothing.
 	 */
-	@Override 
+	@Override
 	public void close()
 	{
 		// does nothing

@@ -27,7 +27,7 @@ import jd.commons.util.UncheckedException;
 public class CharWriteToTest
 {
 	private static final String AUML = "\u00E4";
-	@Test 
+	@Test
 	public void testCountChars() throws Exception
 	{
 		CharSource cs = Chars.fromString(AUML);
@@ -39,17 +39,17 @@ public class CharWriteToTest
 	}
 
 
-	@Test 
+	@Test
 	public void testSilent() throws Exception
 	{
 		assertEquals("abc", Chars.fromString("abc").write().silent().toStr());
 		IOException e = new IOException("hello");
-		Holder<Exception> log = new Holder<>();  
+		Holder<Exception> log = new Holder<>();
 		assertSame(e, Chars.fromError(e).write().silent(log).to(Chars.toNull()));
 		assertSame(e, log.get());
 	}
 
-	
+
 	@Test
 	public void testThrowing() throws Exception
 	{
@@ -58,9 +58,9 @@ public class CharWriteToTest
 			.isInstanceOf(IllegalStateException.class)
 			.cause().isSameAs(e);
 	}
-	
-	
-	@Test 
+
+
+	@Test
 	public void testToAppendable() throws Exception
 	{
 		StringBuilder sb = new StringBuilder();
@@ -68,27 +68,27 @@ public class CharWriteToTest
 		assertEquals("a", sb.toString());
 	}
 
-	
-	@Test 
+
+	@Test
 	public void testToError() throws Exception
 	{
 		IOException e = new IOException("x");
 		Exception f = Chars.fromString("a").write().silent().toError(e);
 		assertSame(e, f);
 	}
-	
+
 
 	@SuppressWarnings("deprecation")
-	@Test 
+	@Test
 	public void testToStr() throws Exception
 	{
 		CharWriteTo<Void,IOException> cw = Chars.fromLines("a").write();
-		String expected = "a" + System.lineSeparator(); 
+		String expected = "a" + System.lineSeparator();
 		assertEquals(expected, cw.toStr());
 		assertNotEquals(expected, cw.toString());
 	}
 
-	
+
 	@Test
 	public void testUnckecked() throws Exception
 	{
@@ -104,7 +104,7 @@ public class CharWriteToTest
 			.isSameAs(ioe);
 	}
 
-	
+
 	@Test
 	public void testWrap() throws Exception
 	{

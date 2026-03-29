@@ -27,7 +27,7 @@ public class XSupplierTest
 	{
 		XSupplier<String,IOException> p1 = () -> "a";
 		XSupplier<String,IOException> p2 = () -> { throw new IOException(); };
-		
+
 		assertEquals("a", p1.unchecked().get());
 		assertThatThrownBy(() -> p2.unchecked().get())
 			.isInstanceOf(UncheckedException.class);

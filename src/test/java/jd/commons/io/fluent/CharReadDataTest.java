@@ -29,13 +29,13 @@ public class CharReadDataTest
 		Chars.fromString("abc").read().all(sb);
 		assertEquals("abc", sb.toString());
 	}
-	
-	
+
+
 	@Test
 	public void testThrowing() throws Exception
 	{
 		Chars.fromString("abc").read().throwing(SQLException::new).all();
-		
+
 		// coverage for apply catch clause
 		assertNull(new CharReadData<>(Chars.fromError("err"), ErrorFunction.swallow()).all());
 	}

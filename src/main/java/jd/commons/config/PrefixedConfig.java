@@ -21,7 +21,7 @@ class PrefixedConfig extends ProxyConfig
 {
 	private final String prefix_;
 
-	
+
 	public static PrefixedConfig of(Config wrapped, String prefix)
 	{
 		Check.notNull(wrapped, "wrapped");
@@ -42,7 +42,7 @@ class PrefixedConfig extends ProxyConfig
 		prefix_ = prefix;
 	}
 
-	
+
 	@Override protected String getInternal(String key)
 	{
 		return wrapped_.getInternal(fullKey(key));
@@ -61,7 +61,7 @@ class PrefixedConfig extends ProxyConfig
 	}
 
 
-	@Override 
+	@Override
 	public Stream<String> keys()
 	{
 		int len = prefix_.length();

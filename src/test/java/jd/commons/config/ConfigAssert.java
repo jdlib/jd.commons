@@ -21,14 +21,14 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 public class ConfigAssert
 {
 	private final Config config_;
-	
-	
+
+
 	public static ConfigAssert of(Config config)
 	{
 		return new ConfigAssert(config);
 	}
-	  
-	
+
+
 	public ConfigAssert(Config config)
 	{
 		config_ = config;
@@ -41,7 +41,7 @@ public class ConfigAssert
 		return this;
 	}
 
-	
+
 	public ConfigAssert contains(String key, boolean expected)
 	{
 		assertEquals(expected, config_.contains(key));
@@ -66,7 +66,7 @@ public class ConfigAssert
 		}
 		return this;
 	}
-	
+
 
 	private void immutable(ThrowingCallable shouldRaiseThrowable)
 	{
@@ -74,7 +74,7 @@ public class ConfigAssert
 			.isInstanceOf(UnsupportedOperationException.class)
 			.hasMessage("immutable");
 	}
-	
+
 
 
 	public ConfigAssert keys(String... expected)
@@ -90,14 +90,14 @@ public class ConfigAssert
 		return this;
 	}
 
-	
+
 	public ConfigAssert set(String key, String value)
 	{
 		config_.setValue(key, value);
 		return this;
 	}
 
-	
+
 	public ConfigAssert toString(String expected)
 	{
 		assertEquals(expected, config_.toString());

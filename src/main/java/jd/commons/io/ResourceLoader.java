@@ -28,15 +28,15 @@ public interface ResourceLoader
 {
 	/**
 	 * @return a ResourceLoader which is based on the {@link Thread#getContextClassLoader() context ClassLoader}.
-	 * For each invocation the context ClassLoadder is retrieved again. 
-	 * If there is no context ClassLoader the system ClassLoader is used. 
+	 * For each invocation the context ClassLoadder is retrieved again.
+	 * If there is no context ClassLoader the system ClassLoader is used.
 	 */
 	public static ResourceLoader context()
 	{
 		return ResLoaderByContextCL.INSTANCE;
 	}
 
-	
+
 	/**
 	 * @return a ResourceLoader which is based on the {@link ClassLoader#getSystemClassLoader() system classloader}.
 	 */
@@ -44,8 +44,8 @@ public interface ResourceLoader
 	{
 		return ResLoaderByCL.SYSTEM;
 	}
-	
-	
+
+
 	/**
 	 * @return a ResourceLoader which is based on the {@link ClassLoader#getPlatformClassLoader() platform classloader}.
 	 */
@@ -54,7 +54,7 @@ public interface ResourceLoader
 		return ResLoaderByCL.PLATFORM;
 	}
 
-	
+
 	/**
 	 * @return a ResourceLoader which is based on the ClassLoader of this class.
 	 */
@@ -63,7 +63,7 @@ public interface ResourceLoader
 		return ResLoaderByCL.OWN;
 	}
 
-	
+
 	/**
 	 * @return a ResourceLoader which always returns null/fails.
 	 */
@@ -72,7 +72,7 @@ public interface ResourceLoader
 		return GenericResLoader.NOP;
 	}
 
-	
+
 	/**
 	 * @param type a Class
 	 * @return a ResourceLoader for the class
@@ -81,8 +81,8 @@ public interface ResourceLoader
 	{
 		return new ResLoaderByClass(type);
 	}
-	
-	
+
+
 	/**
 	 * @param classLoader a ClassLoader
 	 * @return a ResourceLoader for the ClassLoader
@@ -92,14 +92,14 @@ public interface ResourceLoader
 		return new ResLoaderByCL(classLoader);
 	}
 
-	
+
 	// think ServletContext
 	/**
 	 * @return a ResourceLoader which is based the given functions to
 	 * 		return an InputStream and URL for a resource.
 	 * @param name a name for the ResourceLoader (used in its toString() method)
 	 * @param inputStream a function which returns an InputStream for a resource name or null if the resource does not exist
-	 * @param url a function which returns an InputStream for a resource name or null if the resource does not exist 
+	 * @param url a function which returns an InputStream for a resource name or null if the resource does not exist
 	 */
 	public static ResourceLoader of(String name,
 		XFunction<String,InputStream,IOException> inputStream,
@@ -108,7 +108,7 @@ public interface ResourceLoader
 		return new GenericResLoader(name, inputStream, url);
 	}
 
-	
+
 	/**
 	 * Returns an InputStream to the resource or null if it not found.
 	 * @param name the resource name
@@ -117,7 +117,7 @@ public interface ResourceLoader
 	 */
 	public InputStream getInputStreamOrNull(String name) throws IOException;
 
-	
+
 	/**
 	 * @return an InputStream to the resource.
 	 * @param name the resource name
@@ -131,7 +131,7 @@ public interface ResourceLoader
 		return in;
 	}
 
-	
+
 	/**
 	 * Returns an URL to the resource or null if it not found.
 	 * @param name the resource name
@@ -144,42 +144,42 @@ public interface ResourceLoader
 class ResLoaderByClass implements ResourceLoader
 {
 	private final Class<?> class_;
-	
-	
+
+
 	public ResLoaderByClass(Class<?> c)
 	{
 		class_ = Check.notNull(c, "class");
 	}
-	
-	
+
+
 	@Override
 	public InputStream getInputStreamOrNull(String name) throws IOException
 	{
 		return class_.getResourceAsStream(name);
 	}
-	
+
 
 	@Override
 	public URL getURL(String name)
 	{
 		return class_.getResource(name);
 	}
-	
-	
+
+
 	@Override
 	public int hashCode()
 	{
 		return class_.hashCode();
 	}
-	
-	
+
+
 	@Override
 	public boolean equals(Object other)
 	{
 		return other instanceof ResLoaderByClass && ((ResLoaderByClass)other).class_ == class_;
 	}
-	
-	
+
+
 	@Override
 	public String toString()
 	{
@@ -191,34 +191,34 @@ class ResLoaderByClass implements ResourceLoader
 class ResLoaderByContextCL implements ResourceLoader
 {
 	public static final ResLoaderByContextCL INSTANCE = new ResLoaderByContextCL();
-	
-		
+
+
 	private ResLoaderByContextCL()
 	{
 	}
-	
-	
+
+
 	private ClassLoader classLoader()
 	{
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
 		return loader != null ? loader : ClassLoader.getSystemClassLoader();
 	}
 
-	
+
 	@Override
 	public InputStream getInputStreamOrNull(String name) throws IOException
 	{
 		return classLoader().getResourceAsStream(name);
 	}
-	
+
 
 	@Override
 	public URL getURL(String name)
 	{
 		return classLoader().getResource(name);
 	}
-	
-	
+
+
 	@Override
 	public String toString()
 	{
@@ -232,53 +232,53 @@ class ResLoaderByCL implements ResourceLoader
 	public static final ResLoaderByCL SYSTEM   	= new ResLoaderByCL(ClassLoader.getSystemClassLoader(), "<system>");
 	public static final ResLoaderByCL PLATFORM 	= new ResLoaderByCL(ClassLoader.getPlatformClassLoader(), "<platform>");
 	public static final ResLoaderByCL OWN 		= new ResLoaderByCL(ResourceLoader.class.getClassLoader());
-	
+
 
 	private final ClassLoader classLoader_;
 	private final Object name_;
-	
-	
+
+
 	public ResLoaderByCL(ClassLoader classLoader)
 	{
 		this(Check.notNull(classLoader, "classLoader"), null);
 	}
-	
-	
+
+
 	private ResLoaderByCL(ClassLoader classLoader, Object name)
 	{
 		classLoader_ = Check.notNull(classLoader, "classLoader");
 		name_ 		 = name != null ? name : classLoader;
 	}
 
-	
+
 	@Override
 	public InputStream getInputStreamOrNull(String name) throws IOException
 	{
 		return classLoader_.getResourceAsStream(name);
 	}
-	
+
 
 	@Override
 	public URL getURL(String name)
 	{
 		return classLoader_.getResource(name);
 	}
-	
-	
+
+
 	@Override
 	public int hashCode()
 	{
 		return classLoader_.hashCode();
 	}
-	
-	
+
+
 	@Override
 	public boolean equals(Object other)
 	{
 		return other instanceof ResLoaderByCL && ((ResLoaderByCL)other).classLoader_ == classLoader_;
 	}
-	
-	
+
+
 	@Override
 	public String toString()
 	{
@@ -290,13 +290,13 @@ class ResLoaderByCL implements ResourceLoader
 class GenericResLoader implements ResourceLoader
 {
 	public static final GenericResLoader NOP = new GenericResLoader("nop", s -> null, s -> null);
-	
-	
+
+
 	private final String name_;
 	private final XFunction<String,InputStream,IOException> inputStream_;
 	private final Function<String,URL> url_;
-	
-	
+
+
 	public GenericResLoader(String name, XFunction<String,InputStream,IOException> inputStream,
 		Function<String,URL> url)
 	{
@@ -304,36 +304,36 @@ class GenericResLoader implements ResourceLoader
 		inputStream_ = Check.notNull(inputStream, "inputStream");
 		url_ = Check.notNull(url, "url");
 	}
-	
-	
+
+
 	@Override
 	public InputStream getInputStreamOrNull(String name) throws IOException
 	{
 		return inputStream_.apply(name);
 	}
-	
+
 
 	@Override
 	public URL getURL(String name)
 	{
 		return url_.apply(name);
 	}
-	
-	
+
+
 	@Override
 	public int hashCode()
 	{
 		return name_.hashCode();
 	}
-	
-	
+
+
 	@Override
 	public boolean equals(Object other)
 	{
 		return other instanceof GenericResLoader && ((GenericResLoader)other).name_.equals(name_);
 	}
-	
-	
+
+
 	@Override
 	public String toString()
 	{

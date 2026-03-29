@@ -21,35 +21,35 @@ import jd.commons.check.Check;
 /**
  * A Writer implementation that writes to an {@link Appendable}.
  */
-public class AppendableWriter extends Writer 
+public class AppendableWriter extends Writer
 {
     private final Appendable appendable_;
-    
+
 
     /**
      * Creates a new AppendableWriter.
      * @param appendable the appendable, not null
      */
-    public AppendableWriter(Appendable appendable) 
+    public AppendableWriter(Appendable appendable)
     {
         appendable_ = Check.notNull(appendable, "appendable");
     }
 
-    
+
     /**
      * @return the appendable.
      */
-    public Appendable getAppendable() 
+    public Appendable getAppendable()
     {
         return appendable_;
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public Writer append(char c) throws IOException 
+    public Writer append(char c) throws IOException
     {
         appendable_.append(c);
         return this;
@@ -60,7 +60,7 @@ public class AppendableWriter extends Writer
      * {@inheritDoc}
      */
     @Override
-    public Writer append(CharSequence csq) throws IOException 
+    public Writer append(CharSequence csq) throws IOException
     {
         appendable_.append(csq);
         return this;
@@ -71,18 +71,18 @@ public class AppendableWriter extends Writer
      * {@inheritDoc}
      */
     @Override
-    public Writer append(CharSequence csq, int start, int end) throws IOException 
+    public Writer append(CharSequence csq, int start, int end) throws IOException
     {
         appendable_.append(csq, start, end);
         return this;
     }
-    
+
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void write(char[] cbuf, int off, int len) throws IOException 
+    public void write(char[] cbuf, int off, int len) throws IOException
     {
     	Check.notNull(cbuf, "cbuf");
     	int max = off + len;
@@ -90,22 +90,22 @@ public class AppendableWriter extends Writer
             appendable_.append(cbuf[off]);
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public void write(int c) throws IOException 
+    public void write(int c) throws IOException
     {
         appendable_.append((char)c);
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public void write(String str, int off, int len) throws IOException 
+    public void write(String str, int off, int len) throws IOException
     {
         appendable_.append(Check.notNull(str, "str"), off, off + len);
     }
@@ -115,25 +115,25 @@ public class AppendableWriter extends Writer
      * Does nothing.
      */
     @Override
-    public void flush() throws IOException 
+    public void flush() throws IOException
     {
     }
 
-    
+
     /**
      * Does nothing.
      */
     @Override
-    public void close() throws IOException 
+    public void close() throws IOException
     {
     }
-    
+
 
     /**
      * @return the Appendable turned into a String.
      */
     @Override
-    public String toString() 
+    public String toString()
     {
         return appendable_.toString();
     }

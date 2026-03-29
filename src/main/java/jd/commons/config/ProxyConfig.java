@@ -24,7 +24,7 @@ public abstract class ProxyConfig extends Config
 {
 	protected final Config wrapped_;
 
-	
+
 	public ProxyConfig(Config wrapped)
 	{
 		wrapped_ = Check.notNull(wrapped, "wrapped");
@@ -37,7 +37,7 @@ public abstract class ProxyConfig extends Config
 		return wrapped_.containsInternal(key);
 	}
 
-	
+
 	@Override
 	protected String getInternal(String key)
 	{
@@ -64,8 +64,8 @@ public abstract class ProxyConfig extends Config
 	{
 		return wrapped_.isImmutable();
 	}
-	
-	
+
+
 	@Override
 	public Config clear()
 	{

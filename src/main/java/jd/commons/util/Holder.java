@@ -76,7 +76,7 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 		return set(value);
 	}
 
-	
+
 	/**
 	 * Sets the value.
 	 * @param value a value
@@ -88,7 +88,7 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 		return value;
 	}
 
-	
+
 	/**
 	 * Implements Supplier and returns the value.
 	 * @return the value
@@ -108,7 +108,7 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 		return value_ != null ? value_ : defaultValue;
 	}
 
-	
+
 	/**
 	 * @return if the value is not null.
 	 */
@@ -116,8 +116,8 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 	{
 		return value_ != null;
 	}
-	
-	
+
+
 	/**
 	 * @return if the value equals the given value.
 	 * @param test another value
@@ -127,9 +127,9 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 		return Objects.equals(value_, test);
 	}
 
-	
+
 	/**
-	 * @return a String representation. 
+	 * @return a String representation.
 	 */
 	@Override
 	public String toString()
@@ -137,6 +137,6 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 		return "Holder" + ':' + value_;
 	}
 
-	
+
 	private V value_;
 }

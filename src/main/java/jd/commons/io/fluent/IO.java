@@ -14,7 +14,7 @@ package jd.commons.io.fluent;
 
 
 /**
- * This class serves as a static entry point for creating 
+ * This class serves as a static entry point for creating
  * a {@link #Bytes byte} and
  * a {@link #Chars char} sources and targets.
  */
@@ -25,7 +25,7 @@ public interface IO
 	 */
 	public static final ByteFactory Bytes = new ByteFactory();
 
-	
+
 	/**
 	 * A factory to create {@link CharSource} objects.
 	 */

@@ -24,16 +24,16 @@ import jd.commons.util.SetString;
  * Config represents a map like structure of String key/value pairs.
  * Additionally Config provides extended validation and type support when setting or getting a value:
  * <ul>
- * <li>{@link #get(String)} returns a {@link GetString} builder which allows to validate and convert the value stored for 
+ * <li>{@link #get(String)} returns a {@link GetString} builder which allows to validate and convert the value stored for
  * 		a key.
  * <li>{@link #set(String)} returns a {@link SetString} builder which allows to pass non-string values and converts them to a String.
- * </ul> 
+ * </ul>
  * <p>
  * Config implementations exists for several sources (Properties, Maps, JNDI context).<br>
  * Config objects can be {@link #concat(Config...) concatenated} to provide fallback values.<br>
- * Config can be {@link #prefix(String) prefixed}, i.e. a key prefix is automatically applied 
+ * Config can be {@link #prefix(String) prefixed}, i.e. a key prefix is automatically applied
  * 		when accessing a key value.<br>
- * Any config can be turned into a {@link #immutable() immutable} config. 
+ * Any config can be turned into a {@link #immutable() immutable} config.
  */
 public abstract class Config
 {
@@ -67,8 +67,8 @@ public abstract class Config
 				return concat;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Checks that the key is not empty.
 	 * @param key a key
@@ -78,12 +78,12 @@ public abstract class Config
 	{
 		return Check.notEmpty(key, "key");
 	}
-	
+
 
 	/**
 	 * Retrieves the key value and makes available via the returned GetString object.
 	 * @param key the key, must not be null or empty
-	 * @return a {@link GetString} object to access or convert the key value.  
+	 * @return a {@link GetString} object to access or convert the key value.
 	 */
 	public GetString get(String key)
 	{
@@ -93,7 +93,7 @@ public abstract class Config
 
 
 	/**
-	 * @return the value of the key, can be null 
+	 * @return the value of the key, can be null
 	 * @param key the key, must not be null or empty
 	 */
 	public String getValue(String key)
@@ -101,7 +101,7 @@ public abstract class Config
 		return getInternal(checkKey(key));
 	}
 
-	
+
 	/**
 	 * @return the value for a key.
 	 * @param key a non-null key
@@ -124,7 +124,7 @@ public abstract class Config
 	 * @param key a non-null key
 	 */
 	protected abstract boolean containsInternal(String key);
-	
+
 
 	public SetString<Config> set(String key)
 	{
@@ -154,10 +154,10 @@ public abstract class Config
 		setInternal(key, value);
 		return this;
 	}
-	
-	
+
+
 	/**
-	 * Internal method to set the key, implemented by subclasses. 
+	 * Internal method to set the key, implemented by subclasses.
 	 * @param key a key, checked to be not empty
 	 * @param value a value, can be null
 	 */
@@ -177,7 +177,7 @@ public abstract class Config
 
 	public abstract Config clear();
 
-	
+
 	/**
 	 * @return a new config object which wraps this config.
 	 * @param prefix a prefix which is automatically preprended
@@ -198,7 +198,7 @@ public abstract class Config
 
 
 	/**
-	 * @return a immutable Config wrapping this Config. 
+	 * @return a immutable Config wrapping this Config.
 	 */
 	@CheckReturnValue
 	public Config immutable()
@@ -218,18 +218,18 @@ public abstract class Config
 		return new UnsupportedOperationException("immutable");
 	}
 
-	
+
 	/**
 	 * @return a Stream of the keys known to this Config.
 	 */
 	public abstract Stream<String> keys();
-	
-	
+
+
 	/**
 	 * @return a String representation of this Config.
 	 * @see #describe(StringBuilder)
 	 */
-	@Override 
+	@Override
 	public final String toString()
 	{
 		StringBuilder s = new StringBuilder("Config").append('[');

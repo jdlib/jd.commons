@@ -25,14 +25,14 @@ public class TransferBytesHandler<E extends Exception>
 	extends IOHandler<ByteTarget,OutputStream,Void,IOException>
 {
 	protected final ByteSource source_;
-	
-	
+
+
 	public TransferBytesHandler(ByteSource source)
 	{
 		source_ = Check.notNull(source, "source");
 	}
-	
-	
+
+
 	@Override
 	public Void runSupplier(ByteTarget target) throws IOException
 	{
@@ -43,7 +43,7 @@ public class TransferBytesHandler<E extends Exception>
 		}
 		return null;
 	}
-	
+
 
 	@Override
 	public Void runDirect(OutputStream out) throws IOException
@@ -52,7 +52,7 @@ public class TransferBytesHandler<E extends Exception>
 		try (InputStream in = source_.getInputStream())
 		{
 			in.transferTo(out);
-			out.flush(); 
+			out.flush();
 		}
 		return null;
 	}

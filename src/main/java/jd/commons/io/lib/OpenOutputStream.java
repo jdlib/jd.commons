@@ -37,7 +37,7 @@ public class OpenOutputStream extends FilterOutputStream2
 	 * Calls flush.
 	 */
     @Override
-    public void close() throws IOException 
+    public void close() throws IOException
     {
     	out_.flush();
     }

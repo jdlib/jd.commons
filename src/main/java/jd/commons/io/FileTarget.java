@@ -20,7 +20,7 @@ import jd.commons.check.Check;
 
 
 /**
- * A builder class to specify the target of a file operation. 
+ * A builder class to specify the target of a file operation.
  */
 public interface FileTarget
 {
@@ -32,7 +32,7 @@ public interface FileTarget
 	 */
 	public FilePath toSibling(String name) throws IOException;
 
-	
+
 	/**
 	 * Specifies the target as a Path.
 	 * @param target the target Path
@@ -56,8 +56,8 @@ public interface FileTarget
 		Check.notNull(file, "file");
 		return to(file.toPath());
 	}
-	
-	
+
+
 	/**
 	 * Specifies the target.
 	 * @param path the target FilePath

@@ -20,7 +20,7 @@
  * <li>to easily get a Config value converted to a variety of (primitive or non-primitive) types
  * <li>to easily set a Config value from a variety of (primitive or non-primitive) types
  * <li>to concatenate Configs, to provide default values
- * <li>to have different Config backends, e.g based on {@link java.util.Map}, {@link java.util.Properties}, 
+ * <li>to have different Config backends, e.g based on {@link java.util.Map}, {@link java.util.Properties},
  * 	   {@link javax.naming.Context JNDI context}, environment variables...
  * <li>to easily load or save Configs based on {@link java.util.Properties}
  * </ul>
@@ -33,7 +33,7 @@
  * String name = config.get("name").value(); // return string value
  * int itemCount = config.get("itemCount").asInt(); // convert to int
  * File installDir = config.get("installDir").asFile(); // convert to File
- *	
+ *
  * // set values
  * config.set("price").to(4.5); // stores "4.5" under key "price"
  * config.set("flag").to(true); // stores "true" under key "flag"
@@ -52,19 +52,19 @@
  * Config itself is an abstract class. Primary configs are used to be primary sources of keys and values.
  * Various implementations for backing data structures are provided:
  * <h3>PropsConfig</h3>
- * {@link jd.commons.config.PropsConfig} wraps a java.util.Properties object and makes use of its 
+ * {@link jd.commons.config.PropsConfig} wraps a java.util.Properties object and makes use of its
  * load and save methods to persist a PropsConfig.
  * <pre><code>
  * import java.io.File;
  * import jd.commons.config.PropsConfig;
- * 
+ *
  * File file = ...
  * PropsConfig config = new PropsConfig();
  * config.read().from(file);
- * 
+ *
  * int itemCount = config.get("itemCount").asInt();
  * config.set("price").to(4.5);
- * 
+ *
  * config.write().to(file);
  * </code></pre>
  * The system properties can easily be accessed using PropsConfig:
@@ -76,7 +76,7 @@
  * <pre><code>
  * import java.util.Map;
  * import jd.commons.config.MapConfig;
- * 
+ *
  * Map&lt;String,String&gt; map = ...
  * MapConfig config = new MapConfig(map);
  * int itemCount = config.get("itemCount").asInt();
@@ -90,23 +90,23 @@
  * <pre><code>
  * import javax.naming.Context;
  * import jd.commons.config.JndiConfig;
- * 
+ *
  * Context context = ...
  * JndiConfig config = new JndiConfig(context);
  * int itemCount = config.get("itemCount").asInt();
  * </code></pre>
- * 	
- * <h2>Derived Configs</h2> 
+ *
+ * <h2>Derived Configs</h2>
  * Existing configs can be transformed to other configs:
  * <h3>Concatenated Configs</h3>
- * Given multiple configs you can create a new immutable `Config` which returns the 
+ * Given multiple configs you can create a new immutable `Config` which returns the
  * value from the first config which contains the key. Effectively a config can be backed
  * by other configs to provide default values:
  * <pre><code>
  * Config config1 = ...
  * Config config2 = ...
  * Config concat = Config.concat(config1, config2);
- * 
+ *
  * assert concat.contains("price");
  * // is the same as
  * assert config1.contains("price") || config2.cotains("price")
@@ -120,7 +120,7 @@
  * Config config = ...
  * String v1 = config.get("some.v1").value()
  * String v2 = config.get("some.v2").value()
- * 
+ *
  * // accessing values by their prefixed key
  * Config config = ...
  * Config someConfig = config.prefix("some");
@@ -134,7 +134,7 @@
  * To ensure that a given config is immutable you can use
  * <pre><code>
  * Config config = ...
- * Config immutableConfig = config.immutable(); *   
+ * Config immutableConfig = config.immutable(); *
  * </code></pre>
  */
 package jd.commons.config;

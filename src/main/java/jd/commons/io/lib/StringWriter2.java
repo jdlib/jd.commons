@@ -27,8 +27,8 @@ import jd.commons.check.Check;
 public class StringWriter2 extends Writer
 {
     private final StringBuilder builder_;
-    
-    
+
+
     public static String readAll(Reader reader) throws IOException
     {
     	Check.notNull(reader, "reader");
@@ -37,7 +37,7 @@ public class StringWriter2 extends Writer
     	return sw.toString();
     }
 
-    
+
     public static StringBuilder readAll(Reader reader, StringBuilder sb) throws IOException
     {
     	Check.notNull(reader, "reader");
@@ -46,11 +46,11 @@ public class StringWriter2 extends Writer
     	return sw.getBuilder(); // sb could be null
     }
 
-    
+
     /**
      * Constructs a new StringWriter2.
      */
-    public StringWriter2() 
+    public StringWriter2()
     {
         this(null);
     }
@@ -59,31 +59,31 @@ public class StringWriter2 extends Writer
      * Constructs a new StringWriter2.
      * @param capacity initial capacity of StringBuilder
      */
-    public StringWriter2(int capacity) 
+    public StringWriter2(int capacity)
     {
         this(new StringBuilder(capacity));
     }
 
-    
+
     /**
      * Constructs a new StringWriter2.
      * @param builder the StringBuilder, if null a new instance will be created
      */
-    public StringWriter2(StringBuilder builder) 
+    public StringWriter2(StringBuilder builder)
     {
         builder_ = builder != null ? builder : new StringBuilder();
     }
-    
+
     /**
      * @return the internal builder
      */
-    public StringBuilder getBuilder() 
+    public StringBuilder getBuilder()
     {
         return builder_;
     }
 
 
-    
+
     /**
      * {@inheritDoc}
      */
@@ -92,8 +92,8 @@ public class StringWriter2 extends Writer
     {
     	builder_.append((char)c);
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
      */
@@ -102,8 +102,8 @@ public class StringWriter2 extends Writer
     {
     	builder_.append(cbuf, off, len);
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
      */
@@ -112,7 +112,7 @@ public class StringWriter2 extends Writer
     {
     	builder_.append(str);
     }
-    
+
 
     /**
      * {@inheritDoc}
@@ -122,35 +122,35 @@ public class StringWriter2 extends Writer
     {
     	builder_.append(str, off, off + len);
     }
-    
+
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Writer append(char c) 
+    public Writer append(char c)
     {
         builder_.append(c);
         return this;
     }
 
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Writer append(CharSequence csq) 
-    {
-        builder_.append(csq);
-        return this;
-    }
-    
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Writer append(CharSequence csq, int start, int end) 
+    public Writer append(CharSequence csq)
+    {
+        builder_.append(csq);
+        return this;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Writer append(CharSequence csq, int start, int end)
     {
         builder_.append(csq, start, end);
         return this;
@@ -161,27 +161,27 @@ public class StringWriter2 extends Writer
      * Does nothing.
      */
     @Override
-    public void flush() 
+    public void flush()
     {
         // does nothing
     }
-    
-    
+
+
     /**
      * Does nothing.
      */
     @Override
-    public void close() 
+    public void close()
     {
         // does nothing
     }
-    
+
 
     /**
      * @return the StringBuilder turned into a String.
      */
     @Override
-    public String toString() 
+    public String toString()
     {
         return builder_.toString();
     }

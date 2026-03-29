@@ -35,7 +35,7 @@ public interface CharWritable
 	public static CharWritable of(XConsumer<Writer,? extends IOException> consumer)
 	{
 		Check.notNull(consumer, "consumer");
-		return () -> new CharWriteTo<>(new IOHandler<CharTarget,Writer,Void,IOException>() 
+		return () -> new CharWriteTo<>(new IOHandler<CharTarget,Writer,Void,IOException>()
 		{
 			@Override
 			public Void runSupplier(CharTarget target) throws IOException
@@ -46,19 +46,19 @@ public interface CharWritable
 				}
 				return null;
 			}
-			
+
 
 			@Override
 			public Void runDirect(Writer writer) throws IOException
 			{
-				consumer.accept(writer); 
+				consumer.accept(writer);
 				writer.flush();
 				return null;
 			}
 		});
 	}
-	
-	
+
+
 	/**
 	 * @return a CharWrite object which lets you define to what target to write.
 	 */

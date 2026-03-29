@@ -23,10 +23,10 @@ import jd.commons.io.Resource;
 
 /**
  * How many lines of code do you need to implement the following tasks, using only the JDK or a library of your choice?
- * Rules of the game: 
+ * Rules of the game:
  * <ul>
  * <li>Less lines is better
- * <li>standard formatting rules are applied to count lines, and 
+ * <li>standard formatting rules are applied to count lines, and
  * <li>you need to close any opened resources
  * </ul>
  */
@@ -39,8 +39,8 @@ public class OneLineIOChallenge
 	{
 		return Bytes.from(file).read().all();
 	}
-	
-	
+
+
 	/**
 	 * Given a java.nio.file.Path, read the first n bytes of it into a byte array.
 	 */
@@ -98,7 +98,7 @@ public class OneLineIOChallenge
 	/**
 	 * Given a java.io.File read all bytes and only throw RuntimeExceptions.
 	 */
-	public byte[] challenge8(java.io.File file) 
+	public byte[] challenge8(java.io.File file)
 	{
 		return Bytes.from(file).read().unchecked().all();
 	}

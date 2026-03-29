@@ -39,7 +39,7 @@ public class PropsConfig extends Config
 		return new PropsConfig(System.getProperties());
 	}
 
-	
+
 	public PropsConfig()
 	{
 		this(null);
@@ -62,7 +62,7 @@ public class PropsConfig extends Config
 		return props_.containsKey(key);
 	}
 
-	
+
 	/**
 	 * @return the underlying Properties.
 	 */
@@ -70,8 +70,8 @@ public class PropsConfig extends Config
 	{
 		return props_;
 	}
-	
-	
+
+
 	/**
 	 * Returns an Input builder object to specify the source
 	 * which should be read in order to fill this PropConfig.
@@ -90,7 +90,7 @@ public class PropsConfig extends Config
 		return new PropsRead();
 	}
 
-	
+
 	public class PropsRead extends ByteReadFrom<PropsConfig,IOException>
 	{
 		private PropsRead()
@@ -98,7 +98,7 @@ public class PropsConfig extends Config
 			super(new PropReadHandler());
 		}
 
-		
+
 		public PropsRead xml()
 		{
 			((PropReadHandler)handler_).xml_ = true;
@@ -111,17 +111,17 @@ public class PropsConfig extends Config
 	{
 		private boolean xml_;
 
-		
+
 		@Override
 		public PropsConfig runSupplier(ByteSource source) throws IOException
 		{
-			try (InputStream in = source.getInputStream()) 
+			try (InputStream in = source.getInputStream())
 			{
 				return runDirect(in);
 			}
 		}
-		
-	
+
+
 		@Override
 		public PropsConfig runDirect(InputStream in) throws IOException
 		{
@@ -133,54 +133,54 @@ public class PropsConfig extends Config
 		}
 	}
 
-	
+
 	public PropsWrite write()
 	{
 		return new PropsWrite();
 	}
-	
-	
+
+
 	public class PropsWrite extends ByteWriteTo<Void,IOException>
 	{
 		private PropsWrite()
 		{
 			super(new PropWriteHandler());
 		}
-		
-		
+
+
 		private PropWriteHandler handler()
 		{
-			return (PropWriteHandler)handler_; 
+			return (PropWriteHandler)handler_;
 		}
-		
-		
+
+
 		public PropsWrite comment(String comment)
 		{
 			handler().comment_ = comment;
 			return this;
 		}
-		
-		
+
+
 		public PropsWrite xml()
 		{
 			return xml(StandardCharsets.UTF_8);
 		}
 
-		
+
 		public PropsWrite xml(Charset charset)
 		{
 			handler().xmlCharset_ = Check.notNull(charset, "charset");
 			return this;
 		}
 	}
-	
+
 
 	private class PropWriteHandler extends IOHandler<ByteTarget,OutputStream,Void,IOException>
 	{
 		private String comment_;
 		private Charset xmlCharset_;
 
-		
+
 		@Override
 		public Void runSupplier(ByteTarget target) throws IOException
 		{
@@ -190,8 +190,8 @@ public class PropsConfig extends Config
 				return runDirect(out);
 			}
 		}
-		
-	
+
+
 		@Override
 		public Void runDirect(OutputStream out) throws IOException
 		{
@@ -203,7 +203,7 @@ public class PropsConfig extends Config
 		}
 	}
 
-	
+
 	@Override protected String getInternal(String key)
 	{
 		return props_.getProperty(key);
@@ -230,16 +230,16 @@ public class PropsConfig extends Config
 	{
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public Config clear()
 	{
 		props_.clear();
 		return this;
 	}
-	
-	
+
+
 	@Override
 	protected void describe(StringBuilder s)
 	{

@@ -33,28 +33,28 @@ public class OpenOutputStreamTest
 		openOut.close();
 		assertEquals(2, testOut.flushed);
 	}
-	
-	
+
+
 	private static class TestOutputStream extends OutputStream
 	{
 		public int flushed;
-		
-		
+
+
 		@Override
 		public void write(int b) throws IOException
 		{
 		}
 
-		
+
 		@Override
 		public void flush()
 		{
 			flushed++;
 		}
 
-	
+
 	    @Override
-		public void close() throws IOException 
+		public void close() throws IOException
 	    {
 	    	throw new UnsupportedOperationException();
 	    }

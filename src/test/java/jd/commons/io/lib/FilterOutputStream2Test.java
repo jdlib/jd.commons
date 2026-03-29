@@ -23,7 +23,7 @@ public class FilterOutputStream2Test
 	@Test
 	public void test() throws Exception
 	{
-		ByteArrayOutputStream bout = new ByteArrayOutputStream(); 
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		try (FilterOutputStream2 fout = new FilterOutputStream2(bout))
 		{
 			fout.write(1);

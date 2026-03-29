@@ -36,7 +36,7 @@ public class OpenReader extends FilterReader
 	/**
 	 * Does nothing.
 	 */
-	@Override 
+	@Override
 	public void close()
 	{
 		// does nothing

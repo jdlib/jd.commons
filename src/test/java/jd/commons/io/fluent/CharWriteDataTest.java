@@ -27,8 +27,8 @@ import jd.commons.util.UncheckedException;
 public class CharWriteDataTest
 {
 	private static final IOException IOE = new IOException("x");
-	
-	
+
+
 	@Test
 	public void testLines() throws Exception
 	{
@@ -36,8 +36,8 @@ public class CharWriteDataTest
 		write(Chars.to(sb)).lines("a", "b");
 		assertEquals("a" + System.lineSeparator() + "b" + System.lineSeparator(), sb.toString());
 	}
-	
-	
+
+
 	@Test
 	public void testSilent() throws Exception
 	{
@@ -46,8 +46,8 @@ public class CharWriteDataTest
 		assertSame(IOE, e);
 		assertSame(IOE, holder.get());
 	}
-	
-	
+
+
 	@Test
 	public void testThrowing() throws Exception
 	{
@@ -55,8 +55,8 @@ public class CharWriteDataTest
 			.isInstanceOf(SQLException.class)
 			.cause().isSameAs(IOE);
 	}
-	
-	
+
+
 	@Test
 	public void testUnchecked() throws Exception
 	{

@@ -28,15 +28,15 @@ interface IOHelper
 	{
 		return reader instanceof BufferedReader ? (BufferedReader)reader : new BufferedReader(reader);
 	}
-	
-	
+
+
 	public static Writer toWriter(Appendable appendable)
 	{
 		Check.notNull(appendable, "appendable");
 		return appendable instanceof Writer ? (Writer)appendable : new AppendableWriter(appendable);
 	}
-	
-	
+
+
 	public static <T> XSupplier<T,IOException> getThrowsIOorRTException(Object def)
 	{
 		if (def instanceof RuntimeException)

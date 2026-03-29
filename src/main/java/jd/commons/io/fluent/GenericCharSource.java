@@ -24,7 +24,7 @@ class GenericCharSource<R extends Reader> extends IOSupplier<R> implements CharS
 	{
 		super(wrapped);
 	}
-	
+
 
 	@Override
 	public Reader getReader() throws IOException

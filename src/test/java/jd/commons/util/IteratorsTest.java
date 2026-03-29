@@ -32,19 +32,19 @@ public class IteratorsTest
 		String[] array = { "a", "b", "c" };
 		assertThat(toList(Iterators.of(array))).containsExactly(array);
 		assertThat(toList(Iterators.of(array, 1, 2))).containsExactly("b");
-		
+
 		assertThatThrownBy(() -> Iterators.of().next()).isInstanceOf(NoSuchElementException.class);
-		
+
 		assertFalse(Iterators.of((String[])null).hasNext());
 	}
-	
-	
+
+
 	@Test
 	public void testEmpty()
 	{
 		assertThat(Iterators.empty()).isExhausted();
 	}
-	
+
 
 	@Test
 	public void testImmutable()
@@ -52,14 +52,14 @@ public class IteratorsTest
 		List<String> list = new ArrayList<>();
 		list.add("a");
 		assertThat(Iterators.immutable(list)).isUnmodifiable();
-		
+
 		Iterator<String> it = Iterators.immutable(list);
 		assertTrue(it.hasNext());
 		assertEquals("a", it.next());
 		assertFalse(it.hasNext());
 	}
-	
-	
+
+
 	@Test
 	public void testJoin()
 	{
@@ -67,7 +67,7 @@ public class IteratorsTest
 		Collections.addAll(list1, "a", "b");
 		List<String> list2 = new ArrayList<>();
 		Collections.addAll(list2, "1", "2");
-		
+
 		Iterator<String> it = Iterators.join(list1.iterator(), list2.iterator());
 		assertTrue(it.hasNext());
 		assertEquals("a", it.next());
@@ -80,8 +80,8 @@ public class IteratorsTest
 		assertThatThrownBy(() -> it.next()).isInstanceOf(NoSuchElementException.class);
 		assertThatThrownBy(() -> it.remove()).isInstanceOf(NoSuchElementException.class);
 	}
-	
-	
+
+
 	@Test
 	public void testOptional()
 	{
@@ -89,7 +89,7 @@ public class IteratorsTest
 		assertThat(Iterators.optional("a")).hasNext();
 	}
 
-	
+
 	private static <T> List<T> toList(Iterator<T> it)
 	{
 		List<T> list = new ArrayList<>();
@@ -97,13 +97,13 @@ public class IteratorsTest
 			list.add(it.next());
 		return list;
 	}
-	
-	
+
+
 	@Test
 	public void testToEnumeration()
 	{
 		List<String> list = List.of("a");
-		
+
 		Enumeration<String> en = Iterators.toEnumeration(list.iterator());
 		assertTrue(en.hasMoreElements());
 		assertEquals("a", en.nextElement());

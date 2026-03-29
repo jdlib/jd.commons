@@ -25,7 +25,7 @@ class MockImpl<T> implements Mock<T>, Mock.Then<T>
 	private final Map<MockInvocation,MockAction> map_ = new HashMap<>();
 	private MockInvocation lastInvocation_;
 
-	
+
 	public MockImpl(Class<T> type)
 	{
 		type_ = type;
@@ -45,15 +45,15 @@ class MockImpl<T> implements Mock<T>, Mock.Then<T>
 	{
 		return thenAction(() -> value);
 	}
-	
+
 
 	@Override
 	public Mock<T> thenThrow(Exception e)
 	{
 		return thenAction(() -> { throw e; });
 	}
-	
-	
+
+
 	private Mock<T> thenAction(MockAction action)
 	{
 		Check.notNull(lastInvocation_, "lastInvocation");
@@ -62,7 +62,7 @@ class MockImpl<T> implements Mock<T>, Mock.Then<T>
 		return this;
 	}
 
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public T create()
@@ -71,5 +71,5 @@ class MockImpl<T> implements Mock<T>, Mock.Then<T>
 		return (T)Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] { type_ }, handler);
 	}
 }
-	
-	
+
+

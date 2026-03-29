@@ -27,7 +27,7 @@ public class HandlerTest
 {
 	@Test
 	public void testCountChars() throws Exception
-	{	
+	{
 		// CountingWriter created and used
 		CountCharsHandler<?> ch = new CountCharsHandler<>(new TransferCharsHandler<>(Chars.fromString("abc")));
 		assertEquals(3L, ch.runSupplier(Chars.toNull()));
@@ -37,11 +37,11 @@ public class HandlerTest
 		assertEquals(0L, ch.runSupplier(Chars.toNull()));
 	}
 
-	
+
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testErrorSilent()
-	{	
+	{
 		// coverage for toString and IOHandler.getInner
 		assertEquals("Silent->TransferChars", IO.Chars.fromString("a").write().silent().toString());
 	}
@@ -49,7 +49,7 @@ public class HandlerTest
 
 	@Test
 	public void testWrap() throws Exception
-	{	
+	{
 		ByteWriteTo<?,?> wto = Bytes.from("abc".getBytes()).write().wrap(CountingOutputStream::new);
 		assertEquals("TargetWrap->TransferBytes", wto.toString());
 	}

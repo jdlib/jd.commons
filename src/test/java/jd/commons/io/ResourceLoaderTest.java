@@ -30,7 +30,7 @@ public class ResourceLoaderTest
 		assertEquals(nop, nop);
 		assertEquals(nop, ResourceLoader.of("nop", s -> null, s -> null));
 		assertNotEquals(nop, "nop");
-		
+
 		Resource res = Resource.of().path("dummy.txt").loadBy(nop);
 		assertThatThrownBy(() -> res.getInputStream()).hasMessage("resource 'dummy.txt' not found");
 	}
@@ -40,7 +40,7 @@ public class ResourceLoaderTest
 	public void testOfClass() throws Exception
 	{
 		Class<?> c 				= getClass();
-		ResourceLoader loader 	= ResourceLoader.of(c); 
+		ResourceLoader loader 	= ResourceLoader.of(c);
 		assertEquals(c.hashCode(), loader.hashCode());
 		assertEquals(loader, loader);
 		assertNotEquals(loader, c);
@@ -68,12 +68,12 @@ public class ResourceLoaderTest
 	{
 		ResourceLoader rl = ResourceLoader.context();
 		assertEquals("Loader[<context>]", rl.toString());
-		
+
 		assertNotNull(rl.getURL("java/lang/String.class"));
 		try (InputStream in = rl.getInputStream("java/lang/String.class"))
 		{
 		}
-		
+
 		try
 		{
 			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
@@ -83,7 +83,7 @@ public class ResourceLoaderTest
 		{
 			Thread.currentThread().setContextClassLoader(null);
 		}
-		
+
 
 	}
 }

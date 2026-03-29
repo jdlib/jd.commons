@@ -24,14 +24,14 @@ public class CountCharsHandler<E extends Exception>
 	extends IOHandler<CharTarget,Writer,Long,E>
 {
 	protected final IOHandler<CharTarget,Writer,?,E> inner_;
-	
-	
+
+
 	public CountCharsHandler(IOHandler<CharTarget,Writer,?,E> inner)
 	{
 		inner_ = Check.notNull(inner, "inner");
 	}
-	
-	
+
+
 	@Override
 	public Long runSupplier(CharTarget target) throws E
 	{
@@ -39,7 +39,7 @@ public class CountCharsHandler<E extends Exception>
 		inner_.runSupplier(() -> holder.set(new CountingWriter(target.getWriter())));
 		return holder.has() ? holder.get().count() : Long.valueOf(0L);
 	}
-	
+
 
 	@Override
 	public Long runDirect(Writer out) throws E

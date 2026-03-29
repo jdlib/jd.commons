@@ -22,13 +22,13 @@ interface CheckOp
 	public static final CheckOp EQ = new CheckOpEq();
 	public static final CheckOp NOT_EQ = new CheckOpNotEq();
 
-	
+
 	public String symbol();
-		
+
 
 	public boolean compare(double v1, double v2);
 
-	
+
 	public boolean compare(long v1, long v2);
 }
 
@@ -40,8 +40,8 @@ class CheckOpGreater implements CheckOp
 	{
 		return ">";
 	}
-	
-	
+
+
 	@Override
 	public boolean compare(double v1, double v2)
 	{
@@ -55,7 +55,7 @@ class CheckOpGreater implements CheckOp
 		return v1 > v2;
 	}
 }
-  
+
 
 class CheckOpGreaterEq implements CheckOp
 {
@@ -65,13 +65,13 @@ class CheckOpGreaterEq implements CheckOp
 		return ">=";
 	}
 
-	
+
 	@Override
 	public boolean compare(double v1, double v2)
 	{
 		return v1 >= v2;
 	}
-	
+
 
 	@Override
 	public boolean compare(long v1, long v2)
@@ -89,13 +89,13 @@ class CheckOpLess implements CheckOp
 		return "<";
 	}
 
-	
+
 	@Override
 	public boolean compare(double v1, double v2)
 	{
 		return v1 < v2;
 	}
-	
+
 
 	@Override
 	public boolean compare(long v1, long v2)
@@ -113,13 +113,13 @@ class CheckOpLessEq implements CheckOp
 		return "<=";
 	}
 
-	
+
 	@Override
 	public boolean compare(double v1, double v2)
 	{
 		return v1 <= v2;
 	}
-	
+
 
 	@Override
 	public boolean compare(long v1, long v2)
@@ -137,13 +137,13 @@ class CheckOpEq implements CheckOp
 		return "==";
 	}
 
-	
+
 	@Override
 	public boolean compare(double v1, double v2)
 	{
 		return v1 == v2;
 	}
-	
+
 
 	@Override
 	public boolean compare(long v1, long v2)
@@ -161,13 +161,13 @@ class CheckOpNotEq implements CheckOp
 		return "!=";
 	}
 
-	
+
 	@Override
 	public boolean compare(double v1, double v2)
 	{
 		return v1 != v2;
 	}
-	
+
 
 	@Override
 	public boolean compare(long v1, long v2)

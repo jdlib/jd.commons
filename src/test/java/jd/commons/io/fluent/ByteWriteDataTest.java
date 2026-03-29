@@ -28,8 +28,8 @@ public class ByteWriteDataTest
 {
 	private static final IOException IOE = new IOException("x");
 	private static final byte[] BYTES = "abc".getBytes();
-	
-	
+
+
 	@Test
 	public void testSilent() throws Exception
 	{
@@ -38,8 +38,8 @@ public class ByteWriteDataTest
 		assertSame(IOE, e);
 		assertSame(IOE, holder.get());
 	}
-	
-	
+
+
 	@Test
 	public void testThrowing() throws Exception
 	{
@@ -47,8 +47,8 @@ public class ByteWriteDataTest
 			.isInstanceOf(SQLException.class)
 			.cause().isSameAs(IOE);
 	}
-	
-	
+
+
 	@Test
 	public void testUnchecked() throws Exception
 	{

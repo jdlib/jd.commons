@@ -32,16 +32,16 @@ public class StringWriter2Test
 		}
 	}
 
-	
+
 	@Test
 	public void testReadAllToSb() throws Exception
 	{
-		StringReader sr = new StringReader("abc"); 
+		StringReader sr = new StringReader("abc");
 		StringBuilder sb = StringWriter2.readAll(sr, null);
 		assertEquals("abc", sb.toString());
 	}
-	
-	
+
+
 	@Test
 	public void testWrite()
 	{

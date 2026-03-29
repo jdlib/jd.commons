@@ -24,7 +24,7 @@ class GenericByteSource<I extends InputStream> extends IOSupplier<I> implements 
 	{
 		super(wrapped);
 	}
-	
+
 
 	@Override
 	public InputStream getInputStream() throws IOException

@@ -24,15 +24,15 @@ import jd.commons.util.UncheckedException;
  * @param <E> the type of the Exception
  */
 @FunctionalInterface
-public interface XSupplier<T,E extends Exception> 
+public interface XSupplier<T,E extends Exception>
 {
 	/**
 	 * @return a result
 	 * @throws E thrown if the operation fails
 	 */
 	T get() throws E;
-    
-    
+
+
 	/**
 	 * Turns this XSupplier into a unchecked Supplier.
 	 * Any checked exception thrown by the supplier is

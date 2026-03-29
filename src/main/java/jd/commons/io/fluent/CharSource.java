@@ -29,23 +29,23 @@ import jd.commons.io.fluent.handler.TransferCharsHandler;
 public interface CharSource extends CharWritable
 {
 	/**
-	 * @return a Reader. 
+	 * @return a Reader.
 	 * This should only be called once, if this method is invoked a second time the result is undefined.
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public Reader getReader() throws IOException;
 
-	
+
 	/**
 	 * @return a BufferedReader.
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public default BufferedReader getBufferedReader() throws IOException
 	{
 		return IOHelper.bufferedReader(getReader());
 	}
 
-	
+
 	/**
 	 * @return a CharSource which wraps the Reader of this CharSource
 	 * 		by another Reader.
@@ -56,8 +56,8 @@ public interface CharSource extends CharWritable
 		Check.notNull(wrapper, "wrapper");
 		return () -> wrapper.apply(getReader());
 	}
-	
-	
+
+
 	/**
 	 * @return a CharRead object which lets you define what to read from this ByteSource.
 	 * 		This initial CharRead throws IOExceptions.
@@ -66,8 +66,8 @@ public interface CharSource extends CharWritable
 	{
 		return new CharReadData<>(this, ErrorFunction.throwUncheckedOrIOE());
 	}
-	
-	
+
+
 	/**
 	 * @return a CharWrite object which lets you define to what target to write.
 	 * 		This initial CharWrite does not return a result

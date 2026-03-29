@@ -26,14 +26,14 @@ public class MapConfig extends Config
 {
 	private final Map<String,String> map_;
 	private final boolean immutable_;
-	
-	
+
+
 	public static MapConfig env()
 	{
 		return new MapConfig(System.getenv(), true);
 	}
 
-	
+
 	public MapConfig()
 	{
 		this(new HashMap<>(), false);
@@ -49,7 +49,7 @@ public class MapConfig extends Config
 		this(map, true);
 	}
 
-	
+
 	/**
 	 * Creates an Config object based on the given map.
 	 * @param map a map, not null
@@ -60,8 +60,8 @@ public class MapConfig extends Config
 		map_ = Check.notNull(map, "map");
 		immutable_ = immutable;
 	}
-	
-	
+
+
 	public Map<String,String> getMap()
 	{
 		return map_;
@@ -89,8 +89,8 @@ public class MapConfig extends Config
 			throw createImmutableEx();
 		map_.put(key, value);
 	}
-	
-	
+
+
 	@Override
 	public Config clear()
 	{

@@ -32,9 +32,9 @@ public class ByteWriteData<R,E extends Exception>
 	protected final ByteTarget target_;
 	protected final ErrorFunction<?,R,E> error_;
 
-	
+
 	/**
-	 * Creates a new ByteWriteData instance. 
+	 * Creates a new ByteWriteData instance.
 	 * @param target the ByteTarget to write to, not null
 	 * @param error handles errors, not null
 	 */
@@ -44,9 +44,9 @@ public class ByteWriteData<R,E extends Exception>
 		error_  = Check.notNull(error, "error");
 	}
 
-	
+
 	/**
-	 * Writes the bytes of this ByteWriteData to the target. 
+	 * Writes the bytes of this ByteWriteData to the target.
 	 * @param bytes the bytes, not null
 	 * @return t the write result
 	 * @throws E thrown if an error occurs
@@ -56,10 +56,10 @@ public class ByteWriteData<R,E extends Exception>
 		Check.notNull(bytes, "bytes");
 		return apply(out -> out.write(bytes));
 	}
-	 
+
 
 	/**
-	 * Writes the bytes of this ByteWriteData to a OutputStream consumer. 
+	 * Writes the bytes of this ByteWriteData to a OutputStream consumer.
 	 * @param consumer a consumer of an OutputStream
 	 * @return t the write result
 	 * @throws E thrown if an error occurs
@@ -78,19 +78,19 @@ public class ByteWriteData<R,E extends Exception>
 		}
 	}
 
-	
+
 	// TODO
 	public ByteWriteData<Exception,RuntimeException> silent(Consumer<Exception> log)
 	{
 		return new ByteWriteData<>(target_, ErrorFunction.silent(log));
 	}
 
-	
+
 	/**
 	 * @return a new ByteWriteData which catches all exceptions thrown by this ByteWriteData
 	 * 		and rethrows it as RuntimeException.
 	 * @param<F> an exception type
-	 * @param factory a function which takes an exception and returns a new exception 
+	 * @param factory a function which takes an exception and returns a new exception
 	 */
 	@CheckReturnValue
 	public <F extends Exception> ByteWriteData<Void,F> throwing(XFunction<Exception,F,F> factory)
@@ -103,6 +103,6 @@ public class ByteWriteData<R,E extends Exception>
 	@CheckReturnValue
 	public ByteWriteData<R,RuntimeException> unchecked()
 	{
-		return new ByteWriteData<>(target_, ErrorFunction.throwUnchecked());  
+		return new ByteWriteData<>(target_, ErrorFunction.throwUnchecked());
 	}
 }

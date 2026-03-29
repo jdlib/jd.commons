@@ -14,7 +14,7 @@ package jd.commons.util;
 
 
 /**
- * Provides utility methods to obtain primitive values from their 
+ * Provides utility methods to obtain primitive values from their
  * Object counterparts while avoiding NullPointerExceptions.
  */
 public interface Unbox
@@ -51,7 +51,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a byte value. If the Number is null then 0 is returned 
+	 * @return the Number converted to a byte value. If the Number is null then 0 is returned
 	 * @param n a Number, can be null
 	 */
 	public static byte toByte(Number n)
@@ -61,7 +61,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a byte value. If the Number is null the 
+	 * @return the Number converted to a byte value. If the Number is null the
 	 * default value is returned
 	 * @param n a Number, can be null
 	 * @param defaultValue a default value
@@ -73,7 +73,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Character converted to a char value. If the Character is null then 0 is returned 
+	 * @return the Character converted to a char value. If the Character is null then 0 is returned
 	 * @param c a Character, can be null
 	 */
 	public static char toChar(Character c)
@@ -83,7 +83,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Character converted to a char value. If the Character is null the 
+	 * @return the Character converted to a char value. If the Character is null the
 	 * default value is returned
 	 * @param c a Character, can be null
 	 * @param defaultValue a default value
@@ -95,7 +95,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a double value. If the Number is null then 0.0 is returned 
+	 * @return the Number converted to a double value. If the Number is null then 0.0 is returned
 	 * @param n a Number, can be null
 	 */
 	public static double toDouble(Number n)
@@ -105,7 +105,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a double value. If the Number is null the 
+	 * @return the Number converted to a double value. If the Number is null the
 	 * default value is returned
 	 * @param n a Number, can be null
 	 * @param defaultValue a default value
@@ -117,7 +117,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a float value. If the Number is null then 0.0f is returned 
+	 * @return the Number converted to a float value. If the Number is null then 0.0f is returned
 	 * @param n a Number, can be null
 	 */
 	public static float toFloat(Number n)
@@ -127,7 +127,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a float value. If the Number is null the 
+	 * @return the Number converted to a float value. If the Number is null the
 	 * default value is returned
 	 * @param n a Number, can be null
 	 * @param defaultValue a default value
@@ -137,9 +137,9 @@ public interface Unbox
 		return n != null ? n.floatValue() : defaultValue;
 	}
 
-	
+
 	/**
-	 * @return the Number converted to a int value. If the Number is null then 0 is returned 
+	 * @return the Number converted to a int value. If the Number is null then 0 is returned
 	 * @param n a Number, can be null
 	 */
 	public static int toInt(Number n)
@@ -149,7 +149,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a int value. If the Number is null the 
+	 * @return the Number converted to a int value. If the Number is null the
 	 * default value is returned
 	 * @param n a Number, can be null
 	 * @param defaultValue a default value
@@ -161,7 +161,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a long value. If the Number is null then 0L is returned 
+	 * @return the Number converted to a long value. If the Number is null then 0L is returned
 	 * @param n a Number, can be null
 	 */
 	public static long toLong(Number n)
@@ -171,7 +171,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a long value. If the Number is null the 
+	 * @return the Number converted to a long value. If the Number is null the
 	 * default value is returned
 	 * @param n a Number, can be null
 	 * @param defaultValue a default value
@@ -181,9 +181,9 @@ public interface Unbox
 		return n != null ? n.longValue() : defaultValue;
 	}
 
-	
+
 	/**
-	 * @return the Number converted to a short value. If the Number is null then 0 is returned 
+	 * @return the Number converted to a short value. If the Number is null then 0 is returned
 	 * @param n a Number, can be null
 	 */
 	public static short toShort(Number n)
@@ -193,7 +193,7 @@ public interface Unbox
 
 
 	/**
-	 * @return the Number converted to a short value. If the Number is null the 
+	 * @return the Number converted to a short value. If the Number is null the
 	 * default value is returned
 	 * @param n a Number, can be null
 	 * @param defaultValue a default value

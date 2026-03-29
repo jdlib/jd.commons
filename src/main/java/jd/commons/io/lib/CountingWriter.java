@@ -19,20 +19,20 @@ import java.io.Writer;
 
 
 /**
- * CountingWriter wraps another Writer and 
+ * CountingWriter wraps another Writer and
  * counts how many chars were written.
  */
 public class CountingWriter extends FilterWriter
 {
 	private long count_;
 
-	
+
 	public CountingWriter(Writer out)
 	{
 		super(out);
 	}
-	
-	
+
+
 	/**
 	 * @return the number of chars written.
 	 */
@@ -40,8 +40,8 @@ public class CountingWriter extends FilterWriter
 	{
 		return count_;
 	}
-	
-	
+
+
 	protected void addCount(long amount)
 	{
 		count_ += amount;
@@ -49,23 +49,23 @@ public class CountingWriter extends FilterWriter
 
 
     @Override
-	public void write(int c) throws IOException 
+	public void write(int c) throws IOException
     {
         out.write(c);
         addCount(1);
     }
 
-    
+
     @Override
-	public void write(char cbuf[], int off, int len) throws IOException 
+	public void write(char cbuf[], int off, int len) throws IOException
     {
         out.write(cbuf, off, len);
         addCount(len);
     }
-    
+
 
     @Override
-	public void write(String str, int off, int len) throws IOException 
+	public void write(String str, int off, int len) throws IOException
     {
         out.write(str, off, len);
         addCount(len);

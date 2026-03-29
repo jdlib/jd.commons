@@ -28,16 +28,16 @@ public class XBiPredicateTest
 	{
 		XBiPredicate<String,String,SQLException> pTrue  = (s1,s2) -> true;
 		XBiPredicate<String,String,SQLException> pFalse = (s1,s2) -> false;
-		
+
 		assertTrue(pTrue.and(pTrue).test("x", "y"));
 		assertFalse(pTrue.and(pFalse).test("x", "y"));
 		assertFalse(pFalse.and(pTrue).test("x", "y"));
 		assertFalse(pFalse.and(pFalse).test("x", "y"));
-		
+
 		assertTrue(pTrue.or(pFalse).test("x", "y"));
 		assertTrue(pFalse.or(pTrue).test("x", "y"));
 		assertFalse(pFalse.or(pFalse).test("x", "y"));
-		
+
 		assertFalse(pTrue.negate().test("x", "y"));
 		assertTrue(pFalse.negate().test("x", "y"));
 	}
@@ -48,7 +48,7 @@ public class XBiPredicateTest
 	{
 		XBiPredicate<String,String,IOException> p1 = (s1,s2) -> true;
 		XBiPredicate<String,String,IOException> p2 = (s1,s2) -> { throw new IOException(s1); };
-		
+
 		assertTrue(() -> p1.unchecked().test("1", "2"));
 		assertThatThrownBy(() -> p2.unchecked().test("1", "2"))
 			.isInstanceOf(UncheckedException.class);

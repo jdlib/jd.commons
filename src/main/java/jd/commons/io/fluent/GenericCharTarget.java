@@ -24,7 +24,7 @@ class GenericCharTarget<W extends Writer> extends IOSupplier<W> implements CharT
 	{
 		super(wrapped);
 	}
-	
+
 
 	@Override
 	public Writer getWriter() throws IOException

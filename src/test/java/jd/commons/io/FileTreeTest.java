@@ -39,7 +39,7 @@ public class FileTreeTest
 	private static FilePath root_sub;
 	private static FilePath root_sub_btxt;
 
-	
+
 	@BeforeAll
 	public static void beforeAll(@TempDir File temp) throws Exception
 	{
@@ -47,13 +47,13 @@ public class FileTreeTest
 
 		root_atxt = root.resolve("a.txt");
 		Chars.fromString("abc").write().asUtf8().to(root_atxt);
-		
+
 		root_sub = root.resolve("sub");
 		root_sub.createDirectory();
-		
+
 		root_sub_btxt = root_sub.resolve("b.txt");
 		Chars.fromString("1234567890").write().asUtf8().to(root_sub_btxt);
-	}	
+	}
 
 
 	@Test
@@ -75,13 +75,13 @@ public class FileTreeTest
 	public void testSetters() throws Exception
 	{
 		FileTree tree = FileTree.of(root);
-		
+
 		// filter
 		tree.addDirFilter((f,a) -> true);
 		tree.addFileFilter((f,a) -> false);
 		assertNotNull(tree.getFilter());
 		tree.clearFilter();
-		
+
 		// maxDepth
 		tree.setMaxDepth(15);
 		assertEquals(15, tree.getMaxDepth());
@@ -89,7 +89,7 @@ public class FileTreeTest
 		// include root
 		tree.setExcludeRoot();
 		assertFalse(tree.getIncludeRoot());
-		
+
 		// options
 		assertThat(tree.getOptions()).isEmpty();
 		tree.setFollowLinks();
@@ -101,10 +101,10 @@ public class FileTreeTest
 	public void testClone() throws Exception
 	{
 		FileTree tree = FileTree.of(root);
-		
+
 		FileTree clone = tree.clone();
 		clone.setExcludeRoot();
-		
+
 		assertTrue(tree.getIncludeRoot());
 		assertFalse(clone.getIncludeRoot());
 	}
@@ -134,41 +134,41 @@ public class FileTreeTest
 
 		assertAccept(FileTree.of(root).setExcludeRoot())
 			.containsExactlyInAnyOrder(root_atxt, root_sub, root_sub_btxt);
-		
+
 		assertAccept(FileTree.of(root).addFileFilter((p,a) -> p.getName().equals("a.txt")))
 			.containsExactlyInAnyOrder(root, root_atxt, root_sub);
-		
+
 		assertAccept(FileTree.of(root).addDirFilter((p,a) -> !p.getName().equals("sub")))
 			.containsExactlyInAnyOrder(root, root_atxt, root_sub_btxt);
 	}
-	
-	
+
+
 	@Test
 	public void testDelete(@TempDir File temp) throws IOException
 	{
 		FilePath root 		= FilePath.of(temp);
-		FilePath a_txt 		= root.resolve("a.txt").createFile(); 
-		FilePath b_txt 		= root.resolve("b.txt").createFile(); 
-		FilePath sub   		= root.resolve("sub").createDirectory(); 
+		FilePath a_txt 		= root.resolve("a.txt").createFile();
+		FilePath b_txt 		= root.resolve("b.txt").createFile();
+		FilePath sub   		= root.resolve("sub").createDirectory();
 		FilePath sub_a_txt  = sub.resolve("a.txt").createFile();
 		FilePath sub_b_txt  = sub.resolve("b.txt").createFile();
 		assertTrue(a_txt.isRegularFile());
 		assertTrue(b_txt.isRegularFile());
 		assertTrue(sub_a_txt.isRegularFile());
 		assertTrue(sub_b_txt.isRegularFile());
-		
+
 		FileTree tree = FileTree.of(root);
-		tree.clone().addFileFilter((p,a) -> p.getName().equals("a.txt")).delete();		
+		tree.clone().addFileFilter((p,a) -> p.getName().equals("a.txt")).delete();
 		assertFalse(a_txt.exists());
 		assertTrue(b_txt.exists());
 		assertFalse(sub_a_txt.exists());
 		assertTrue(sub.exists());
 		assertTrue(sub_b_txt.exists());
-		
+
 		tree.delete();
 		assertFalse(root.exists());
 	}
-	
+
 
 	@Test
 	public void testCopy(@TempDir File temp) throws IOException
@@ -180,46 +180,46 @@ public class FileTreeTest
 			.map(p -> target.relativize(p).toString().replace('\\', '/'))
 			.collect(Collectors.toList());
 		assertThat(copies).containsExactly("a.txt", "sub", "sub/b.txt");
-		
-		FilePath sub = target.resolve("sub"); 
+
+		FilePath sub = target.resolve("sub");
 		FileTree.of(sub).copy().toSibling("sub2"); // cover FileTreeTarget.toSibling()
 		assertTrue(target.resolve("sub").exists());
 	}
-	
-	
-	@Test 
+
+
+	@Test
 	public void testSkipRootProxy() throws Exception
 	{
 		FileTree rootTree = FileTree.of(root);
 		FileTree.SkipRootProxy srp = rootTree.new SkipRootProxy(new Visited());
 		IOException ioe = new IOException();
-		
+
 		assertThatThrownBy(() -> srp.visitFileFailed(root, ioe)).isSameAs(ioe);
 		assertSame(FileVisitResult.CONTINUE, srp.visitFileFailed(root_atxt, ioe));
 		assertSame(FileVisitResult.TERMINATE, srp.visitFile(root, null));
 	}
-	
-	
+
+
 	private ListAssert<FilePath> assertAccept(FileTree tree) throws IOException
 	{
 		Visited visited = new Visited();
 		tree.accept(visited);
 		return assertThat(visited.list);
 	}
-	
-	
+
+
 	private static class Visited implements FileVisitor<FilePath>
 	{
 		public final List<FilePath> list = new ArrayList<>();
-		
-		
+
+
 		@Override
 		public FileVisitResult preVisitDirectory(FilePath dir, BasicFileAttributes attrs) throws IOException
 		{
 			list.add(dir);
 			return FileVisitResult.CONTINUE;
 		}
-		
+
 
 		@Override
 		public FileVisitResult visitFile(FilePath file, BasicFileAttributes attrs) throws IOException
@@ -227,14 +227,14 @@ public class FileTreeTest
 			list.add(file);
 			return FileVisitResult.CONTINUE;
 		}
-		
+
 
 		@Override
 		public FileVisitResult visitFileFailed(FilePath file, IOException exc) throws IOException
 		{
 			return FileVisitResult.CONTINUE;
 		}
-		
+
 
 		@Override
 		public FileVisitResult postVisitDirectory(FilePath dir, IOException exc) throws IOException

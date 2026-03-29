@@ -25,7 +25,7 @@ import jd.commons.check.Check;
 
 /**
  * ByteTarget can provide an OutputStream to receive binary content.
- * See {@link IO#Bytes} for factory methods to create a ByteTarget 
+ * See {@link IO#Bytes} for factory methods to create a ByteTarget
  * for various targets.
  */
 public interface ByteTarget extends AsCharset<CharTarget>
@@ -33,32 +33,32 @@ public interface ByteTarget extends AsCharset<CharTarget>
 	/**
 	 * @return an OutputStream.
 	 * This should only be called once, if this method is invoked a second time the result is undefined.
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public OutputStream getOutputStream() throws IOException;
-	
-	
+
+
 	/**
 	 * @return a PrintStream based on the OutputStream of this ByteTarget.
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public default PrintStream getPrintStream() throws IOException
 	{
 		return getPrintStream(false);
 	}
-	
-	
+
+
 	/**
 	 * @return a PrintStream based on the OutputStream of this ByteTarget.
 	 * @param autoFlush the auto flush flag of the PrintStream
-	 * @throws IOException if an I/O error occurs 
+	 * @throws IOException if an I/O error occurs
 	 */
 	public default PrintStream getPrintStream(boolean autoFlush) throws IOException
 	{
 		return new PrintStream(getOutputStream(), autoFlush);
 	}
 
-	
+
 	/**
 	 * Returns a {@link CharTarget} which is based on the OutputStream
 	 * provided by this ByteTarget, encoded using the given charset.
@@ -73,7 +73,7 @@ public interface ByteTarget extends AsCharset<CharTarget>
 		return () -> new OutputStreamWriter(getOutputStream(), charset);
 	}
 
-	
+
 	/**
 	 * @return a ByteTarget which wraps the OutputStream of this ByteTarget
 	 * 		by another OutputStream.

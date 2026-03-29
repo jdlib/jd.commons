@@ -26,10 +26,10 @@ public class CountingWriterTest
 		{
 			long expected = 0;
 			assertEquals(expected, w.count());
-			
+
 			w.write(17);
 			expected = assertCount(expected, 1, w);
-			
+
 			w.write("abcd", 1, 2);
 			expected = assertCount(expected, 2, w);
 		}

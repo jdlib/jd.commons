@@ -29,7 +29,7 @@ public class ClassLoadTest
 		assertThatThrownBy(() -> ClassLoad.forName("x").get())
 			.isInstanceOfAny(ClassNotFoundException.class);
 	}
-	
+
 
 	@Test
 	public void testOrNull() throws Exception
@@ -37,8 +37,8 @@ public class ClassLoadTest
 		assertSame(String.class, ClassLoad.forName(String.class.getName()).orNull());
 		assertNull(ClassLoad.forName("x").orNull());
 	}
-	
-	
+
+
 	@Test
 	public void testOrThrow() throws Exception
 	{
@@ -47,23 +47,23 @@ public class ClassLoadTest
 			.isInstanceOf(IllegalStateException.class)
 			.cause().isInstanceOf(ClassNotFoundException.class);
 	}
-	
-	
+
+
 	@Test
 	public void testLoadBy() throws Exception
 	{
 		Class<?> c = getClass();
 		assertSame(c, ClassLoad.forName(c.getName()).using(c.getClassLoader()).get());
 	}
-	
-	
+
+
 	@Test
 	public void testDerivedFrom() throws Exception
 	{
 		Class<? extends CharSequence> csc = ClassLoad.forName(String.class.getName())
-			.derivedFrom(CharSequence.class).get(); 
+			.derivedFrom(CharSequence.class).get();
 		assertSame(String.class, csc);
-		
+
 		assertThatThrownBy(() -> ClassLoad.forName(String.class.getName())
 			.derivedFrom(getClass()).get())
 			.isInstanceOf(IllegalArgumentException.class)

@@ -32,14 +32,14 @@ import jd.commons.util.function.XSupplier;
  * ByteTo allows to specify a target for byte output.
  * <ul>
  * <li>Directly specify a {@link #to(OutputStream) OutputStream}
- * <li>Directly specify a {@link #to(ByteTarget) ByteTarget} 
+ * <li>Directly specify a {@link #to(ByteTarget) ByteTarget}
  * <li>Specify IO related objects which
  *     can be turned into a OutputStream or ByteTarget. The default implementations
  *     of these methods forward them to {@link #to(OutputStream)} or {@link #to(ByteTarget)}
  * </ul>
  * The return value computed from the Writer or ByteTarget depends on the implementation.
  * @param<T> the result type
- * @param<E> the exception thrown by the ByteTo methods 
+ * @param<E> the exception thrown by the ByteTo methods
  */
 public interface ByteTo<T,E extends Exception>
 {
@@ -60,7 +60,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @throws E if an error occurs
 	 */
 	public T to(OutputStream out) throws E;
-	
+
 
 	/**
 	 * Creates a file from the file name and forwards to {@link #to(File)}.
@@ -74,7 +74,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(new File(fileName));
 	}
 
-	
+
 	/**
 	 * Calls {@link #to(File, boolean) to(file, false)}.
 	 * @param file a file, not null
@@ -86,7 +86,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(file, false);
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget that returns an FileOutputStream for the file.
 	 * @param file a file, not null
@@ -100,7 +100,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(() -> new FileOutputStream(file, append));
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget for the path.
 	 * @param path a path, not null
@@ -114,7 +114,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(() -> Files.newOutputStream(path, options));
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget for the path.
 	 * @param path a path, not null
@@ -128,7 +128,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(path.toNioPath(), options);
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget for the channel.
 	 * @param channel a channel, not null
@@ -141,7 +141,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(() -> Channels.newOutputStream(channel));
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget for the socket.
 	 * @param socket a socket, not null
@@ -154,7 +154,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(socket::getOutputStream);
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget for the Blob.
 	 * @param blob a blob, not null
@@ -166,7 +166,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(blob, 1);
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget for the Blob.
 	 * @param blob a blob, not null
@@ -182,7 +182,7 @@ public interface ByteTo<T,E extends Exception>
 		return toSupplier(() -> blob.setBinaryStream(pos));
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget which throws the exception when a OutputStream is requested.
 	 * @param e either an exception (which is turned into a RuntimeException or IOException),
@@ -206,7 +206,7 @@ public interface ByteTo<T,E extends Exception>
 		return to(OutputStream.nullOutputStream());
 	}
 
-	
+
 	/**
 	 * Creates a ByteTarget which returns the OutputStream provided by the supplier.
 	 * @param supplier a supplier, not null

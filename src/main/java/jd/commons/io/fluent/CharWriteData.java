@@ -32,14 +32,14 @@ public class CharWriteData<R,E extends Exception>
 	protected final CharTarget target_;
 	protected final ErrorFunction<?,R,E> error_;
 
-	
+
 	public CharWriteData(CharTarget target, ErrorFunction<?,R,E> error)
 	{
 		target_ = Check.notNull(target, "target");
 		error_	= Check.notNull(error, "error");
 	}
 
-	
+
 	public R string(CharSequence s) throws E
 	{
 		return apply(writer -> writer.append(s));
@@ -57,7 +57,7 @@ public class CharWriteData<R,E extends Exception>
 	{
 		Check.notNull(lines, "lines");
 		return apply(writer -> {
-            for (CharSequence line: lines) 
+            for (CharSequence line: lines)
             {
             	writer.append(line);
                 writer.write(System.lineSeparator());
@@ -91,7 +91,7 @@ public class CharWriteData<R,E extends Exception>
 	 * Returns new CharWriteData which converts thrown exceptions to a new type.
 	 * @param factory a factory which receives a thrown exception. It must either
 	 * 		throw an own exception of type F or create an exception of type F
-	 * 		(which is then thrown). The second case makes it easy to use 
+	 * 		(which is then thrown). The second case makes it easy to use
 	 * 		method handles to specify a factory (e.g. {@code IllegalStateException::new}).
 	 * @param <F> an exception type
 	 * @return the CharWriteData
@@ -101,8 +101,8 @@ public class CharWriteData<R,E extends Exception>
 	{
 		return new CharWriteData<>(target_, ErrorFunction.throwing(factory));
 	}
-	
-	
+
+
 	/**
 	 * @return a new CharWriteData which catches all exceptions thrown by this CharWriteData
 	 * 		and rethrows it as RuntimeException.

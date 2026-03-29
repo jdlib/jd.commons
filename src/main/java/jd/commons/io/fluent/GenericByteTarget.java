@@ -24,7 +24,7 @@ class GenericByteTarget<I extends OutputStream> extends IOSupplier<I> implements
 	{
 		super(wrapped);
 	}
-	
+
 
 	@Override
 	public OutputStream getOutputStream() throws IOException

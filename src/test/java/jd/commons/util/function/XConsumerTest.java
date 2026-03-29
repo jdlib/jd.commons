@@ -30,7 +30,7 @@ public class XConsumerTest
 		XConsumer<String,SQLException> c  = s -> b.append(s);
 		c.accept("a");
 		assertEquals("a", b.toString());
-		
+
 		XConsumer<String,SQLException> c2 = c.andThen(c);
 		b.setLength(0);
 		c2.accept("a");
@@ -44,14 +44,14 @@ public class XConsumerTest
 		XConsumer<String,IOException> c = s -> {};
 		assertNull(c.toXFunction().apply("x"));
 	}
-	
-	
+
+
 	@Test
 	public void testUnchecked() throws Exception
 	{
 		XConsumer<String,IOException> c1 = s -> {};
 		XConsumer<String,IOException> c2 = s -> { throw new IOException(); };
-		
+
 		c1.unchecked().accept("a");
 		assertThatThrownBy(() -> c2.unchecked().accept("a"))
 			.isInstanceOf(UncheckedException.class);

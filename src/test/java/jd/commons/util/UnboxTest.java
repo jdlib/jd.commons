@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test;
 public class UnboxTest
 {
 	private static final Number ONE = Integer.valueOf(1);
-	
-	
+
+
 	@Test
 	public void testBoolean()
 	{
@@ -32,7 +32,7 @@ public class UnboxTest
 		assertTrue(Unbox.isFalse(Boolean.FALSE));
 		assertFalse(Unbox.isFalse(Boolean.TRUE));
 		assertFalse(Unbox.isFalse(null));
-		
+
 		assertFalse(Unbox.toBoolean(null, false));
 		assertTrue(Unbox.toBoolean(null, true));
 		assertFalse(Unbox.toBoolean(Boolean.FALSE, true));

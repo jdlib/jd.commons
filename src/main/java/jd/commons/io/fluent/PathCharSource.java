@@ -28,8 +28,8 @@ class PathCharSource implements CharSource
 	private final Path path_;
 	private final OpenOption[] options_;
 	private final Charset charset_;
-	
-	
+
+
 	public PathCharSource(Path path, OpenOption[] options, Charset charset)
 	{
 		path_	 = path;
@@ -58,14 +58,14 @@ class PathCharSource implements CharSource
 		{
 			super(PathCharSource.this, error);
 		}
-		
-		
+
+
 		@Override
 		public String all() throws E
 		{
 			if (options_.length > 0)
 				return super.all();
-			
+
 			try
 			{
 				// call the optimized implementation
@@ -76,6 +76,6 @@ class PathCharSource implements CharSource
 				error_.handleException(e);
 				return null; // will never be executed
 			}
-		}	
+		}
 	}
 }
