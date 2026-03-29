@@ -55,17 +55,17 @@ public class BytesTest
 	private static final byte[] ABC_BYTES = ABC.getBytes(UTF_8);
 	private static final String AUML = "\u00E4";
 	private static final byte[] AUML_BYTES = AUML.getBytes(UTF_8);
-	
-	
+
+
 	@BeforeAll
 	public static void beforeAll() throws Exception
 	{
 		tempFile = new File(tempDir, "test.txt");
 		Bytes.from(ABC_BYTES).write().to(tempFile);
 		assertEquals(3L, tempFile.length());
-	}	
-	
-	
+	}
+
+
 	@Test
 	public void testFactoryFromBlob() throws Exception
 	{
@@ -82,29 +82,29 @@ public class BytesTest
 			assertSame(in, blobIn);
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryFromByteChannel() throws Exception
 	{
 		ReadableByteChannel channel = Channels.newChannel(new ByteArrayInputStream(ABC_BYTES));
 		assertArrayEquals(ABC_BYTES, Bytes.from(channel).read().all());
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryFromFile() throws Exception
 	{
 		assertTempFileBytes(Bytes.fromFile(tempFile.toString()));
 	}
 
-	
+
 	@Test
 	public void testFactoryFromFilePath() throws Exception
 	{
 		ByteSource bs = Bytes.from(FilePath.of(tempFile));
 		assertTempFileBytes(bs);
-		
+
 		// touch PathByteSource.getInputStream()
 		try (InputStream in = bs.getInputStream())
 		{
@@ -116,10 +116,10 @@ public class BytesTest
 		}
 
 		// this executes the optimized implementation of PathByteSoure/CharSource/CharRead
-		assertEquals(ABC, bs.asUtf8().read().all()); 
+		assertEquals(ABC, bs.asUtf8().read().all());
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryFromInputStream() throws Exception
 	{
@@ -127,14 +127,14 @@ public class BytesTest
 		{
 			assertThat(in).isInstanceOf(OpenInputStream.class);
 		}
-		
+
 		try (InputStream in = Bytes.from(new ByteArrayInputStream(ABC_BYTES), false).getInputStream())
 		{
 			assertThat(in).isInstanceOf(ByteArrayInputStream.class);
 		}
 	}
 
-	
+
 	@Test
 	public void testFactoryFromPath() throws Exception
 	{
@@ -143,31 +143,31 @@ public class BytesTest
 		assertEquals(ABC, src.asUtf8().read().all());
 	}
 
-	
+
 	@Test
 	public void testFactoryFromSocket() throws Exception
 	{
 		MockSocket socket = new MockSocket(ABC_BYTES);
 		assertArrayEquals(ABC_BYTES, Bytes.from(socket).read().all());
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryFromURI() throws Exception
 	{
 		assertTempFileBytes(Bytes.from(tempFile.toURI()));
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryFromURL() throws Exception
 	{
-		URL url = tempFile.toURI().toURL(); 
+		URL url = tempFile.toURI().toURL();
 		assertTempFileBytes(Bytes.from(url));
 		assertTempFileBytes(Bytes.from(url.openConnection()));
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryToBlob() throws Exception
 	{
@@ -184,8 +184,8 @@ public class BytesTest
 			assertSame(out, blobOut);
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryToByteChannel() throws Exception
 	{
@@ -193,32 +193,39 @@ public class BytesTest
 		Bytes.from(ABC_BYTES).write().to(Channels.newChannel(out));
 		assertArrayEquals(ABC_BYTES, out.toByteArray());
 	}
-	
-	
+
+
 	@Test
 	public void testFactoryToFile() throws Exception
 	{
-		// coverage 
+		// coverage
 		Bytes.to(tempFile);
 		Bytes.toFile(tempFile.getAbsolutePath());
 		Bytes.to(FilePath.of(tempFile));
 	}
 
-	
+
 	@Test
 	public void testFactoryToOutputStream() throws Exception
 	{
-		try (OutputStream out = Bytes.to(new ByteArrayOutputStream()).getOutputStream())
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		try (OutputStream out = Bytes.to(bout).getOutputStream())
 		{
 			assertThat(out).isInstanceOf(OpenOutputStream.class);
 		}
-		
-		try (OutputStream out = Bytes.to(new ByteArrayOutputStream(), false).getOutputStream())
+
+		try (OutputStream out = Bytes.to(bout, false).getOutputStream())
 		{
 			assertThat(out).isInstanceOf(ByteArrayOutputStream.class);
 		}
+
+		OpenOutputStream oo = new OpenOutputStream(bout);
+		try (OutputStream out = Bytes.to(oo).getOutputStream())
+		{
+			assertSame(out, oo);
+		}
 	}
-	
+
 
 	@Test
 	public void testReadResultApplyError() throws Exception
@@ -227,8 +234,8 @@ public class BytesTest
 			.isInstanceOf(IOException.class)
 			.cause().isInstanceOf(SQLException.class);
 	}
-	
-	
+
+
 	@Test
 	public void testReadResultNBytes() throws Exception
 	{
@@ -238,8 +245,8 @@ public class BytesTest
 		byte[] read = Bytes.from(ABC_BYTES).read().first(1);
 		assertThat(read).hasSize(1).contains((byte)'a');
 	}
-	
-	
+
+
 	@Test
 	public void testSourceAs() throws Exception
 	{
@@ -247,25 +254,25 @@ public class BytesTest
 		assertEquals(AUML, s);
 	}
 
-	
+
 	@Test
 	public void testReadUnchecked() throws Exception
 	{
 		// implicitly also tests throwing()
-		
+
 		// no exception thrown
 		assertArrayEquals(ABC_BYTES, Bytes.from(ABC_BYTES).read().unchecked().all());
 		assertArrayEquals(new byte[] { ABC_BYTES[0] }, Bytes.from(ABC_BYTES).read().unchecked().first(1));
 
 		// exception thrown
-		UnsupportedOperationException uoe = new UnsupportedOperationException("hallo"); 
+		UnsupportedOperationException uoe = new UnsupportedOperationException("hallo");
 		ByteSource bs = () -> { throw uoe; };
 		assertThatThrownBy(() -> bs.read().unchecked().all()).isSameAs(uoe);
 		assertThatThrownBy(() -> bs.read().unchecked().first(1)).isSameAs(uoe);
 		assertThatThrownBy(() -> bs.read().unchecked().apply(in -> null)).isSameAs(uoe);
 	}
-	
-	
+
+
 	@Test
 	public void testTargetGetPrintStream() throws Exception
 	{
@@ -275,15 +282,15 @@ public class BytesTest
 			pout.println("hallo");
 		}
 	}
-	
-	
+
+
 	@Test
 	public void testWriteCountBytes() throws Exception
 	{
 		// .to(OutputStream) and .to(ByteTarget) have different implementations in CountingOutputStream
 		assertEquals(2, Bytes.from(AUML_BYTES).write().countBytes().to(nullOutputStream()));
 		assertEquals(3, Bytes.from(ABC_BYTES).write().countBytes().to(Bytes.to(nullOutputStream())));
-		
+
 		// what if the inner ByteWrite never opens the target, i.e. no CountingOutputStream created by to(ByteTarget)
 		CountBytesHandler<?> c = new CountBytesHandler<>(new IOHandler<ByteTarget,OutputStream,Object,Exception>()
 		{
@@ -295,8 +302,8 @@ public class BytesTest
 		});
 		assertEquals(0L, c.runSupplier(Bytes.toNull()));
 	}
-	
-	
+
+
 	@Test
 	public void testWriteInIsOpenedBeforeOut() throws Exception
 	{
@@ -304,42 +311,42 @@ public class BytesTest
 		assertNotNull(e);
 		assertEquals("src", e.getMessage());
 	}
-	
-	
+
+
 	@Test
 	public void testWriteSilent() throws Exception
 	{
 		// .to(OutputStream) and .to(ByteTarget) have different implementations in ProxyByteWrite
-		
+
 		// silent().to(OutputStream) without exception
 		assertNull(Bytes.from(ABC_BYTES).write().silent().to(nullOutputStream()));
-		
+
 		// silent().to(ByteTarget) without exception
 		assertNull(Bytes.from(ABC_BYTES).write().silent().to(Bytes.to(nullOutputStream())));
 
 		// silent().to(OutputStream) with exception
-		IOException ioe = new IOException("hallo"); 
+		IOException ioe = new IOException("hallo");
 		ByteSource bs = Bytes.fromError(ioe);
 		assertSame(ioe, bs.write().silent().to(nullOutputStream()));
-		
+
 		// silent().to(ByteTarget) with exception
 		assertSame(ioe, bs.write().silent().to(Bytes.to(nullOutputStream())));
-		
+
 		// silent(Consumer) with exception
 		Holder<Exception> holder = new Holder<>();
 		assertSame(ioe, bs.write().silent(holder).to(nullOutputStream()));
 		assertSame(ioe, holder.get());
 	}
-	
-	
+
+
 	@Test
 	public void testWriteToByteArray() throws Exception
 	{
 		byte[] written = Bytes.from(AUML_BYTES).write().toByteArray();
 		assertArrayEquals(AUML_BYTES, written);
 	}
-	
-	
+
+
 	@Test
 	public void testWriteToSocket() throws Exception
 	{
@@ -348,12 +355,12 @@ public class BytesTest
 		assertArrayEquals(ABC_BYTES, socket.out.toByteArray());
 	}
 
-	
+
 	@Test
 	public void testWriteUnckecked() throws Exception
 	{
 		// implicitly also tests throwing()
-		
+
 		// no exception thrown
 		assertNull(Bytes.from(ABC_BYTES).write().unchecked().to(nullOutputStream()));
 
@@ -365,14 +372,14 @@ public class BytesTest
 			.isInstanceOf(IOException.class);
 	}
 
-	
+
 	@Test
 	public void testWriteWrap() throws Exception
 	{
 		String s = "test input";
 		byte[] b = s.getBytes();
 		String expectEncoded = Base64.getEncoder().encodeToString(b);
-		
+
 		// Bytes.write.wrap
 		byte[] encoded = Bytes.from(b).write().wrap(Base64.getEncoder()::wrap).toByteArray();
 		assertEquals(expectEncoded, new String(encoded));
@@ -382,7 +389,7 @@ public class BytesTest
 		assertEquals(s, decoded);
 	}
 
-	
+
 	private void assertTempFileBytes(ByteSource source) throws Exception
 	{
 		byte[] read = source.read().all();
