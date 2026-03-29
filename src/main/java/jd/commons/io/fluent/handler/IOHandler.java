@@ -14,9 +14,19 @@ package jd.commons.io.fluent.handler;
 
 
 import java.io.Closeable;
+import jd.commons.io.fluent.ByteSource;
 import jd.commons.util.Utils;
 
 
+/**
+ * IOHandler can take a IO related class, e.g. an InputStream,
+ * either provided directly or supplied indirectly (e.g. as {@link ByteSource},
+ * and return a result.
+ * @param <AD> the type of the directly provided argument
+ * @param <AS> the type of the argument provided by a supplier
+ * @param <R> the result type
+ * @param <E> the exception type thrown by the IOHandler operations.
+ */
 public abstract class IOHandler<AS,AD extends Closeable,R,E extends Exception>
 {
 	public abstract R runSupplier(AS arg) throws E;

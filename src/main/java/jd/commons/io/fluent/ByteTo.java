@@ -38,10 +38,10 @@ import jd.commons.util.function.XSupplier;
  *     of these methods forward them to {@link #to(OutputStream)} or {@link #to(ByteTarget)}
  * </ul>
  * The return value computed from the Writer or ByteTarget depends on the implementation.
- * @param<T> the result type
+ * @param<R> the result type
  * @param<E> the exception thrown by the ByteTo methods
  */
-public interface ByteTo<T,E extends Exception>
+public interface ByteTo<R,E extends Exception>
 {
 	/**
 	 * Accepts a ByteTarget.
@@ -49,7 +49,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public T to(ByteTarget target) throws E;
+	public R to(ByteTarget target) throws E;
 
 
 	/**
@@ -59,7 +59,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public T to(OutputStream out) throws E;
+	public R to(OutputStream out) throws E;
 
 
 	/**
@@ -68,7 +68,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public default T toFile(String fileName) throws E
+	public default R toFile(String fileName) throws E
 	{
 		Check.notEmpty(fileName, "fileName");
 		return to(new File(fileName));
@@ -81,7 +81,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public default T to(File file) throws E
+	public default R to(File file) throws E
 	{
 		return to(file, false);
 	}
@@ -94,7 +94,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public default T to(File file, boolean append) throws E
+	public default R to(File file, boolean append) throws E
 	{
 		Check.notNull(file, "file");
 		return to(() -> new FileOutputStream(file, append));
@@ -108,7 +108,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public default T to(Path path, OpenOption... options) throws E
+	public default R to(Path path, OpenOption... options) throws E
 	{
 		Check.notNull(path, "path");
 		return to(() -> Files.newOutputStream(path, options));
@@ -122,7 +122,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public default T to(FilePath path, OpenOption... options) throws E
+	public default R to(FilePath path, OpenOption... options) throws E
 	{
 		Check.notNull(path, "path");
 		return to(path.toNioPath(), options);
@@ -134,8 +134,9 @@ public interface ByteTo<T,E extends Exception>
 	 * @param channel a channel, not null
 	 * @return the computed result
 	 * @throws E if an error occurs
+	 * @see Channels#newOutputStream(WritableByteChannel)
 	 */
-	public default T to(WritableByteChannel channel) throws E
+	public default R to(WritableByteChannel channel) throws E
 	{
 		Check.notNull(channel, "channel");
 		return to(() -> Channels.newOutputStream(channel));
@@ -147,8 +148,9 @@ public interface ByteTo<T,E extends Exception>
 	 * @param socket a socket, not null
 	 * @return the computed result
 	 * @throws E if an error occurs
+	 * @see Socket#getOutputStream()
 	 */
-	public default T to(Socket socket) throws E
+	public default R to(Socket socket) throws E
 	{
 		Check.notNull(socket, "socket");
 		return to(socket::getOutputStream);
@@ -160,8 +162,9 @@ public interface ByteTo<T,E extends Exception>
 	 * @param blob a blob, not null
 	 * @return the computed result
 	 * @throws E if an error occurs
+	 * @see Blob#setBinaryStream
 	 */
-	public default T to(Blob blob) throws E
+	public default R to(Blob blob) throws E
 	{
 		return to(blob, 1);
 	}
@@ -174,8 +177,9 @@ public interface ByteTo<T,E extends Exception>
      *        retrieved. The first byte in the {@code Blob} is at position 1.
 	 * @return the computed result
 	 * @throws E if an error occurs
+	 * @see Blob#setBinaryStream
 	 */
-	public default T to(Blob blob, long pos) throws E
+	public default R to(Blob blob, long pos) throws E
 	{
 		Check.notNull(blob, "blob");
 		Check.value(pos, "pos").greaterEq(1);
@@ -186,11 +190,11 @@ public interface ByteTo<T,E extends Exception>
 	/**
 	 * Creates a ByteTarget which throws the exception when a OutputStream is requested.
 	 * @param e either an exception (which is turned into a RuntimeException or IOException),
-	 * 		or any other objects which is used as message for a IOException.
+	 * 		or any other object which is used as message for a IOException.
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public default T toError(Object e) throws E
+	public default R toError(Object e) throws E
 	{
 		return toSupplier(IOHelper.getThrowsIOorRTException(e));
 	}
@@ -201,7 +205,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public default T toNull() throws E
+	public default R toNull() throws E
 	{
 		return to(OutputStream.nullOutputStream());
 	}
@@ -213,7 +217,7 @@ public interface ByteTo<T,E extends Exception>
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */
-	public default T toSupplier(XSupplier<? extends OutputStream,?> supplier) throws E
+	public default R toSupplier(XSupplier<? extends OutputStream,?> supplier) throws E
 	{
 		Check.notNull(supplier, "supplier");
 		return to(new GenericByteTarget<>(supplier));

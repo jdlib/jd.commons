@@ -14,7 +14,6 @@ package jd.commons.io.fluent.handler;
 
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.function.Consumer;
 import jd.commons.check.Check;
 import jd.commons.io.fluent.ByteWriteTo;
@@ -68,7 +67,7 @@ public abstract class ErrorFunction<RI,RO,E extends Exception>
 
 
 	/**
-	 * @return a ErrorFunction which takes an exception and rethrows it as {@link UncheckedIOException}.
+	 * @return a ErrorFunction which takes an exception and rethrows it as {@link UncheckedException}.
 	 * @param<R> allows to cast the returned ErrorFunction
 	 */
 	@SuppressWarnings("unchecked")

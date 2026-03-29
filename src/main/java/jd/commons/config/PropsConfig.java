@@ -87,15 +87,15 @@ public class PropsConfig extends Config
 	@CheckReturnValue
 	public PropsRead read()
 	{
-		return new PropsRead();
+		return new PropsRead(new PropReadHandler());
 	}
 
 
-	public class PropsRead extends ByteReadFrom<PropsConfig,IOException>
+	public static class PropsRead extends ByteReadFrom<PropsConfig,IOException>
 	{
-		private PropsRead()
+		private PropsRead(PropReadHandler handler)
 		{
-			super(new PropReadHandler());
+			super(handler);
 		}
 
 

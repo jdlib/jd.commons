@@ -72,7 +72,7 @@ public interface ByteSource extends ByteWritable, AsCharset<CharSource>
 
 
 	/**
-	 * @return a ByteReadData object which allows you to read content of this ByteSource.
+	 * @return a ByteReadData object which allows you to read the bytes of this ByteSource.
 	 */
 	public default ByteReadData<IOException> read()
 	{
@@ -84,7 +84,7 @@ public interface ByteSource extends ByteWritable, AsCharset<CharSource>
 	 * @return a ByteWriteTo object to specify a target to which
 	 * 		the content of this ByteSource should be written.
 	 * 		This initial object does not return a result
-	 * 		and throws IOExceptions
+	 * 		and throws IOExceptions on errors
 	 */
 	@Override
 	public default ByteWriteTo<Void,IOException> write()

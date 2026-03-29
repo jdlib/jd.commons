@@ -22,11 +22,12 @@ import jd.commons.io.fluent.handler.ErrorFunction;
 import jd.commons.io.fluent.handler.ErrorHandler;
 import jd.commons.io.fluent.handler.IOHandler;
 import jd.commons.io.fluent.handler.WrapHandler;
+import jd.commons.util.UncheckedException;
 import jd.commons.util.function.XFunction;
 
 
 /**
- * ByteReadFrom allows to specify a {@link ByteSource} for byte input
+ * ByteReadFrom allows to specify a {@link ByteSource} or {@link InputStream}
  * which is then used to read the content and return a result.
  * @param<R> the type of the computed result
  * @param<E> the exception thrown by ByteReadFrom methods
@@ -36,12 +37,21 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 	protected final IOHandler<ByteSource,InputStream,R,E> handler_;
 
 
+	/**
+	 * Creates a new ByteReadFrom object.
+	 * @param handler implements the ByteReadFrom function.
+	 */
 	public ByteReadFrom(IOHandler<ByteSource,InputStream,R,E> handler)
 	{
 		handler_ = Check.notNull(handler, "handler");
 	}
 
 
+	/**
+	 * @return the result computed from the ByteSource.
+	 * @param source a ByteSource, not null
+	 * @throws E if an error occurs
+	 */
 	@Override
 	public R from(ByteSource source) throws E
 	{
@@ -50,6 +60,11 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 	}
 
 
+	/**
+	 * @return the result computed from the InputStream.
+	 * @param in a InputStream, not null
+	 * @throws E if an error occurs
+	 */
 	@Override
 	public R from(InputStream in) throws E
 	{
@@ -100,7 +115,7 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 
 	/**
 	 * @return a new ByteReadFrom which catches all exceptions thrown by this ByteReadFrom
-	 * 		and rethrows it as RuntimeException.
+	 * 		and rethrows it as {@link UncheckedException}
 	 */
 	@CheckReturnValue
 	public ByteReadFrom<R,RuntimeException> unchecked()
@@ -111,7 +126,8 @@ public class ByteReadFrom<R,E extends Exception> implements ByteFrom<R,E>
 
 	/**
 	 * @return a new ByteReadFrom which wraps the InputStream of this ByteReadFrom in another
-	 * 		InputStream.
+	 * 		InputStream. Example: Call <code>.wrap(BufferedInputStream::new)</code> to wrap
+	 * 		into a BufferedInputStream.
 	 * @param wrapper wraps an InputStream
 	 */
 	@CheckReturnValue

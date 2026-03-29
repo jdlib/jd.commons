@@ -31,6 +31,7 @@ import jd.commons.check.Check;
 import jd.commons.io.FilePath;
 import jd.commons.util.function.XSupplier;
 
+
 /**
  * ByteFrom allows to specify a {@link ByteSource} for byte input.
  * <ul>
@@ -177,6 +178,7 @@ public interface ByteFrom<R,E extends Exception>
 	 * @param channel a channel, not null
 	 * @return the computed result
 	 * @throws E if an error occurs
+	 * @see Channels#newInputStream(ReadableByteChannel)
 	 */
 	public default R from(ReadableByteChannel channel) throws E
 	{
@@ -190,6 +192,7 @@ public interface ByteFrom<R,E extends Exception>
 	 * @param socket a socket, not null
 	 * @return the computed result
 	 * @throws E if an error occurs
+	 * @see Socket#getInputStream()
 	 */
 	public default R from(Socket socket) throws E
 	{
@@ -203,6 +206,7 @@ public interface ByteFrom<R,E extends Exception>
 	 * @param blob a blob, not null
 	 * @return the computed result
 	 * @throws E if an error occurs
+	 * @see Blob#getBinaryStream()
 	 */
 	public default R from(Blob blob) throws E
 	{
@@ -219,6 +223,7 @@ public interface ByteFrom<R,E extends Exception>
      * @param length the number of bytes to retrieve
 	 * @return the computed result
 	 * @throws E if an error occurs
+	 * @see Blob#getBinaryStream(long, long)
 	 */
 	public default R from(Blob blob, long pos, long length) throws E
 	{
@@ -231,7 +236,7 @@ public interface ByteFrom<R,E extends Exception>
 	/**
 	 * Creates a ByteSource which throws the exception when a InputStream is requested.
 	 * @param e either an exception (which is turned into a RuntimeException or IOException),
-	 * 		or any other objects which is used as message for a IOException.
+	 * 		or any other object which is used as message for a IOException.
 	 * @return the computed result
 	 * @throws E if an error occurs
 	 */

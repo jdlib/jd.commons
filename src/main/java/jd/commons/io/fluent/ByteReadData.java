@@ -26,7 +26,7 @@ import jd.commons.util.function.XFunction;
  * @see ByteSource#read()
  * @param<E> the exception thrown by ByteReadData methods
  */
-public class ByteReadData<E extends Exception> //implements AsCharset<CharReadData<E>>
+public class ByteReadData<E extends Exception>
 {
 	protected final ByteSource source_;
 	protected final ErrorFunction<Void,Void,E> error_;
@@ -57,13 +57,6 @@ public class ByteReadData<E extends Exception> //implements AsCharset<CharReadDa
 	}
 
 
-//	@Override
-//	public CharReadData<E> as(Charset charset)
-//	{
-//		return new CharReadData<>(source_.as(charset), error_);
-//	}
-//
-//
 	/**
 	 * Reads and returns the first len bytes of the binary content.
 	 * @param len the number of bytes to read

@@ -21,13 +21,13 @@ package jd.commons.io.fluent;
 public interface IO
 {
 	/**
-	 * A factory to create {@link ByteSource} objects.
+	 * A factory to create {@link ByteSource} and {@link ByteTarget} objects.
 	 */
 	public static final ByteFactory Bytes = new ByteFactory();
 
 
 	/**
-	 * A factory to create {@link CharSource} objects.
+	 * A factory to create {@link CharSource} and {@link CharTarget} objects.
 	 */
 	public static final CharFactory Chars = new CharFactory();
 }

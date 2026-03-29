@@ -26,6 +26,7 @@ interface IOHelper
 {
 	public static BufferedReader bufferedReader(Reader reader)
 	{
+		Check.notNull(reader, "reader");
 		return reader instanceof BufferedReader ? (BufferedReader)reader : new BufferedReader(reader);
 	}
 
