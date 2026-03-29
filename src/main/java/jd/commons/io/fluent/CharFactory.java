@@ -23,52 +23,58 @@ import jd.commons.io.lib.OpenWriter;
 
 
 /**
- * CharFactory allows to to create {@link CharSource} objects.
+ * CharFactory can create {@link CharSource} and {@link CharTarget} instances.
+ * @see IO#Chars
  */
-public class CharFactory implements 
+public class CharFactory implements
 	CharFrom<CharSource,RuntimeException>,
 	CharTo<CharTarget,RuntimeException>
 {
-	@Override 
+	/**
+	 * Implements {@link CharFrom#from(CharSource)} by returning the provided CharSource.
+	 * @param source a CharSource, not null
+	 */
+	@Override
 	public CharSource from(CharSource source)
 	{
 		return Check.notNull(source, "source");
 	}
-	
-	
+
+
 	/**
 	 * Creates a CharSource for the Reader and forwards to {@link CharFrom#from(CharSource)}.
 	 * The Reader will not be closed by CharSource operations.
 	 * @param reader a Reader, not null
-	 * @return the computed result
+	 * @return the reader as CharSource
+	 * @see #from(Reader, boolean)
 	 */
-	@Override 
+	@Override
 	public CharSource from(Reader reader)
 	{
 		return from(reader, true);
 	}
-	
-	
+
+
 	/**
 	 * Creates a CharSource for the Reader and forwards to {@link CharFrom#from(CharSource)}.
 	 * The Reader can be used in subsequent CharSource operations.
 	 * The closeable flag controls if the Reader can be closed
-	 * in these operations (true) or if should stay open (false). 
+	 * in these operations (true) or if should stay open (false).
 	 * @param reader a Reader, not null
 	 * @param keepOpen if true the Reader will be wrapped in a {@link OpenReader}
-	 * 		to prevent that it is closed. 
-	 * @return the computed result
+	 * 		to prevent that it is closed.
+	 * @return the CharSource
 	 */
 	public CharSource from(Reader reader, boolean keepOpen)
 	{
 		Check.notNull(reader, "reader");
-		Reader finalReader = keepOpen ? new OpenReader(reader) : reader;
+		Reader finalReader = !keepOpen || (reader instanceof OpenReader) ? reader : new OpenReader(reader);
 		return from(() -> finalReader);
 	}
-	
-	
+
+
 	/**
-	 * @return a CharContent which can write the lines + line separator to a target.
+	 * @return a CharWritable which can write the lines + line separator to a target.
 	 * @param lines the lines, not null
 	 */
 	public CharWritable fromLines(Iterable<? extends CharSequence> lines)
@@ -76,7 +82,7 @@ public class CharFactory implements
 		Check.notNull(lines, "lines");
 		return CharWritable.of(w -> {
 			BufferedWriter bw = new BufferedWriter(w);
-	        for (CharSequence line: lines) 
+	        for (CharSequence line : lines)
 	        {
 	            bw.append(line);
 	            bw.newLine();
@@ -84,21 +90,29 @@ public class CharFactory implements
 	        bw.flush();
 	    });
 	}
-	
-	
+
+
+	/**
+	 * @return a CharWritable which can write the lines + line separator to a target.
+	 * @param lines the lines, not null
+	 */
 	public CharWritable fromLines(CharSequence... lines)
 	{
 		return fromLines(Arrays.asList(lines));
 	}
-	
-	
-	@Override 
+
+
+	/**
+	 * Implements {@link CharTo#to(CharTarget)} by returning the provided CharSource.
+	 * @param target a CharTarget, not null
+	 */
+	@Override
 	public CharTarget to(CharTarget target)
 	{
 		return Check.notNull(target, "target");
 	}
-	
-	
+
+
 	/**
 	 * @return a CharTarget for the given Writer.
 	 * The Writer will not be closed in any operations of the CharTarget.
@@ -108,14 +122,14 @@ public class CharFactory implements
 	public CharTarget to(Writer writer)
 	{
 		return to(writer, true);
-	}	
-	
-	
+	}
+
+
 	/**
 	 * Creates a CharTarget which returns the given Writer.
 	 * @param writer a Writer, not null
 	 * @param keepOpen if true the Writer will be wrapped in a {@link OpenWriter}
-	 * 		to prevent that it is closed 
+	 * 		to prevent that it is closed
 	 * @return the CharTarget
 	 */
 	public CharTarget to(Writer writer, boolean keepOpen)
@@ -123,5 +137,5 @@ public class CharFactory implements
 		Check.notNull(writer, "writer");
 		Writer finalWriter = !keepOpen || (writer instanceof OpenWriter) ? writer : new OpenWriter(writer);
 		return to(() -> finalWriter);
-	}	
+	}
 }

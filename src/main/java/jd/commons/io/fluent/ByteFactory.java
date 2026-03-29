@@ -21,9 +21,10 @@ import jd.commons.io.lib.OpenOutputStream;
 
 
 /**
- * ByteFactory provides methods to construct {@link ByteSource} and {@link ByteTarget} instances.
+ * ByteFactory can create {@link ByteSource} and {@link ByteTarget} instances.
+ * @see IO#Bytes
  */
-public class ByteFactory implements 
+public class ByteFactory implements
 	ByteFrom<ByteSource,RuntimeException>,
 	ByteTo<ByteTarget,RuntimeException>
 {
@@ -31,30 +32,30 @@ public class ByteFactory implements
 	 * @return the provided ByteSource.
 	 * @param source a ByteSource, not null
 	 */
-	@Override 
+	@Override
 	public ByteSource from(ByteSource source)
 	{
 		return Check.notNull(source, "source");
 	}
-	
-	
+
+
 	/**
 	 * @return a ByteSource which returns the InputStream, wrapped in a {@link OpenInputStream}
 	 * 		in order to ensure that the InputStream is not closed by ByteSource operations.
 	 * @param in an InputStream, not null
 	 */
-	@Override 
+	@Override
 	public ByteSource from(InputStream in)
 	{
 		return from(in, true);
 	}
-	
-	
+
+
 	/**
 	 * Creates a ByteSource for the InputStream and forwards to {@link ByteFrom#from(ByteSource)}.
 	 * The InputStream can be used in subsequent ByteSource operations.
 	 * The keepOpen flag controls if the InputStream can be closed
-	 * in these operations (false) or if should stay open (true). 
+	 * in these operations (false) or if should stay open (true).
 	 * @param in an InputStream, not null
 	 * @param keepOpen if true the InputStream will be wrapped in a {@link OpenInputStream}
 	 * 		to prevent that it is closed
@@ -66,8 +67,8 @@ public class ByteFactory implements
 		InputStream finalIn = keepOpen ? new OpenInputStream(in) : in;
 		return from(() -> finalIn);
 	}
-	
-	
+
+
 	/**
 	 * @return the provided ByteTarget.
 	 * @param target a ByteTarget, not null
@@ -77,8 +78,8 @@ public class ByteFactory implements
 	{
 		return Check.notNull(target, "target");
 	}
-	
-	
+
+
 	/**
 	 * @return a ByteTarget which returns the OutputStream, wrapped in a {@link OpenOutputStream}
 	 * 		in order to ensure that the OutputStream is not closed by ByteTarget operations.
@@ -89,8 +90,8 @@ public class ByteFactory implements
 	{
 		return to(out, true /*keep open*/);
 	}
-	
-	
+
+
 	/**
 	 * Creates a ByteTarget which returns the given OutputStream.
 	 * @param out an OutputStream, not null

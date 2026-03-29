@@ -40,7 +40,7 @@ public class CharReadFrom<R,E extends Exception> implements CharFrom<R,E>
 
 
 	/**
-	 * Creates new CharReadFrom
+	 * Creates new CharReadFrom.
 	 * @param handler the handler
 	 */
 	public CharReadFrom(IOHandler<CharSource,Reader,R,E> handler)
