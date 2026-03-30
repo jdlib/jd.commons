@@ -62,8 +62,8 @@ public interface Iterators
 
 	/**
 	 * @return an Iterator which returns zero or one values.
-	 * @param value the value. If it is not null, the iterator wiull returns
-	 * 		this values, else it returns no value.
+	 * @param value the value. If it is not null, the iterator will return
+	 * 		the value, else it will be empty.
 	 * @param <T> the element type
 	 */
 	public static <T> Iterator<T> optional(T value)
@@ -73,9 +73,9 @@ public interface Iterators
 
 
 	/**
+	 * @return an Iterator which joins the given iterators.
 	 * @param iterators a list of iterators
 	 * @param <T> the element type
-	 * @return an Iterator which joins the given iterators.
 	 */
 	@SafeVarargs
 	public static <T> Iterator<T> join(Iterator<T>... iterators)
