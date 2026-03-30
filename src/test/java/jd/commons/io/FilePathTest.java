@@ -480,10 +480,12 @@ public class FilePathTest
 	public void testTemp() throws Exception
 	{
 		FilePath tempRoot = FilePath.tempDir();
-		try (FilePath.Closeable tempDir = tempRoot.createTempDir("test").toCloseable()) {
+		try (FilePath.Closeable tempDir = tempRoot.createTempDir("test").toCloseable())
+		{
 			assertThat(tempDir.getName()).startsWith("test");
 			tempDir.createTempFile("test1", ".tmp"); // will be deleted when tempRoot is closed
-			try (FilePath.Closeable tempFile = tempDir.createTempFile("test", ".tmp").toCloseable()) {
+			try (FilePath.Closeable tempFile = tempDir.createTempFile("test", ".tmp").toCloseable())
+			{
 				assertThat(tempFile.getName()).startsWith("test").endsWith(".tmp");
 			}
 		}
