@@ -1154,9 +1154,9 @@ public class FilePath implements Comparable<FilePath>
 	 * @return a Builder to open a binary stream or channel to this file.
 	 */
 	@CheckReturnValue
-	public ByteOpen open()
+	public PathOpen open()
 	{
-		return new ByteOpen();
+		return new PathOpen();
 	}
 
 
@@ -1166,7 +1166,7 @@ public class FilePath implements Comparable<FilePath>
 	/**
 	 * A builder to open a binary stream or channel to this file.
 	 */
-	public class ByteOpen implements AsCharset<CharOpen>
+	public class PathOpen implements AsCharset<CharOpen>
 	{
 		private OpenOption[] options_ = EMPTY_OPEN_OPTIONS;
 
@@ -1221,7 +1221,7 @@ public class FilePath implements Comparable<FilePath>
 		 * Sets the options to {@link StandardOpenOption#APPEND}
 		 * @return this
 		 */
-		public ByteOpen append()
+		public PathOpen append()
 		{
 			return options(StandardOpenOption.APPEND);
 		}
@@ -1232,7 +1232,7 @@ public class FilePath implements Comparable<FilePath>
 		 * @param options the options
 		 * @return this
 		 */
-		public ByteOpen options(OpenOption... options)
+		public PathOpen options(OpenOption... options)
 		{
 			Check.elems(options, "options").noneNull();
 			options_ = options;
@@ -1337,9 +1337,9 @@ public class FilePath implements Comparable<FilePath>
 	 * @return a builder which allows to read the content of this file.
 	 */
 	@CheckReturnValue
-	public ByteRead read()
+	public PathRead read()
 	{
-		return new ByteRead(IO.Bytes.from(path_));
+		return new PathRead(IO.Bytes.from(path_));
 	}
 
 
@@ -1347,9 +1347,9 @@ public class FilePath implements Comparable<FilePath>
 	 * A builder class to specify what to read from this {@link FilePath}.
 	 * @see FilePath#read()
 	 */
-	public class ByteRead extends ByteReadData<IOException> implements AsCharset<CharReadData<IOException>>
+	public class PathRead extends ByteReadData<IOException> implements AsCharset<CharReadData<IOException>>
 	{
-		private ByteRead(ByteSource source)
+		private PathRead(ByteSource source)
 		{
 			super(source, ErrorFunction.throwUncheckedOrIOE());
 		}
@@ -1492,9 +1492,9 @@ public class FilePath implements Comparable<FilePath>
 	 * @return a builder to specify what to write to this FilePath.
 	 */
 	@CheckReturnValue
-	public ByteWrite write()
+	public PathWrite write()
 	{
-		return new ByteWrite(IO.Bytes.to(this));
+		return new PathWrite(IO.Bytes.to(this));
 	}
 
 
@@ -1502,9 +1502,9 @@ public class FilePath implements Comparable<FilePath>
 	 * A builder class to specify what to write to this {@link FilePath}.
 	 * @see FilePath#write()
 	 */
-	public class ByteWrite extends ByteWriteData<Void,IOException> implements AsCharset<CharWriteData<Void,IOException>>
+	public class PathWrite extends ByteWriteData<Void,IOException> implements AsCharset<CharWriteData<Void,IOException>>
 	{
-		private ByteWrite(ByteTarget target)
+		private PathWrite(ByteTarget target)
 		{
 			super(target, ErrorFunction.throwUncheckedOrIOE());
 		}
@@ -1515,7 +1515,7 @@ public class FilePath implements Comparable<FilePath>
 		 * Calls {@link #append()} with {@link StandardOpenOption#APPEND}
 		 * @return a new builder object with updated options
 		 */
-		public ByteWrite append()
+		public PathWrite append()
 		{
 			return options(StandardOpenOption.APPEND);
 		}
@@ -1527,9 +1527,9 @@ public class FilePath implements Comparable<FilePath>
 		 * @return a new builder object with updated options
 		 * @see Files#newOutputStream(Path, OpenOption...)
 		 */
-		public ByteWrite options(OpenOption... options)
+		public PathWrite options(OpenOption... options)
 		{
-			return new ByteWrite(IO.Bytes.to(FilePath.this, options));
+			return new PathWrite(IO.Bytes.to(FilePath.this, options));
 		}
 
 
