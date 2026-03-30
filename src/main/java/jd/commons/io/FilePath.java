@@ -1347,7 +1347,7 @@ public class FilePath implements Comparable<FilePath>
 	 * A builder class to specify what to read from this {@link FilePath}.
 	 * @see FilePath#read()
 	 */
-	public class PathRead extends ByteReadData<IOException> implements AsCharset<CharReadData<IOException>>
+	public static class PathRead extends ByteReadData<IOException> implements AsCharset<CharReadData<IOException>>
 	{
 		private PathRead(ByteSource source)
 		{
