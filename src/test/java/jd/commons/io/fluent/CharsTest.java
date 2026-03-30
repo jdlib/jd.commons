@@ -40,7 +40,7 @@ public class CharsTest
 	@Test
 	public void testFactoryFromChars() throws Exception
 	{
-		assertEquals("abc",Chars.from('a', 'b', 'c').read().all());
+		assertEquals("abc", Chars.from('a', 'b', 'c').read().all());
 	}
 
 
