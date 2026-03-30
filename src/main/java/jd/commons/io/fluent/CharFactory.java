@@ -80,7 +80,7 @@ public class CharFactory implements
 	public CharWritable fromLines(Iterable<? extends CharSequence> lines)
 	{
 		Check.notNull(lines, "lines");
-		return CharWritable.of(w -> {
+		return CharWritable.from(w -> {
 			BufferedWriter bw = new BufferedWriter(w);
 	        for (CharSequence line : lines)
 	        {

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.Writer;
 import javax.annotation.CheckReturnValue;
 import jd.commons.check.Check;
-import jd.commons.io.fluent.handler.IOHandler;
+import jd.commons.io.fluent.handler.ConsumeCharsHandler;
 import jd.commons.util.function.XConsumer;
 
 
@@ -28,34 +28,13 @@ import jd.commons.util.function.XConsumer;
 public interface CharWritable
 {
 	/**
-	 * @return a CharContent object based on the consumer.
-	 * @param consumer A consumer which takes a writer and writes
-	 * 		the content
+	 * @return a CharWritable object based on the consumer.
+	 * @param consumer a consumer which can write the char content to a Writer.
 	 */
-	public static CharWritable of(XConsumer<Writer,? extends IOException> consumer)
+	public static CharWritable from(XConsumer<Writer,? extends IOException> consumer)
 	{
 		Check.notNull(consumer, "consumer");
-		return () -> new CharWriteTo<>(new IOHandler<CharTarget,Writer,Void,IOException>()
-		{
-			@Override
-			public Void runSupplier(CharTarget target) throws IOException
-			{
-				try (Writer writer = target.getWriter())
-				{
-					runDirect(writer);
-				}
-				return null;
-			}
-
-
-			@Override
-			public Void runDirect(Writer writer) throws IOException
-			{
-				consumer.accept(writer);
-				writer.flush();
-				return null;
-			}
-		});
+		return () -> new CharWriteTo<>(new ConsumeCharsHandler(consumer));
 	}
 
 
