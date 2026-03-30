@@ -22,16 +22,20 @@ import java.util.function.Supplier;
 /**
  * Holder contains a value.
  * Holder implements Consumer, Supplier and Function in order
- * to be easily uses in Streams.
+ * to be easily used in Streams.
  * @param<V> the value type.
  */
 public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 {
+	private V value_;
+
+
 	/**
 	 * Creates a Holder with a null value.
 	 */
 	public Holder()
 	{
+		this(null);
 	}
 
 
@@ -55,7 +59,7 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 
 
 	/**
-	 * Implements Consumer and sets the value.
+	 * Implements {@link Consumer} and sets the value.
 	 * @param value a value
 	 */
 	@Override
@@ -66,7 +70,7 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 
 
 	/**
-	 * Implements Function and sets and returns the value
+	 * Implements {@link Function} and {@link #set(Object) sets} and returns the value
 	 * @param value a value
 	 * @return the value
 	 */
@@ -136,7 +140,4 @@ public class Holder<V> implements Consumer<V>, Supplier<V>, Function<V,V>
 	{
 		return "Holder" + ':' + value_;
 	}
-
-
-	private V value_;
 }
