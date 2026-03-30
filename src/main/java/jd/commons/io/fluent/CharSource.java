@@ -76,7 +76,7 @@ public interface CharSource extends CharWritable
 	@Override
 	public default CharWriteTo<Void,IOException> write()
 	{
-		return new CharWriteTo<>(new TransferCharsHandler<>(this));
+		return new CharWriteTo<>(new TransferCharsHandler(this));
 	}
 }
 

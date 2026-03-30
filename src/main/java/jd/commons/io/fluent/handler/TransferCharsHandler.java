@@ -21,8 +21,7 @@ import jd.commons.io.fluent.CharSource;
 import jd.commons.io.fluent.CharTarget;
 
 
-public class TransferCharsHandler<E extends Exception>
-	extends IOHandler<CharTarget,Writer,Void,IOException>
+public class TransferCharsHandler extends IOHandler<CharTarget,Writer,Void,IOException>
 {
 	protected final CharSource source_;
 

@@ -29,7 +29,7 @@ public class HandlerTest
 	public void testCountChars() throws Exception
 	{
 		// CountingWriter created and used
-		CountCharsHandler<?> ch = new CountCharsHandler<>(new TransferCharsHandler<>(Chars.fromString("abc")));
+		CountCharsHandler<?> ch = new CountCharsHandler<>(new TransferCharsHandler(Chars.fromString("abc")));
 		assertEquals(3L, ch.runSupplier(Chars.toNull()));
 
 		// CountingWriter not created and used, falls back to 0
