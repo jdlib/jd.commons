@@ -1447,7 +1447,7 @@ public class FilePath implements Comparable<FilePath>
 
 
 	/**
-	 * @return the path to which this symbolic link points to-
+	 * @return the path to which this symbolic link points to.
 	 * @throws IOException if an I/O error occurs
 	 * @see Files#readSymbolicLink(Path)
 	 */

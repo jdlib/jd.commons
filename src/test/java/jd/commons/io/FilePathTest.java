@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.AccessMode;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -170,13 +171,14 @@ public class FilePathTest
 		assertEquals("owner", attrs.ownerView().name());
 		attrs.set("lastModifiedTime", basic.lastAccessTime());
 
-
 		try
 		{
 			attrs.posix();
 		}
 		catch (UnsupportedOperationException e)
 		{
+
+			// fails on windows
 		}
 	}
 
@@ -452,6 +454,25 @@ public class FilePathTest
 		String name = tempLink.getName();
 		assertEquals(tempLink, tempFile.resolveSibling(name));
 		assertEquals(tempLink, tempFile.resolveSibling(FilePath.of(name)));
+	}
+
+
+	@Test
+	public void testSymbolicLink() throws Exception
+	{
+		try (FilePath.Closeable symlink = FilePath.tempDir().resolve("symlink").toCloseable())
+		{
+			try
+			{
+				symlink.createSymbolicLink().to(tempFile);
+				assertEquals(tempFile, symlink.resolveSymbolicLink());
+				assertSame(FilePath.Type.SYMBOLIC_LINK, symlink.getType());
+			}
+			catch (FileSystemException e)
+			{
+				// will fail on windows since it requires admin rights
+			}
+		}
 	}
 
 
