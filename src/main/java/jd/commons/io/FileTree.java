@@ -487,8 +487,8 @@ public class FileTree implements Cloneable
 	    }
 	    catch (IOException e)
 	    {
-	    	// fallback
-	    	return readAttributesNoFollowLinks(path);
+	    		// fallback
+	    		return readAttributesNoFollowLinks(path);
 	    }
 	}
 
@@ -501,7 +501,7 @@ public class FileTree implements Cloneable
 	    }
 	    catch (IOException e)
 	    {
-	    	throw UncheckedException.create(e);
+	    		throw UncheckedException.create(e);
 	    }
 	}
 
