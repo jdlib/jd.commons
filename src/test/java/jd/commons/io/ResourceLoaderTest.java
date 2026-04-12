@@ -44,6 +44,8 @@ public class ResourceLoaderTest
 		assertEquals(c.hashCode(), loader.hashCode());
 		assertEquals(loader, loader);
 		assertNotEquals(loader, c);
+		assertNotEquals(loader, getClass());
+		assertNotEquals(loader, ResourceLoader.of(ResourceLoader.class));
 		assertEquals("Loader[jd.commons.io.ResourceLoaderTest]", loader.toString());
 	}
 
