@@ -48,6 +48,8 @@ public class UncheckedException extends RuntimeException
 	 * <li>as RuntimeException if the exception is a RuntimeException,
 	 * <li>else as an Exception of the provided type if it is derived from that type
 	 * </ul>
+	 * @param e an exception
+	 * @param exceptionType the exception type
 	 * @param <E> an exception type
 	 * @param <T> a pseudo return type
 	 * @return this function always throws an exception and never returns a value

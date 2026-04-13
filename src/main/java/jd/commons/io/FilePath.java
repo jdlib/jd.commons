@@ -820,6 +820,7 @@ public class FilePath implements Comparable<FilePath>
 	 * @param prefix the prefix string to be used in generating the directory's name; may be {@code null}
 	 * @param attrs an optional list of file attributes to set atomically when creating the directory
 	 * @throws IOException if an I/O error occurs
+	 * @return the path for the new temp directory
 	 */
 	public FilePath createTempDir(String prefix, FileAttribute<?>... attrs) throws IOException
 	{
@@ -833,6 +834,7 @@ public class FilePath implements Comparable<FilePath>
 	 * @param suffix the suffix string to be used in generating the file's name; may be {@code null}, in which case "{@code .tmp}" is used
 	 * @param attrs an optional list of file attributes to set atomically when creating the directory
 	 * @throws IOException if an I/O error occurs
+	 * @return the path for the new temp file
 	 */
 	public FilePath createTempFile(String prefix, String suffix, FileAttribute<?>... attrs) throws IOException
 	{

@@ -30,7 +30,7 @@ public class CheckSize extends CheckLong
 
 	/**
 	 * Checks that the provided value is contained in the interval [0,length[,
-	 * i.e. is >= 0 and &lt; length.
+	 * i.e. is &gt;= 0 and &lt; length.
 	 * @param index an index value
 	 * @param what describes the index
 	 * @return this
@@ -45,7 +45,7 @@ public class CheckSize extends CheckLong
 
 	/**
 	 * Checks that the provided value is contained in the interval [0,length[,
-	 * i.e. is >= 0 and &lt; length.
+	 * i.e. is &gt;= 0 and &lt; length.
 	 * @param index an index value
 	 * @return this
 	 */
@@ -57,7 +57,7 @@ public class CheckSize extends CheckLong
 
 	/**
 	 * Checks that the provided value is contained in the interval [0,length],
-	 * i.e. is >= 0 and &lt;= length.
+	 * i.e. is &gt;= 0 and &lt;= length.
 	 * @param end an end value
 	 * @param what describes the value
 	 * @return this
@@ -72,7 +72,7 @@ public class CheckSize extends CheckLong
 
 	/**
 	 * Checks that the provided value is contained in the interval [0,length],
-	 * i.e. is >= 0 and &lt;= length.
+	 * i.e. is &gt;= 0 and &lt;= length.
 	 * @param end an end value
 	 * @return this
 	 */

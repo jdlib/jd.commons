@@ -140,6 +140,7 @@ public class FileName
 
 	/**
 	 * @return if the FileName has the given extension.
+	 * @param extension the extension
 	 * @see #getExtension()
 	 */
 	public boolean hasExtension(String extension)
