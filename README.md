@@ -10,7 +10,7 @@ To add a dependency on `jd.commons` using Maven, use the following:
 	<dependency>
 		<groupId>io.github.jdlib</groupId>
 		<artifactId>jd.commons</artifactId>
-		<version>1.0.0</version>
+		<version>1.2.0</version>
 	</dependency>
 	
 or download the [latest release](https://github.com/jdlib/jd.commons/releases/latest).
