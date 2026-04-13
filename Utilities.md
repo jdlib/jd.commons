@@ -1,13 +1,13 @@
 # Utilities
 
-This page lists some minor utility classes provided by package `jd.commons.util`.
+This page lists utility classes provided by package `jd.commons.util`.
 
 ## jd.commons.util.Utils
 
 A classic collection of static utility methods:
 
 	import jd.commons.util.Utils;
-
+	
 	String s = ... 
 	s = Utils.cutStart(s, "/"); // removes a leading "/" from the String
 	s = Utils.padEnd(s, 15, '.');
@@ -29,17 +29,26 @@ provides easy class loading:
 		.orThrow(IllegalStateException::new);
 
 
+## jd.commons.util.Slice
+
+a [slice operator](https://www.rfc-editor.org/rfc/rfc9535#name-array-slice-selector) for Java:
+
+	import jd.common.util.Slice;
+	
+	Slice slice = Slice.build().start(5).end(1).step(-2).create();
+	List<String> input = ...
+	List<String> sliced = slice.applyTo(input);
+
+
 ## jd.commons.util.Arguments
 
 allows to process command-line arguments passed to the `main` method:
 
 	import jd.common.util.Arguments;
 	
-	public static void main(String[] a) {
-		Arguments args = new Arguments();
-		boolean showHelp = args.consumeAny("-?", "-h", "--help");
-		File inputFile = args.next("inputFile").required().asFile();
-	}
+	Arguments args = new Arguments();
+	boolean showHelp = args.consumeAny("-?", "-h", "--help");
+	File inputFile = args.next("inputFile").required().asFile();
 	
 ## jd.commons.util.Unbox
 
