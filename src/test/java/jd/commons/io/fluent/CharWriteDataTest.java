@@ -13,9 +13,9 @@
 package jd.commons.io.fluent;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class CharWriteDataTest
 	{
 		StringBuilder sb = new StringBuilder();
 		write(Chars.to(sb)).lines("a", "b");
-		assertEquals("a" + System.lineSeparator() + "b" + System.lineSeparator(), sb.toString());
+		expectEqual("a" + System.lineSeparator() + "b" + System.lineSeparator(), sb.toString());
 	}
 
 
@@ -43,26 +43,26 @@ public class CharWriteDataTest
 	{
 		Holder<Exception> holder = new Holder<>();
 		Exception e = write(Chars.toError(IOE)).silent(holder).string("abc");
-		assertSame(IOE, e);
-		assertSame(IOE, holder.get());
+		expectSame(IOE, e);
+		expectSame(IOE, holder.get());
 	}
 
 
 	@Test
 	public void testThrowing() throws Exception
 	{
-		assertThatThrownBy(() -> write(Chars.toError(IOE)).throwing(SQLException::new).string("abc"))
-			.isInstanceOf(SQLException.class)
-			.cause().isSameAs(IOE);
+		expectError(() -> write(Chars.toError(IOE)).throwing(SQLException::new).string("abc"))
+			.isA(SQLException.class)
+			.cause().same(IOE);
 	}
 
 
 	@Test
 	public void testUnchecked() throws Exception
 	{
-		assertThatThrownBy(() -> write(Chars.toError(IOE)).unchecked().string("abc"))
-			.isInstanceOf(UncheckedException.class)
-			.cause().isSameAs(IOE);
+		expectError(() -> write(Chars.toError(IOE)).unchecked().string("abc"))
+			.isA(UncheckedException.class)
+			.cause().same(IOE);
 	}
 
 

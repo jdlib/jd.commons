@@ -13,8 +13,8 @@
 package jd.commons.util.function;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -29,12 +29,12 @@ public class XConsumerTest
 		final StringBuilder b = new StringBuilder();
 		XConsumer<String,SQLException> c  = s -> b.append(s);
 		c.accept("a");
-		assertEquals("a", b.toString());
+		expectEqual("a", b.toString());
 
 		XConsumer<String,SQLException> c2 = c.andThen(c);
 		b.setLength(0);
 		c2.accept("a");
-		assertEquals("aa", b.toString());
+		expectEqual("aa", b.toString());
 	}
 
 
@@ -42,7 +42,7 @@ public class XConsumerTest
 	public void testToFunction() throws Exception
 	{
 		XConsumer<String,IOException> c = s -> {};
-		assertNull(c.toXFunction().apply("x"));
+		expectNull(c.toXFunction().apply("x"));
 	}
 
 
@@ -53,7 +53,7 @@ public class XConsumerTest
 		XConsumer<String,IOException> c2 = s -> { throw new IOException(); };
 
 		c1.unchecked().accept("a");
-		assertThatThrownBy(() -> c2.unchecked().accept("a"))
-			.isInstanceOf(UncheckedException.class);
+		expectError(() -> c2.unchecked().accept("a"))
+			.isA(UncheckedException.class);
 	}
 }

@@ -13,7 +13,7 @@
 package jd.commons.io.lib;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import java.io.StringReader;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ public class StringWriter2Test
 			sw.append('a');
 			sw.append("bc");
 			sw.append(".de.", 1, 3);
-			assertEquals("abcde", sw.toString());
+			expectEqual("abcde", sw.toString());
 		}
 	}
 
@@ -38,7 +38,7 @@ public class StringWriter2Test
 	{
 		StringReader sr = new StringReader("abc");
 		StringBuilder sb = StringWriter2.readAll(sr, null);
-		assertEquals("abc", sb.toString());
+		expectEqual("abc", sb.toString());
 	}
 
 
@@ -47,11 +47,11 @@ public class StringWriter2Test
 	{
 		try (StringWriter2 sw = new StringWriter2(5))
 		{
-			assertNotNull(sw.getBuilder());
+			expectNotNull(sw.getBuilder());
 			sw.write('a');
 			sw.write("bc");
 			sw.write(".de.", 1, 2);
-			assertEquals("abcde", sw.toString());
+			expectEqual("abcde", sw.toString());
 		}
 	}
 }

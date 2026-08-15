@@ -13,7 +13,8 @@
 package jd.commons.io;
 
 
-import static org.assertj.core.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,10 +29,10 @@ public class ResourceTest
 	public void testLoadByClass() throws Exception
 	{
 		URL url = Resource.of("String.class").loadBy(String.class).checkExists().getURL();
-		assertThat(url.toString()).endsWith("java/lang/String.class");
+		expectThat(url.toString()).endsWith("java/lang/String.class");
 
 		String data = Resource.of("test.txt").loadByClassOf(this).asUtf8().read().all();
-		assertEquals("hello", data);
+		expectEqual("hello", data);
 	}
 
 
@@ -43,7 +44,7 @@ public class ResourceTest
 		res.checkExists();
 
 		res = res.loadByCLOf(getClass());
-		assertSame(res, res.loadByCLOf(getClass()));
+		expectSame(res, res.loadByCLOf(getClass()));
 		res.checkExists();
 		try (InputStream in = res.getInputStream())
 		{
@@ -55,7 +56,7 @@ public class ResourceTest
 	public void testOfClassFile() throws Exception
 	{
 		URL url = Resource.ofClassFile(String.class).checkExists().getURL();
-		assertThat(url.toString()).endsWith("java/lang/String.class");
+		expectThat(url.toString()).endsWith("java/lang/String.class");
 
 		// test with inner classes
 		Resource.ofClassFile(InnerClass.class).checkExists();
@@ -65,13 +66,13 @@ public class ResourceTest
 	@Test
 	public void testOfPaths() throws Exception
 	{
-		assertEquals("java/lang", Resource.of().pathTo(String.class).getName());
+		expectEqual("java/lang", Resource.of().pathTo(String.class).getName());
 
 		String name = Resource.of().path("/", "java", "lang", "String.class").getName();
-		assertEquals("/java/lang/String.class", name);
+		expectEqual("/java/lang/String.class", name);
 
-		assertEquals("a/b", Resource.of().path("a/", "/b").getName());
-		assertEquals("a/b", Resource.of("a", "b").getName());
+		expectEqual("a/b", Resource.of().path("a/", "/b").getName());
+		expectEqual("a/b", Resource.of("a", "b").getName());
 	}
 
 
@@ -80,20 +81,20 @@ public class ResourceTest
 	{
 		ResourceLoader nop = ResourceLoader.nop();
 		Resource res = Resource.of().path("dummy.txt").loadBy(nop);
-		assertSame(nop, res.getLoader());
-		assertEquals("dummy.txt", res.getName());
-		assertEquals("Resource[dummy.txt]", res.toString());
-		assertFalse(res.exists());
-		assertNull(res.getInputStreamOrNull());
-		assertNull(res.getURL());
-		assertEquals(res, res);
+		expectSame(nop, res.getLoader());
+		expectEqual("dummy.txt", res.getName());
+		expectEqual("Resource[dummy.txt]", res.toString());
+		expectFalse(res.exists());
+		expectNull(res.getInputStreamOrNull());
+		expectNull(res.getURL());
+		expectEqual(res, res);
 		assertNotEquals(res, Resource.of().path("dummy.bin").loadBy(nop));
 		assertNotEquals(res, Resource.of().path("dummy.txt").loadByClassOf(this));
-		assertEquals(Objects.hash(res.getName(), nop), res.hashCode());
+		expectEqual(Objects.hash(res.getName(), nop), res.hashCode());
 		assertNotEquals(res, nop);
-		assertThatThrownBy(() -> res.checkExists(IllegalStateException::new))
-			.isInstanceOf(IllegalStateException.class)
-			.hasMessage("resource 'dummy.txt' not found");
+		expectError(() -> res.checkExists(IllegalStateException::new))
+			.isA(IllegalStateException.class)
+			.message("resource 'dummy.txt' not found");
 	}
 
 	class InnerClass {

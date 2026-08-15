@@ -13,9 +13,10 @@
 package jd.commons.io;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static java.nio.charset.StandardCharsets.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,7 +55,7 @@ public class FilePathTest
 	public static void beforeAll(@TempDir File temp) throws Exception
 	{
 		tempDir = FilePath.of(temp);
-		assertEquals(temp, tempDir.toFile());
+		expectEqual(temp, tempDir.toFile());
 
 		tempFile = tempDir.resolve("test.txt");
 		Chars.fromString("abc").write().asUtf8().to(tempFile);
@@ -92,68 +93,68 @@ public class FilePathTest
 		Ancestors ancestors = p0.ancestors();
 
 		Ancestors ancestorsOrSelf = ancestors.orSelf();
-		assertNotSame(ancestors, ancestorsOrSelf);
-		assertSame(ancestorsOrSelf, ancestorsOrSelf.orSelf());
+		not().expectSame(ancestors, ancestorsOrSelf);
+		expectSame(ancestorsOrSelf, ancestorsOrSelf.orSelf());
 
 		Ancestors rootToNearest = ancestors.rootToNearest();
-		assertNotSame(ancestors, rootToNearest);
-		assertSame(rootToNearest, rootToNearest.rootToNearest());
+		not().expectSame(ancestors, rootToNearest);
+		expectSame(rootToNearest, rootToNearest.rootToNearest());
 
-		assertSame(ancestors, ancestors.filter(null));
+		expectSame(ancestors, ancestors.filter(null));
 		Ancestors filtered = ancestors.filter(fp -> true);
-		assertNotSame(ancestors, filtered);
-		assertNotSame(filtered, filtered.filter(fp -> false));
-		assertNotSame(filtered, filtered.filter(null));
+		not().expectSame(ancestors, filtered);
+		not().expectSame(filtered, filtered.filter(fp -> false));
+		not().expectSame(filtered, filtered.filter(null));
 
 		//----------------------------------
 		// nearest to root
 
 		// first(), firstOrNull() + filter
-		assertEquals(p0, p0.ancestors().orSelf().firstOrNull());
-		assertEquals(p1, p0.ancestors().first().orElse(null)); // coverage of first()
-		assertNull(p0.getRoot().ancestors().firstOrNull());
-		assertEquals(p1, p0.ancestors().orSelf().filter(fp -> fp.equals(p1)).firstOrNull());
+		expectEqual(p0, p0.ancestors().orSelf().firstOrNull());
+		expectEqual(p1, p0.ancestors().first().orElse(null)); // coverage of first()
+		expectNull(p0.getRoot().ancestors().firstOrNull());
+		expectEqual(p1, p0.ancestors().orSelf().filter(fp -> fp.equals(p1)).firstOrNull());
 
 		// iterator
-		assertEquals(p0, p0.ancestors().orSelf().iterator().next());
-		assertEquals(p1, p0.ancestors().iterator().next());
+		expectEqual(p0, p0.ancestors().orSelf().iterator().next());
+		expectEqual(p1, p0.ancestors().iterator().next());
 		assertThrows(NoSuchElementException.class, () -> p0.ancestors().filter(filepath -> false)
 			.iterator().next());
 
 		// toList
-		assertEquals(ancOrSelfList, p0.ancestors().orSelf().toList());
-		assertEquals(ancOrSelfList, p0.ancestors().orSelf()
+		expectEqual(ancOrSelfList, p0.ancestors().orSelf().toList());
+		expectEqual(ancOrSelfList, p0.ancestors().orSelf()
 			.filter(fp -> true) // coverage
 			.filter(fp -> true) // coverage of filter chaining
 			.toList());
 
 		// toNameList
-		assertEquals(ancOrSelfNameList, p0.ancestors().orSelf().toNameList());
+		expectEqual(ancOrSelfNameList, p0.ancestors().orSelf().toNameList());
 
 		//----------------------------------
 		// root to nearest
 
 		// firstOrNull()
-		assertEquals(proot, p0.ancestors().rootToNearest().firstOrNull());
+		expectEqual(proot, p0.ancestors().rootToNearest().firstOrNull());
 
 		// filter
-		assertEquals(List.of(p1, p0), p0.ancestors().orSelf().rootToNearest()
+		expectEqual(List.of(p1, p0), p0.ancestors().orSelf().rootToNearest()
 			.filter(fp -> fp.equals(p1) || fp.equals(p0))
 			.toList());
 
 		// iterator
-		assertEquals(proot, p0.ancestors().rootToNearest().iterator().next());
+		expectEqual(proot, p0.ancestors().rootToNearest().iterator().next());
 
 		// toList
-		assertEquals(ancOrSelfRevertedList, p0.ancestors().orSelf().rootToNearest().toList());
+		expectEqual(ancOrSelfRevertedList, p0.ancestors().orSelf().rootToNearest().toList());
 
 		// toNameList
-		assertEquals(ancOrSelfNamesRevertedList, p0.ancestors().orSelf().rootToNearest().toNameList());
+		expectEqual(ancOrSelfNamesRevertedList, p0.ancestors().orSelf().rootToNearest().toNameList());
 
 		//----------------------------------
 		// size
-		assertEquals(ancOrSelfList.size(), p0.ancestors().orSelf().size());
-		assertEquals(1, p0.ancestors().filter(fp -> fp.equals(p1)).size());
+		expectEqual(ancOrSelfList.size(), p0.ancestors().orSelf().size());
+		expectEqual(1, p0.ancestors().filter(fp -> fp.equals(p1)).size());
 	}
 
 
@@ -162,13 +163,13 @@ public class FilePathTest
 	{
 		Attributes attrs = tempDir.attrsNoFollowLinks();
 		BasicFileAttributes basic = attrs.basic();
-		assertTrue(basic.isDirectory());
-		assertEquals(basic.lastModifiedTime(), attrs.get("lastModifiedTime"));
-		assertThat(attrs.map("fileKey,size"))
-			.hasSize(2)
-			.containsEntry("fileKey", basic.fileKey())
-			.containsEntry("size", basic.size());
-		assertEquals("owner", attrs.ownerView().name());
+		expectTrue(basic.isDirectory());
+		expectEqual(basic.lastModifiedTime(), attrs.get("lastModifiedTime"));
+		expectThat(attrs.map("fileKey,size"))
+			.size(2)
+			.value("fileKey", basic.fileKey())
+			.value("size", basic.size());
+		expectEqual("owner", attrs.ownerView().name());
 		attrs.set("lastModifiedTime", basic.lastAccessTime());
 
 		try
@@ -177,7 +178,6 @@ public class FilePathTest
 		}
 		catch (UnsupportedOperationException e)
 		{
-
 			// fails on windows
 		}
 	}
@@ -188,29 +188,29 @@ public class FilePathTest
 	{
 		// .glob.list
 		List<FilePath> files = tempDir.children().glob("t*.txt").toList();
-		assertThat(files).containsExactly(tempFile);
+		expectThat(files).elems(tempFile);
 
 		// .count
-		assertEquals(2, tempDir.children().size());
+		expectEqual(2, tempDir.children().size());
 
 		// .filter.list
 		files = tempDir.children()
 			.filter(null) // coverage of filter with null predicate
 			.filter(fp -> true) // test that nexgt filter is merged
 			.filter(fp -> fp.getName().endsWith(".link")).toList();
-		assertThat(files).containsExactly(tempLink);
+		expectThat(files).elems(tempLink);
 
 		// .forEach, also tests .apply()
 		AtomicLong totalSize = new AtomicLong(0);
 		tempDir.children().forEach(fp -> totalSize.addAndGet(fp.size()));
-		assertEquals(6L, totalSize.get());
+		expectEqual(6L, totalSize.get());
 
 		// .forEach throwing an exception
 		IOException ioe = new IOException();
-		assertThatThrownBy(() -> tempDir.children().forEach(fp -> { throw ioe; })).isSameAs(ioe);
+		expectError(() -> tempDir.children().forEach(fp -> { throw ioe; })).same(ioe);
 
 		// children of a regular file
-		assertEquals(0, tempFile.children().size());
+		expectEqual(0, tempFile.children().size());
 	}
 
 
@@ -219,7 +219,7 @@ public class FilePathTest
 	{
 		FilePath dir = FilePath.of(tempDir);
 		dir.resolve("a.txt").write().asUtf8().string("abc");
-		assertEquals(1, dir.children().delete());
+		expectEqual(1, dir.children().delete());
 	}
 
 
@@ -232,20 +232,20 @@ public class FilePathTest
 
 		// copy
 		FilePath copy = file.copy().toSibling("copy.txt");
-		assertEquals(3, copy.size());
-		assertEquals(root, copy.getParent());
+		expectEqual(3, copy.size());
+		expectEqual(root, copy.getParent());
 
 		// move
 		FilePath move = copy.move().toSibling("move.txt");
-		assertEquals(3, move.size());
-		assertEquals(root, move.getParent());
-		assertFalse(copy.exists());
+		expectEqual(3, move.size());
+		expectEqual(root, move.getParent());
+		expectFalse(copy.exists());
 
 		// delete
 		move.delete();
-		assertFalse(move.exists());
-		assertFalse(move.deleteIfExists());
-		assertEquals(0, move.deleteRecursively());
+		expectFalse(move.exists());
+		expectFalse(move.deleteIfExists());
+		expectEqual(0, move.deleteRecursively());
 		assertThrows(NoSuchFileException.class, () -> move.delete());
 	}
 
@@ -255,21 +255,21 @@ public class FilePathTest
 	{
 		FilePath root = FilePath.of(tempDir);
 		FilePath dir  = root.resolve("a", "b");
-		assertFalse(dir.exists());
-		assertFalse(dir.getParent().exists());
+		expectFalse(dir.exists());
+		expectFalse(dir.getParent().exists());
 
 		// createDirectory, createDirectories
-		assertThatThrownBy(() -> dir.createDirectory()).isInstanceOf(IOException.class);
+		expectError(() -> dir.createDirectory()).isA(IOException.class);
 		dir.createDirectories();
-		assertTrue(dir.exists());
+		expectTrue(dir.exists());
 		root.resolve("c").createDirectory(); // for coverage
 
 		// createFile
 		FilePath file = dir.resolve("file.txt");
-		assertFalse(file.exists());
+		expectFalse(file.exists());
 		file.createFile();
-		assertTrue(file.exists());
-		assertEquals(0, file.size());
+		expectTrue(file.exists());
+		expectEqual(0, file.size());
 	}
 
 
@@ -278,37 +278,37 @@ public class FilePathTest
 	{
 		FilePath root = FilePath.of(tempDir);
 		FilePath file1 = root.resolve("a", "1.txt");
-		assertFalse(file1.exists());
-		assertFalse(file1.deleteIfExists());
-		assertThatThrownBy(() -> file1.delete()).isInstanceOf(NoSuchFileException.class);
+		expectFalse(file1.exists());
+		expectFalse(file1.deleteIfExists());
+		expectError(() -> file1.delete()).isA(NoSuchFileException.class);
 
 		file1.getParent().createDirectories();
 		file1.createFile();
-		assertTrue(file1.exists());
+		expectTrue(file1.exists());
 		FilePath file2 = file1.resolveSibling("2.txt").createFile();
 		FilePath file3 = file1.resolveSibling("3.txt").createFile();
 
-		assertTrue(file2.deleteIfExists());
+		expectTrue(file2.deleteIfExists());
 		file3.delete();
-		assertFalse(file3.exists());
+		expectFalse(file3.exists());
 
-		assertEquals(3, root.deleteRecursively());
-		assertFalse(root.exists());
+		expectEqual(3, root.deleteRecursively());
+		expectFalse(root.exists());
 	}
 
 
 	@Test
 	public void testGetFileName() throws Exception
 	{
-		assertEquals(tempFile.getName(), tempFile.getFileName().toString());
+		expectEqual(tempFile.getName(), tempFile.getFileName().toString());
 	}
 
 
 	@Test
 	public void testGetType() throws Exception
 	{
-		assertSame(FilePath.Type.DIRECTORY, tempDir.getType());
-		assertSame(FilePath.Type.REGULAR_FILE, tempFile.getType());
+		expectSame(FilePath.Type.DIRECTORY, tempDir.getType());
+		expectSame(FilePath.Type.REGULAR_FILE, tempFile.getType());
 	}
 
 
@@ -316,22 +316,22 @@ public class FilePathTest
 	public void testNormalize()
 	{
 		FilePath f = tempDir.resolve("..", tempDir.getName(), tempFile.getName());
-		assertThat(f.toString()).contains("..");
+		expectThat(f.toString()).contains("..");
 		f = f.normalize();
-		assertEquals(tempFile, f);
-		assertSame(f, f.normalize());
+		expectEqual(tempFile, f);
+		expectSame(f, f.normalize());
 	}
 
 
 	@Test
 	public void testOf() throws Exception
 	{
-		assertEquals(tempFile, FilePath.of(tempFile.toUri()));
+		expectEqual(tempFile, FilePath.of(tempFile.toUri()));
 		FilePath.userDir(); // coverage
 
 		FilePath empty = FilePath.of("");
-		assertNull(empty.getRoot());
-		assertEquals("", empty.getName());
+		expectNull(empty.getRoot());
+		expectEqual("", empty.getName());
 	}
 
 
@@ -368,37 +368,37 @@ public class FilePathTest
 	@Test
 	public void testProps() throws Exception
 	{
-		assertEquals(0, tempFile.compareTo(tempFile));
-		assertFalse(tempFile.equals(""));
-		assertTrue(tempFile.endsWith(FilePath.of(tempFile.getName())));
-		assertTrue(tempFile.endsWith(tempFile.getName()));
-		assertTrue(tempFile.exists());
-		assertTrue(tempFile.existsNoFollowLinks());
-		assertNotNull(tempFile.getFileStore());
-		assertNotNull(tempFile.getFileSystem());
-		assertEquals("test.txt", tempFile.getName());
-		assertEquals(tempDir, tempFile.getParent());
-		assertNotNull(tempFile.getRoot());
-		assertEquals(tempFile.toNioPath().hashCode(), tempFile.hashCode());
-		assertTrue(tempFile.isAccessible(AccessMode.READ, AccessMode.WRITE));
-		assertTrue(tempDir.isDirectory());
-		assertFalse(tempFile.isDirectory());
-		assertEquals(Files.isExecutable(tempFile.toNioPath()), tempFile.isExecutable());
-		assertFalse(tempDir.isRegularFile());
-		assertTrue(tempFile.isRegularFile());
-		assertFalse(tempFile.isHidden());
-		assertTrue(tempFile.isReadable());
-		assertTrue(tempFile.isSameFile(tempLink));
-		assertTrue(tempFile.isWritable());
-		assertFalse(tempFile.isSymbolicLink());
-		assertFalse(tempFile.notExists());
-		assertEquals("text/plain", tempFile.probeContentType());
-		assertEquals(3L, tempFile.size());
-		assertTrue(tempFile.startsWith(tempDir));
-		assertEquals(tempFile, tempFile.toRealPath());
-		assertTrue(tempFile.startsWith(tempDir.toString()));
-		assertTrue(tempFile.toAbsolutePath().isAbsolute());
-		assertEquals(tempFile.toNioPath().toString(), tempFile.toString());
+		expectEqual(0, tempFile.compareTo(tempFile));
+		expectFalse(tempFile.equals(""));
+		expectTrue(tempFile.endsWith(FilePath.of(tempFile.getName())));
+		expectTrue(tempFile.endsWith(tempFile.getName()));
+		expectTrue(tempFile.exists());
+		expectTrue(tempFile.existsNoFollowLinks());
+		expectNotNull(tempFile.getFileStore());
+		expectNotNull(tempFile.getFileSystem());
+		expectEqual("test.txt", tempFile.getName());
+		expectEqual(tempDir, tempFile.getParent());
+		expectNotNull(tempFile.getRoot());
+		expectEqual(tempFile.toNioPath().hashCode(), tempFile.hashCode());
+		expectTrue(tempFile.isAccessible(AccessMode.READ, AccessMode.WRITE));
+		expectTrue(tempDir.isDirectory());
+		expectFalse(tempFile.isDirectory());
+		expectEqual(Files.isExecutable(tempFile.toNioPath()), tempFile.isExecutable());
+		expectFalse(tempDir.isRegularFile());
+		expectTrue(tempFile.isRegularFile());
+		expectFalse(tempFile.isHidden());
+		expectTrue(tempFile.isReadable());
+		expectTrue(tempFile.isSameFile(tempLink));
+		expectTrue(tempFile.isWritable());
+		expectFalse(tempFile.isSymbolicLink());
+		expectFalse(tempFile.notExists());
+		expectEqual("text/plain", tempFile.probeContentType());
+		expectEqual(3L, tempFile.size());
+		expectTrue(tempFile.startsWith(tempDir));
+		expectEqual(tempFile, tempFile.toRealPath());
+		expectTrue(tempFile.startsWith(tempDir.toString()));
+		expectTrue(tempFile.toAbsolutePath().isAbsolute());
+		expectEqual(tempFile.toNioPath().toString(), tempFile.toString());
 	}
 
 
@@ -409,19 +409,19 @@ public class FilePathTest
 
 		// createFile
 		FilePath file = dir.resolve("file.txt");
-		assertFalse(file.exists());
+		expectFalse(file.exists());
 		file.createFile();
-		assertTrue(file.exists());
-		assertEquals(0, file.size());
+		expectTrue(file.exists());
+		expectEqual(0, file.size());
 
 		// write/read string
 		file.write().asUtf8().string("abc");
-		assertEquals("abc", file.read().asUtf8().all());
+		expectEqual("abc", file.read().asUtf8().all());
 
 		// write/read lines
 		List<String> lines = List.of("a", "b", "c");
 		file.write().asUtf8().lines(lines);
-		assertEquals(lines, file.read().asUtf8().lines().toList());
+		expectEqual(lines, file.read().asUtf8().lines().toList());
 
 		// write/read bytes
 		byte[] bytes = "abc".getBytes();
@@ -436,7 +436,7 @@ public class FilePathTest
 	public void testRelativize()
 	{
 		FilePath rel = tempDir.relativize(tempFile);
-		assertEquals(rel.toString(), tempFile.getName());
+		expectEqual(rel.toString(), tempFile.getName());
 	}
 
 
@@ -444,7 +444,7 @@ public class FilePathTest
 	public void testResolve()
 	{
 		String name = tempFile.getName();
-		assertEquals(tempFile, tempDir.resolve(FilePath.of(name)));
+		expectEqual(tempFile, tempDir.resolve(FilePath.of(name)));
 	}
 
 
@@ -452,8 +452,8 @@ public class FilePathTest
 	public void testResolveSibling()
 	{
 		String name = tempLink.getName();
-		assertEquals(tempLink, tempFile.resolveSibling(name));
-		assertEquals(tempLink, tempFile.resolveSibling(FilePath.of(name)));
+		expectEqual(tempLink, tempFile.resolveSibling(name));
+		expectEqual(tempLink, tempFile.resolveSibling(FilePath.of(name)));
 	}
 
 
@@ -465,8 +465,8 @@ public class FilePathTest
 			try
 			{
 				symlink.createSymbolicLink().to(tempFile);
-				assertEquals(tempFile, symlink.resolveSymbolicLink());
-				assertSame(FilePath.Type.SYMBOLIC_LINK, symlink.getType());
+				expectEqual(tempFile, symlink.resolveSymbolicLink());
+				expectSame(FilePath.Type.SYMBOLIC_LINK, symlink.getType());
 			}
 			catch (FileSystemException e)
 			{
@@ -482,11 +482,11 @@ public class FilePathTest
 		FilePath tempRoot = FilePath.tempDir();
 		try (FilePath.Closeable tempDir = tempRoot.createTempDir("test").toCloseable())
 		{
-			assertThat(tempDir.getName()).startsWith("test");
+			expectThat(tempDir.getName()).startsWith("test");
 			tempDir.createTempFile("test1", ".tmp"); // will be deleted when tempRoot is closed
 			try (FilePath.Closeable tempFile = tempDir.createTempFile("test", ".tmp").toCloseable())
 			{
-				assertThat(tempFile.getName()).startsWith("test").endsWith(".tmp");
+				expectThat(tempFile.getName()).startsWith("test").endsWith(".tmp");
 			}
 		}
 	}
@@ -496,6 +496,6 @@ public class FilePathTest
 	public void testTreeList() throws Exception
 	{
 		List<FilePath> list = FileTree.of(tempDir).setMaxDepth(15).toList();
-		assertThat(list).containsExactlyInAnyOrder(tempDir, tempFile, tempLink);
+		expectThat(list).contains().exactly(tempDir, tempFile, tempLink);
 	}
 }

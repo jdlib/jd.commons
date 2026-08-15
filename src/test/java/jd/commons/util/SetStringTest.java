@@ -13,7 +13,7 @@
 package jd.commons.util;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import org.junit.jupiter.api.Test;
 
 
@@ -31,19 +31,19 @@ public class SetStringTest
 	@Test
 	public void test()
 	{
-		assertEquals("s", 		set_.to("s"));
-		assertEquals("1", 		set_.to(1));
-		assertEquals("2", 		set_.to((byte)2));
-		assertEquals("3", 		set_.to((short)3));
-		assertEquals("4", 		set_.to(4L));
-		assertEquals("5.0", 	set_.to(5.0));
-		assertEquals("6.0", 	set_.to(6.0f));
-		assertEquals("c", 		set_.to('c'));
-		assertEquals("true", 	set_.to(true));
-		assertEquals("42", 		set_.toObject(Integer.valueOf(42)));
-		assertEquals(String.class.getName(), set_.toClass(String.class));
-		assertNull(set_.to(null));
-		assertNull(set_.toClass(null));
-		assertNull(set_.toObject(null));
+		expectEqual("s", 		set_.to("s"));
+		expectEqual("1", 		set_.to(1));
+		expectEqual("2", 		set_.to((byte)2));
+		expectEqual("3", 		set_.to((short)3));
+		expectEqual("4", 		set_.to(4L));
+		expectEqual("5.0", 	set_.to(5.0));
+		expectEqual("6.0", 	set_.to(6.0f));
+		expectEqual("c", 		set_.to('c'));
+		expectEqual("true", 	set_.to(true));
+		expectEqual("42", 		set_.toObject(Integer.valueOf(42)));
+		expectEqual(String.class.getName(), set_.toClass(String.class));
+		expectNull(set_.to(null));
+		expectNull(set_.toClass(null));
+		expectNull(set_.toObject(null));
 	}
 }

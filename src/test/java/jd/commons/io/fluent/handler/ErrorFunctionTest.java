@@ -13,8 +13,8 @@
 package jd.commons.io.fluent.handler;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -30,10 +30,10 @@ public class ErrorFunctionTest
 		SQLException sqe = new SQLException();
 
 		ErrorFunction<Void,Void,IOException> ef = ErrorFunction.throwUncheckedOrIOE();
-		assertThatThrownBy(() -> ef.handleException(iae)).isSameAs(iae);
-		assertThatThrownBy(() -> ef.handleException(ioe)).isSameAs(ioe);
-		assertThatThrownBy(() -> ef.handleException(sqe)).isInstanceOf(IOException.class).cause().isSameAs(sqe);
-		assertEquals("Throwing", ef.toString());
+		expectError(() -> ef.handleException(iae)).same(iae);
+		expectError(() -> ef.handleException(ioe)).same(ioe);
+		expectError(() -> ef.handleException(sqe)).isA(IOException.class).cause().same(sqe);
+		expectEqual("Throwing", ef.toString());
 	}
 
 
@@ -41,9 +41,9 @@ public class ErrorFunctionTest
 	public void testSwallow() throws Exception
 	{
 		ErrorFunction<String,String,RuntimeException> sw = ErrorFunction.swallow();
-		assertNull(sw.handleResult("a"));
-		assertNull(sw.handleException(new IOException()));
-		assertEquals("Swallow", sw.toString());
+		expectNull(sw.handleResult("a"));
+		expectNull(sw.handleException(new IOException()));
+		expectEqual("Swallow", sw.toString());
 	}
 
 
@@ -53,8 +53,8 @@ public class ErrorFunctionTest
 		// even if the throwing factory returns null, an exception is thrown
 		NullPointerException npe = new NullPointerException();
 		ErrorFunction<?,?,?> ef = ErrorFunction.throwing(e -> null);
-		assertThatThrownBy(() -> ef.handleException(npe))
-			.isInstanceOf(IllegalStateException.class)
-			.hasCause(npe);
+		expectError(() -> ef.handleException(npe))
+			.isA(IllegalStateException.class)
+			.cause().same(npe);
 	}
 }

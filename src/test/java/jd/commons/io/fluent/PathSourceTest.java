@@ -13,8 +13,9 @@
 package jd.commons.io.fluent;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.IOException;
@@ -54,16 +55,16 @@ public class PathSourceTest
 	public void testCharReadAs() throws Exception
 	{
 		// call Files.readString(path_, charset_)
-		PathCharReadData<IOException> crd = assertInstanceOf(PathCharReadData.class, fpExists.read().asUtf8());
-		assertEquals("abc", crd.all());
-		assertThatThrownBy(() -> fpNotExists.read().asUtf8().all()).isInstanceOf(NoSuchFileException.class);
+		PathCharReadData<IOException> crd = expectInstance(PathCharReadData.class, fpExists.read().asUtf8());
+		expectEqual("abc", crd.all());
+		expectError(() -> fpNotExists.read().asUtf8().all()).isA(NoSuchFileException.class);
 
 		// coverage: specifying options leads to fallback to default read
-		assertEquals("abc", Bytes.from(fpExists, StandardOpenOption.READ).asUtf8().read().all());
+		expectEqual("abc", Bytes.from(fpExists, StandardOpenOption.READ).asUtf8().read().all());
 
 		// coverage
-		PathCharSource source = assertInstanceOf(PathCharSource.class, Bytes.from(fpNotExists).asUtf8());
-		assertNull(source.new PathCharReadData<>(ErrorFunction.swallow()).all());
+		PathCharSource source = expectInstance(PathCharSource.class, Bytes.from(fpNotExists).asUtf8());
+		expectNull(source.new PathCharReadData<>(ErrorFunction.swallow()).all());
 	}
 
 
@@ -73,13 +74,13 @@ public class PathSourceTest
 	{
 		// call Files.readString(path_, charset_)
 		assertArrayEquals(abcBytes, fpExists.read().all());
-		assertThatThrownBy(() -> fpNotExists.read().asUtf8().all()).isInstanceOf(NoSuchFileException.class);
+		expectError(() -> fpNotExists.read().asUtf8().all()).isA(NoSuchFileException.class);
 
 		// coverage: specifying options leads to fallback to default read
 		assertArrayEquals(abcBytes, Bytes.from(fpExists, StandardOpenOption.READ).read().all());
 
 		// coverage
-		PathByteSource source = assertInstanceOf(PathByteSource.class, Bytes.from(fpNotExists));
-		assertNull(source.new PathByteReadData<>(ErrorFunction.swallow()).all());
+		PathByteSource source = expectInstance(PathByteSource.class, Bytes.from(fpNotExists));
+		expectNull(source.new PathByteReadData<>(ErrorFunction.swallow()).all());
 	}
 }

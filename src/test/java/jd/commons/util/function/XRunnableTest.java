@@ -13,7 +13,7 @@
 package jd.commons.util.function;
 
 
-import static org.assertj.core.api.Assertions.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import jd.commons.util.UncheckedException;
@@ -28,7 +28,7 @@ public class XRunnableTest
 		XRunnable<IOException> r2 = () -> { throw new IOException(); };
 
 		r1.unchecked().run();
-		assertThatThrownBy(() -> r2.unchecked().run())
-			.isInstanceOf(UncheckedException.class);
+		expectError(() -> r2.unchecked().run())
+			.isA(UncheckedException.class);
 	}
 }

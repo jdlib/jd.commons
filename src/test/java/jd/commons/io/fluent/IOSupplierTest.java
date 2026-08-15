@@ -13,14 +13,13 @@
 package jd.commons.io.fluent;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import org.assertj.core.api.AbstractThrowableAssert;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import jd.commons.util.function.XSupplier;
+import deepdive.actual.java.lang.ThrowableActual;
 
 
 public class IOSupplierTest
@@ -32,9 +31,9 @@ public class IOSupplierTest
 		IOException ioe = new IOException();
 		SQLException sqle = new SQLException();
 
-		assertThrown(iae).isSameAs(iae);
-		assertThrown(ioe).isSameAs(ioe);
-		assertThrown(sqle).isInstanceOf(IOException.class).hasCause(sqle);
+		expectThrown(iae).same(iae);
+		expectThrown(ioe).same(ioe);
+		expectThrown(sqle).isA(IOException.class).cause().same(sqle);
 	}
 
 
@@ -42,14 +41,13 @@ public class IOSupplierTest
 	public void testToString()
 	{
 		XSupplier<String,?> ts = () -> "x";
-		assertEquals(ts.toString(), new IOSupplier<>(ts).toString());
+		expectEqual(ts.toString(), new IOSupplier<>(ts).toString());
 	}
 
 
-	private AbstractThrowableAssert<?,? extends Throwable> assertThrown(Exception e)
+	private ThrowableActual<?,?,?> expectThrown(Exception e)
 	{
 		IOSupplier<?> supplier = new IOSupplier<>(() -> { throw e; });
-		ThrowingCallable callable = () -> supplier.get();
-		return assertThatThrownBy(callable);
+		return expectError(() -> supplier.get());
 	}
 }

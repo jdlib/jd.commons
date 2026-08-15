@@ -13,12 +13,12 @@
 package jd.commons.io.fluent;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static java.io.OutputStream.*;
 import static java.nio.charset.StandardCharsets.*;
 import static jd.commons.io.fluent.IO.*;
 import static jd.commons.mock.Mock.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -62,7 +62,7 @@ public class BytesTest
 	{
 		tempFile = new File(tempDir, "test.txt");
 		Bytes.from(ABC_BYTES).write().to(tempFile);
-		assertEquals(3L, tempFile.length());
+		expectEqual(3L, tempFile.length());
 	}
 
 
@@ -73,13 +73,13 @@ public class BytesTest
 		Blob blob = mock(Blob.class).when("getBinaryStream").thenReturn(in).create();
 		try (InputStream blobIn = Bytes.from(blob).getInputStream())
 		{
-			assertSame(in, blobIn);
+			expectSame(in, blobIn);
 		}
 
 		blob = mock(Blob.class).when("getBinaryStream", 2L, 2L).thenReturn(in).create();
 		try (InputStream blobIn = Bytes.from(blob, 2L, 2L).getInputStream())
 		{
-			assertSame(in, blobIn);
+			expectSame(in, blobIn);
 		}
 	}
 
@@ -88,14 +88,14 @@ public class BytesTest
 	public void testFactoryFromByteChannel() throws Exception
 	{
 		ReadableByteChannel channel = Channels.newChannel(new ByteArrayInputStream(ABC_BYTES));
-		assertArrayEquals(ABC_BYTES, Bytes.from(channel).read().all());
+		expectThat(Bytes.from(channel).read().all()).equal(ABC_BYTES);
 	}
 
 
 	@Test
 	public void testFactoryFromFile() throws Exception
 	{
-		assertTempFileBytes(Bytes.fromFile(tempFile.toString()));
+		expectTempFileBytes(Bytes.fromFile(tempFile.toString()));
 	}
 
 
@@ -103,7 +103,7 @@ public class BytesTest
 	public void testFactoryFromFilePath() throws Exception
 	{
 		ByteSource bs = Bytes.from(FilePath.of(tempFile));
-		assertTempFileBytes(bs);
+		expectTempFileBytes(bs);
 
 		// touch PathByteSource.getInputStream()
 		try (InputStream in = bs.getInputStream())
@@ -116,7 +116,7 @@ public class BytesTest
 		}
 
 		// this executes the optimized implementation of PathByteSoure/CharSource/CharRead
-		assertEquals(ABC, bs.asUtf8().read().all());
+		expectEqual(ABC, bs.asUtf8().read().all());
 	}
 
 
@@ -125,12 +125,12 @@ public class BytesTest
 	{
 		try (InputStream in = Bytes.from(new ByteArrayInputStream(ABC_BYTES)).getInputStream())
 		{
-			assertThat(in).isInstanceOf(OpenInputStream.class);
+			expectThat(in).isA(OpenInputStream.class);
 		}
 
 		try (InputStream in = Bytes.from(new ByteArrayInputStream(ABC_BYTES), false).getInputStream())
 		{
-			assertThat(in).isInstanceOf(ByteArrayInputStream.class);
+			expectThat(in).isA(ByteArrayInputStream.class);
 		}
 	}
 
@@ -139,8 +139,8 @@ public class BytesTest
 	public void testFactoryFromPath() throws Exception
 	{
 		ByteSource src = Bytes.from(tempFile.toPath());
-		assertTempFileBytes(src);
-		assertEquals(ABC, src.asUtf8().read().all());
+		expectTempFileBytes(src);
+		expectEqual(ABC, src.asUtf8().read().all());
 	}
 
 
@@ -148,14 +148,14 @@ public class BytesTest
 	public void testFactoryFromSocket() throws Exception
 	{
 		MockSocket socket = new MockSocket(ABC_BYTES);
-		assertArrayEquals(ABC_BYTES, Bytes.from(socket).read().all());
+		expectThat(Bytes.from(socket).read().all()).equal(ABC_BYTES);
 	}
 
 
 	@Test
 	public void testFactoryFromURI() throws Exception
 	{
-		assertTempFileBytes(Bytes.from(tempFile.toURI()));
+		expectTempFileBytes(Bytes.from(tempFile.toURI()));
 	}
 
 
@@ -163,8 +163,8 @@ public class BytesTest
 	public void testFactoryFromURL() throws Exception
 	{
 		URL url = tempFile.toURI().toURL();
-		assertTempFileBytes(Bytes.from(url));
-		assertTempFileBytes(Bytes.from(url.openConnection()));
+		expectTempFileBytes(Bytes.from(url));
+		expectTempFileBytes(Bytes.from(url.openConnection()));
 	}
 
 
@@ -175,13 +175,13 @@ public class BytesTest
 		Blob blob = mock(Blob.class).when("setBinaryStream", 1L).thenReturn(out).create();
 		try (OutputStream blobOut = Bytes.to(blob).getOutputStream())
 		{
-			assertSame(out, blobOut);
+			expectSame(out, blobOut);
 		}
 
 		blob = mock(Blob.class).when("setBinaryStream", 2L).thenReturn(out).create();
 		try (OutputStream blobOut = Bytes.to(blob, 2L).getOutputStream())
 		{
-			assertSame(out, blobOut);
+			expectSame(out, blobOut);
 		}
 	}
 
@@ -191,7 +191,7 @@ public class BytesTest
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Bytes.from(ABC_BYTES).write().to(Channels.newChannel(out));
-		assertArrayEquals(ABC_BYTES, out.toByteArray());
+		expectThat(out.toByteArray()).equal(ABC_BYTES);
 	}
 
 
@@ -211,18 +211,18 @@ public class BytesTest
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		try (OutputStream out = Bytes.to(bout).getOutputStream())
 		{
-			assertThat(out).isInstanceOf(OpenOutputStream.class);
+			expectInstance(OpenOutputStream.class, out);
 		}
 
 		try (OutputStream out = Bytes.to(bout, false).getOutputStream())
 		{
-			assertThat(out).isInstanceOf(ByteArrayOutputStream.class);
+			expectInstance(ByteArrayOutputStream.class, out);
 		}
 
 		OpenOutputStream oo = new OpenOutputStream(bout);
 		try (OutputStream out = Bytes.to(oo).getOutputStream())
 		{
-			assertSame(out, oo);
+			expectSame(out, oo);
 		}
 	}
 
@@ -230,20 +230,20 @@ public class BytesTest
 	@Test
 	public void testReadResultApplyError() throws Exception
 	{
-		assertThatThrownBy(() -> Bytes.from(ABC_BYTES).read().apply(in -> { throw new SQLException("x"); }))
-			.isInstanceOf(IOException.class)
-			.cause().isInstanceOf(SQLException.class);
+		expectError(() -> Bytes.from(ABC_BYTES).read().apply(in -> { throw new SQLException("x"); }))
+			.isA(IOException.class)
+			.cause().isA(SQLException.class);
 	}
 
 
 	@Test
 	public void testReadResultNBytes() throws Exception
 	{
-		assertTempFileBytes(Bytes.from(tempFile));
-		assertTempFileBytes(Bytes.from(ABC_BYTES));
+		expectTempFileBytes(Bytes.from(tempFile));
+		expectTempFileBytes(Bytes.from(ABC_BYTES));
 
 		byte[] read = Bytes.from(ABC_BYTES).read().first(1);
-		assertThat(read).hasSize(1).contains((byte)'a');
+		expectThat(read).length(1).contains((byte)'a');
 	}
 
 
@@ -251,7 +251,7 @@ public class BytesTest
 	public void testSourceAs() throws Exception
 	{
 		String s = Bytes.from(AUML_BYTES).asUtf8().read().all();
-		assertEquals(AUML, s);
+		expectEqual(AUML, s);
 	}
 
 
@@ -261,15 +261,15 @@ public class BytesTest
 		// implicitly also tests throwing()
 
 		// no exception thrown
-		assertArrayEquals(ABC_BYTES, Bytes.from(ABC_BYTES).read().unchecked().all());
-		assertArrayEquals(new byte[] { ABC_BYTES[0] }, Bytes.from(ABC_BYTES).read().unchecked().first(1));
+		expectThat(Bytes.from(ABC_BYTES).read().unchecked().all()).equal(ABC_BYTES);
+		expectThat(Bytes.from(ABC_BYTES).read().unchecked().first(1)).elems(ABC_BYTES[0]);
 
 		// exception thrown
 		UnsupportedOperationException uoe = new UnsupportedOperationException("hallo");
 		ByteSource bs = () -> { throw uoe; };
-		assertThatThrownBy(() -> bs.read().unchecked().all()).isSameAs(uoe);
-		assertThatThrownBy(() -> bs.read().unchecked().first(1)).isSameAs(uoe);
-		assertThatThrownBy(() -> bs.read().unchecked().apply(in -> null)).isSameAs(uoe);
+		expectError(() -> bs.read().unchecked().all()).same(uoe);
+		expectError(() -> bs.read().unchecked().first(1)).same(uoe);
+		expectError(() -> bs.read().unchecked().apply(in -> null)).same(uoe);
 	}
 
 
@@ -288,8 +288,8 @@ public class BytesTest
 	public void testWriteCountBytes() throws Exception
 	{
 		// .to(OutputStream) and .to(ByteTarget) have different implementations in CountingOutputStream
-		assertEquals(2, Bytes.from(AUML_BYTES).write().countBytes().to(nullOutputStream()));
-		assertEquals(3, Bytes.from(ABC_BYTES).write().countBytes().to(Bytes.to(nullOutputStream())));
+		expectEqual(2L, Bytes.from(AUML_BYTES).write().countBytes().to(nullOutputStream()));
+		expectEqual(3L, Bytes.from(ABC_BYTES).write().countBytes().to(Bytes.to(nullOutputStream())));
 
 		// what if the inner ByteWrite never opens the target, i.e. no CountingOutputStream created by to(ByteTarget)
 		CountBytesHandler<?> c = new CountBytesHandler<>(new IOHandler<ByteTarget,OutputStream,Object,Exception>()
@@ -300,7 +300,7 @@ public class BytesTest
 			@Override
 			public Object runDirect(OutputStream out) throws Exception { return null; }
 		});
-		assertEquals(0L, c.runSupplier(Bytes.toNull()));
+		expectEqual(0L, c.runSupplier(Bytes.toNull()));
 	}
 
 
@@ -308,8 +308,8 @@ public class BytesTest
 	public void testWriteInIsOpenedBeforeOut() throws Exception
 	{
 		Exception e = Bytes.fromError("src").write().silent().to(Bytes.toError("target"));
-		assertNotNull(e);
-		assertEquals("src", e.getMessage());
+		expectNotNull(e);
+		expectEqual("src", e.getMessage());
 	}
 
 
@@ -319,23 +319,23 @@ public class BytesTest
 		// .to(OutputStream) and .to(ByteTarget) have different implementations in ProxyByteWrite
 
 		// silent().to(OutputStream) without exception
-		assertNull(Bytes.from(ABC_BYTES).write().silent().to(nullOutputStream()));
+		expectNull(Bytes.from(ABC_BYTES).write().silent().to(nullOutputStream()));
 
 		// silent().to(ByteTarget) without exception
-		assertNull(Bytes.from(ABC_BYTES).write().silent().to(Bytes.to(nullOutputStream())));
+		expectNull(Bytes.from(ABC_BYTES).write().silent().to(Bytes.to(nullOutputStream())));
 
 		// silent().to(OutputStream) with exception
 		IOException ioe = new IOException("hallo");
 		ByteSource bs = Bytes.fromError(ioe);
-		assertSame(ioe, bs.write().silent().to(nullOutputStream()));
+		expectSame(ioe, bs.write().silent().to(nullOutputStream()));
 
 		// silent().to(ByteTarget) with exception
-		assertSame(ioe, bs.write().silent().to(Bytes.to(nullOutputStream())));
+		expectSame(ioe, bs.write().silent().to(Bytes.to(nullOutputStream())));
 
 		// silent(Consumer) with exception
 		Holder<Exception> holder = new Holder<>();
-		assertSame(ioe, bs.write().silent(holder).to(nullOutputStream()));
-		assertSame(ioe, holder.get());
+		expectSame(ioe, bs.write().silent(holder).to(nullOutputStream()));
+		expectSame(ioe, holder.get());
 	}
 
 
@@ -343,7 +343,7 @@ public class BytesTest
 	public void testWriteToByteArray() throws Exception
 	{
 		byte[] written = Bytes.from(AUML_BYTES).write().toByteArray();
-		assertArrayEquals(AUML_BYTES, written);
+		expectThat(written).equal(AUML_BYTES);
 	}
 
 
@@ -352,7 +352,7 @@ public class BytesTest
 	{
 		MockSocket socket = new MockSocket();
 		Bytes.from(ABC_BYTES).write().to(Bytes.to(socket));
-		assertArrayEquals(ABC_BYTES, socket.out.toByteArray());
+		expectThat(socket.out.toByteArray()).equal(ABC_BYTES);
 	}
 
 
@@ -362,14 +362,14 @@ public class BytesTest
 		// implicitly also tests throwing()
 
 		// no exception thrown
-		assertNull(Bytes.from(ABC_BYTES).write().unchecked().to(nullOutputStream()));
+		expectNull(Bytes.from(ABC_BYTES).write().unchecked().to(nullOutputStream()));
 
 		// exception thrown
-		assertThatThrownBy(() -> Bytes.fromFile("doesnotexist").write().unchecked().toByteArray())
-			.isInstanceOf(UncheckedException.class)
-			.hasMessage("java.io.FileNotFoundException: doesnotexist (The system cannot find the file specified)")
+		expectError(() -> Bytes.fromFile("doesnotexist").write().unchecked().toByteArray())
+			.isA(UncheckedException.class)
+			.message("java.io.FileNotFoundException: doesnotexist (The system cannot find the file specified)")
 			.cause()
-			.isInstanceOf(IOException.class);
+			.isA(IOException.class);
 	}
 
 
@@ -382,17 +382,16 @@ public class BytesTest
 
 		// Bytes.write.wrap
 		byte[] encoded = Bytes.from(b).write().wrap(Base64.getEncoder()::wrap).toByteArray();
-		assertEquals(expectEncoded, new String(encoded));
+		expectEqual(expectEncoded, new String(encoded));
 
 		// ByteSource.wrap
 		String decoded = Bytes.from(encoded).wrap(Base64.getDecoder()::wrap).asUtf8().read().all();
-		assertEquals(s, decoded);
+		expectEqual(s, decoded);
 	}
 
 
-	private void assertTempFileBytes(ByteSource source) throws Exception
+	private void expectTempFileBytes(ByteSource source) throws Exception
 	{
-		byte[] read = source.read().all();
-		assertArrayEquals(ABC_BYTES, read);
+		expectThat(source.read().all()).equal(ABC_BYTES);
 	}
 }

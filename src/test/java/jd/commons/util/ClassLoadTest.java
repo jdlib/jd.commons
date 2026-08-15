@@ -13,8 +13,8 @@
 package jd.commons.util;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import org.junit.jupiter.api.Test;
 
 
@@ -24,28 +24,28 @@ public class ClassLoadTest
 	public void testGet() throws Exception
 	{
 		Class<?> c = getClass();
-		assertSame(c, ClassLoad.forName(c.getName()).get());
+		expectSame(c, ClassLoad.forName(c.getName()).get());
 
-		assertThatThrownBy(() -> ClassLoad.forName("x").get())
-			.isInstanceOfAny(ClassNotFoundException.class);
+		expectError(() -> ClassLoad.forName("x").get())
+			.isA(ClassNotFoundException.class);
 	}
 
 
 	@Test
 	public void testOrNull() throws Exception
 	{
-		assertSame(String.class, ClassLoad.forName(String.class.getName()).orNull());
-		assertNull(ClassLoad.forName("x").orNull());
+		expectSame(String.class, ClassLoad.forName(String.class.getName()).orNull());
+		expectNull(ClassLoad.forName("x").orNull());
 	}
 
 
 	@Test
 	public void testOrThrow() throws Exception
 	{
-		assertSame(String.class, ClassLoad.forName(String.class.getName()).orThrow(IllegalStateException::new));
-		assertThatThrownBy(() -> ClassLoad.forName("x").orThrow(IllegalStateException::new))
-			.isInstanceOf(IllegalStateException.class)
-			.cause().isInstanceOf(ClassNotFoundException.class);
+		expectSame(String.class, ClassLoad.forName(String.class.getName()).orThrow(IllegalStateException::new));
+		expectError(() -> ClassLoad.forName("x").orThrow(IllegalStateException::new))
+			.isA(IllegalStateException.class)
+			.cause().isA(ClassNotFoundException.class);
 	}
 
 
@@ -53,7 +53,7 @@ public class ClassLoadTest
 	public void testLoadBy() throws Exception
 	{
 		Class<?> c = getClass();
-		assertSame(c, ClassLoad.forName(c.getName()).using(c.getClassLoader()).get());
+		expectSame(c, ClassLoad.forName(c.getName()).using(c.getClassLoader()).get());
 	}
 
 
@@ -62,11 +62,11 @@ public class ClassLoadTest
 	{
 		Class<? extends CharSequence> csc = ClassLoad.forName(String.class.getName())
 			.derivedFrom(CharSequence.class).get();
-		assertSame(String.class, csc);
+		expectSame(String.class, csc);
 
-		assertThatThrownBy(() -> ClassLoad.forName(String.class.getName())
+		expectError(() -> ClassLoad.forName(String.class.getName())
 			.derivedFrom(getClass()).get())
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("java.lang.String is not derived from " + getClass().getName());
+			.isA(IllegalArgumentException.class)
+			.message("java.lang.String is not derived from " + getClass().getName());
 	}
 }

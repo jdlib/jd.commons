@@ -13,8 +13,8 @@
 package jd.commons.io.fluent;
 
 
+import static deepdive.ExpectStatic.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 import jd.commons.io.fluent.handler.ErrorFunction;
@@ -27,7 +27,7 @@ public class CharReadDataTest
 	{
 		StringBuilder sb = new StringBuilder();
 		Chars.fromString("abc").read().all(sb);
-		assertEquals("abc", sb.toString());
+		expectEqual("abc", sb.toString());
 	}
 
 
@@ -37,6 +37,6 @@ public class CharReadDataTest
 		Chars.fromString("abc").read().throwing(SQLException::new).all();
 
 		// coverage for apply catch clause
-		assertNull(new CharReadData<>(Chars.fromError("err"), ErrorFunction.swallow()).all());
+		expectNull(new CharReadData<>(Chars.fromError("err"), ErrorFunction.swallow()).all());
 	}
 }

@@ -13,7 +13,7 @@
 package jd.commons.io.lib;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import java.io.ByteArrayOutputStream;
 import org.junit.jupiter.api.Test;
 
@@ -26,24 +26,24 @@ public class CountingOutputStreamTest
 		try (CountingOutputStream out = new CountingOutputStream(new ByteArrayOutputStream()))
 		{
 			long expected = 0;
-			assertEquals(expected, out.count());
+			expectEqual(expected, out.count());
 
 			out.write(17);
-			expected = assertCount(expected, 1, out);
+			expected = expectCount(expected, 1, out);
 
 			out.write(new byte[4]);
-			expected = assertCount(expected, 4, out);
+			expected = expectCount(expected, 4, out);
 
 			out.write(new byte[15], 1, 2);
-			expected = assertCount(expected, 2, out);
+			expected = expectCount(expected, 2, out);
 		}
 	}
 
 
-	private long assertCount(long current, long delta, CountingOutputStream out)
+	private long expectCount(long current, long delta, CountingOutputStream out)
 	{
 		long expected = current + delta;
-		assertEquals(expected, out.count());
+		expectEqual(expected, out.count());
 		return expected;
 	}
 }

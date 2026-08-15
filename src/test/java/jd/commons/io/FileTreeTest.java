@@ -13,9 +13,9 @@
 package jd.commons.io;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
@@ -26,10 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.assertj.core.api.ListAssert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import deepdive.actual.java.util.ListActual;
 
 
 public class FileTreeTest
@@ -60,14 +60,14 @@ public class FileTreeTest
 	public void testGetters() throws Exception
 	{
 		FileTree tree = FileTree.of(root);
-		assertEquals(tree.getRoot(), FileTree.of(root.toNioPath()).getRoot());
-		assertEquals(tree.getRoot(), FileTree.of(root.toFile()).getRoot());
-		assertSame(root, tree.getRoot());
-		assertTrue(tree.getIncludeRoot());
-		assertEquals(Integer.MAX_VALUE, tree.getMaxDepth());
-		assertNull(tree.getFilter());
-		assertEquals(Set.of(), tree.getOptions());
-		assertEquals("Tree[" + root + ']', tree.toString());
+		expectEqual(tree.getRoot(), FileTree.of(root.toNioPath()).getRoot());
+		expectEqual(tree.getRoot(), FileTree.of(root.toFile()).getRoot());
+		expectSame(root, tree.getRoot());
+		expectTrue(tree.getIncludeRoot());
+		expectEqual(Integer.MAX_VALUE, tree.getMaxDepth());
+		expectNull(tree.getFilter());
+		expectEqual(Set.of(), tree.getOptions());
+		expectEqual("Tree[" + root + ']', tree.toString());
 	}
 
 
@@ -79,21 +79,21 @@ public class FileTreeTest
 		// filter
 		tree.addDirFilter((f,a) -> true);
 		tree.addFileFilter((f,a) -> false);
-		assertNotNull(tree.getFilter());
+		expectNotNull(tree.getFilter());
 		tree.clearFilter();
 
 		// maxDepth
 		tree.setMaxDepth(15);
-		assertEquals(15, tree.getMaxDepth());
+		expectEqual(15, tree.getMaxDepth());
 
 		// include root
 		tree.setExcludeRoot();
-		assertFalse(tree.getIncludeRoot());
+		expectFalse(tree.getIncludeRoot());
 
 		// options
-		assertThat(tree.getOptions()).isEmpty();
+		expectThat(tree.getOptions()).empty();
 		tree.setFollowLinks();
-		assertThat(tree.getOptions()).containsExactly(FileVisitOption.FOLLOW_LINKS);
+		expectThat(tree.getOptions()).elems(FileVisitOption.FOLLOW_LINKS);
 	}
 
 
@@ -105,8 +105,8 @@ public class FileTreeTest
 		FileTree clone = tree.clone();
 		clone.setExcludeRoot();
 
-		assertTrue(tree.getIncludeRoot());
-		assertFalse(clone.getIncludeRoot());
+		expectTrue(tree.getIncludeRoot());
+		expectFalse(clone.getIncludeRoot());
 	}
 
 
@@ -114,32 +114,32 @@ public class FileTreeTest
 	public void testStream() throws Exception
 	{
 		FileTree tree = FileTree.of(root);
-		assertThat(tree.toList())
-			.containsExactlyInAnyOrder(root, root_atxt, root_sub, root_sub_btxt);
-		assertThat(tree.clone().setExcludeRoot().toList())
-			.containsExactlyInAnyOrder(root_atxt, root_sub, root_sub_btxt);
-		assertThat(tree.clone().addDirFilter((f,a) -> !f.getName().equals("sub")).toList())
-			.containsExactlyInAnyOrder(root, root_atxt, root_sub_btxt);
+		expectThat(tree.toList())
+			.contains().exactly(root, root_atxt, root_sub, root_sub_btxt);
+		expectThat(tree.clone().setExcludeRoot().toList())
+			.contains().exactly(root_atxt, root_sub, root_sub_btxt);
+		expectThat(tree.clone().addDirFilter((f,a) -> !f.getName().equals("sub")).toList())
+			.contains().exactly(root, root_atxt, root_sub_btxt);
 		// coverage for follow-links filter
-		assertThat(tree.clone().setFollowLinks().addFileFilter((p,a) -> p.getName().equals("a.txt")).toList())
-			.containsExactlyInAnyOrder(root, root_atxt, root_sub);
+		expectThat(tree.clone().setFollowLinks().addFileFilter((p,a) -> p.getName().equals("a.txt")).toList())
+			.contains().exactly(root, root_atxt, root_sub);
 	}
 
 
 	@Test
 	public void testAccept() throws Exception
 	{
-		assertAccept(FileTree.of(root))
-			.containsExactlyInAnyOrder(root, root_atxt, root_sub, root_sub_btxt);
+		expectAccept(FileTree.of(root))
+			.contains().exactly(root, root_atxt, root_sub, root_sub_btxt);
 
-		assertAccept(FileTree.of(root).setExcludeRoot())
-			.containsExactlyInAnyOrder(root_atxt, root_sub, root_sub_btxt);
+		expectAccept(FileTree.of(root).setExcludeRoot())
+			.contains().exactly(root_atxt, root_sub, root_sub_btxt);
 
-		assertAccept(FileTree.of(root).addFileFilter((p,a) -> p.getName().equals("a.txt")))
-			.containsExactlyInAnyOrder(root, root_atxt, root_sub);
+		expectAccept(FileTree.of(root).addFileFilter((p,a) -> p.getName().equals("a.txt")))
+			.contains().exactly(root, root_atxt, root_sub);
 
-		assertAccept(FileTree.of(root).addDirFilter((p,a) -> !p.getName().equals("sub")))
-			.containsExactlyInAnyOrder(root, root_atxt, root_sub_btxt);
+		expectAccept(FileTree.of(root).addDirFilter((p,a) -> !p.getName().equals("sub")))
+			.contains().exactly(root, root_atxt, root_sub_btxt);
 	}
 
 
@@ -152,21 +152,21 @@ public class FileTreeTest
 		FilePath sub   		= root.resolve("sub").createDirectory();
 		FilePath sub_a_txt  = sub.resolve("a.txt").createFile();
 		FilePath sub_b_txt  = sub.resolve("b.txt").createFile();
-		assertTrue(a_txt.isRegularFile());
-		assertTrue(b_txt.isRegularFile());
-		assertTrue(sub_a_txt.isRegularFile());
-		assertTrue(sub_b_txt.isRegularFile());
+		expectTrue(a_txt.isRegularFile());
+		expectTrue(b_txt.isRegularFile());
+		expectTrue(sub_a_txt.isRegularFile());
+		expectTrue(sub_b_txt.isRegularFile());
 
 		FileTree tree = FileTree.of(root);
 		tree.clone().addFileFilter((p,a) -> p.getName().equals("a.txt")).delete();
-		assertFalse(a_txt.exists());
-		assertTrue(b_txt.exists());
-		assertFalse(sub_a_txt.exists());
-		assertTrue(sub.exists());
-		assertTrue(sub_b_txt.exists());
+		expectFalse(a_txt.exists());
+		expectTrue(b_txt.exists());
+		expectFalse(sub_a_txt.exists());
+		expectTrue(sub.exists());
+		expectTrue(sub_b_txt.exists());
 
 		tree.delete();
-		assertFalse(root.exists());
+		expectFalse(root.exists());
 	}
 
 
@@ -179,11 +179,11 @@ public class FileTreeTest
 			.stream()
 			.map(p -> target.relativize(p).toString().replace('\\', '/'))
 			.collect(Collectors.toList());
-		assertThat(copies).containsExactly("a.txt", "sub", "sub/b.txt");
+		expectThat(copies).elems("a.txt", "sub", "sub/b.txt");
 
 		FilePath sub = target.resolve("sub");
 		FileTree.of(sub).copy().toSibling("sub2"); // cover FileTreeTarget.toSibling()
-		assertTrue(target.resolve("sub").exists());
+		expectTrue(target.resolve("sub").exists());
 	}
 
 
@@ -194,17 +194,17 @@ public class FileTreeTest
 		FileTree.SkipRootProxy srp = rootTree.new SkipRootProxy(new Visited());
 		IOException ioe = new IOException();
 
-		assertThatThrownBy(() -> srp.visitFileFailed(root, ioe)).isSameAs(ioe);
-		assertSame(FileVisitResult.CONTINUE, srp.visitFileFailed(root_atxt, ioe));
-		assertSame(FileVisitResult.TERMINATE, srp.visitFile(root, null));
+		expectError(() -> srp.visitFileFailed(root, ioe)).same(ioe);
+		expectSame(FileVisitResult.CONTINUE, srp.visitFileFailed(root_atxt, ioe));
+		expectSame(FileVisitResult.TERMINATE, srp.visitFile(root, null));
 	}
 
 
-	private ListAssert<FilePath> assertAccept(FileTree tree) throws IOException
+	private ListActual<FilePath,?,?,?> expectAccept(FileTree tree) throws IOException
 	{
 		Visited visited = new Visited();
 		tree.accept(visited);
-		return assertThat(visited.list);
+		return expectThat(visited.list);
 	}
 
 

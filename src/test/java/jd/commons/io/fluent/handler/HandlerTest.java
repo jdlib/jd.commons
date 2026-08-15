@@ -13,8 +13,8 @@
 package jd.commons.io.fluent.handler;
 
 
+import static deepdive.ExpectStatic.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.Writer;
 import org.junit.jupiter.api.Test;
 import jd.commons.io.fluent.ByteWriteTo;
@@ -30,11 +30,11 @@ public class HandlerTest
 	{
 		// CountingWriter created and used
 		CountCharsHandler<?> ch = new CountCharsHandler<>(new TransferCharsHandler(Chars.fromString("abc")));
-		assertEquals(3L, ch.runSupplier(Chars.toNull()));
+		expectEqual(3L, ch.runSupplier(Chars.toNull()));
 
 		// CountingWriter not created and used, falls back to 0
 		ch = new CountCharsHandler<>(new NopHandler<CharTarget,Writer>());
-		assertEquals(0L, ch.runSupplier(Chars.toNull()));
+		expectEqual(0L, ch.runSupplier(Chars.toNull()));
 	}
 
 
@@ -43,7 +43,7 @@ public class HandlerTest
 	public void testErrorSilent()
 	{
 		// coverage for toString and IOHandler.getInner
-		assertEquals("Silent->TransferChars", IO.Chars.fromString("a").write().silent().toString());
+		expectEqual("Silent->TransferChars", IO.Chars.fromString("a").write().silent().toString());
 	}
 
 
@@ -51,6 +51,6 @@ public class HandlerTest
 	public void testWrap() throws Exception
 	{
 		ByteWriteTo<?,?> wto = Bytes.from("abc".getBytes()).write().wrap(CountingOutputStream::new);
-		assertEquals("TargetWrap->TransferBytes", wto.toString());
+		expectEqual("TargetWrap->TransferBytes", wto.toString());
 	}
 }

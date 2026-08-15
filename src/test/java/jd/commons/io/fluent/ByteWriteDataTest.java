@@ -13,9 +13,9 @@
 package jd.commons.io.fluent;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -35,26 +35,26 @@ public class ByteWriteDataTest
 	{
 		Holder<Exception> holder = new Holder<>();
 		Exception e = write(Bytes.toError(IOE)).silent(holder).bytes(BYTES);
-		assertSame(IOE, e);
-		assertSame(IOE, holder.get());
+		expectSame(IOE, e);
+		expectSame(IOE, holder.get());
 	}
 
 
 	@Test
 	public void testThrowing() throws Exception
 	{
-		assertThatThrownBy(() -> write(Bytes.toError(IOE)).throwing(SQLException::new).bytes(BYTES))
-			.isInstanceOf(SQLException.class)
-			.cause().isSameAs(IOE);
+		expectError(() -> write(Bytes.toError(IOE)).throwing(SQLException::new).bytes(BYTES))
+			.isA(SQLException.class)
+			.cause().same(IOE);
 	}
 
 
 	@Test
 	public void testUnchecked() throws Exception
 	{
-		assertThatThrownBy(() -> write(Bytes.toError(IOE)).unchecked().bytes(BYTES))
-			.isInstanceOf(UncheckedException.class)
-			.cause().isSameAs(IOE);
+		expectError(() -> write(Bytes.toError(IOE)).unchecked().bytes(BYTES))
+			.isA(UncheckedException.class)
+			.cause().same(IOE);
 	}
 
 

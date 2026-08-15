@@ -13,7 +13,7 @@
 package jd.commons.util;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import org.junit.jupiter.api.Test;
 
 
@@ -25,77 +25,77 @@ public class UnboxTest
 	@Test
 	public void testBoolean()
 	{
-		assertTrue(Unbox.isTrue(Boolean.TRUE));
-		assertFalse(Unbox.isTrue(Boolean.FALSE));
-		assertFalse(Unbox.isTrue(null));
+		expectTrue(Unbox.isTrue(Boolean.TRUE));
+		expectFalse(Unbox.isTrue(Boolean.FALSE));
+		expectFalse(Unbox.isTrue(null));
 
-		assertTrue(Unbox.isFalse(Boolean.FALSE));
-		assertFalse(Unbox.isFalse(Boolean.TRUE));
-		assertFalse(Unbox.isFalse(null));
+		expectTrue(Unbox.isFalse(Boolean.FALSE));
+		expectFalse(Unbox.isFalse(Boolean.TRUE));
+		expectFalse(Unbox.isFalse(null));
 
-		assertFalse(Unbox.toBoolean(null, false));
-		assertTrue(Unbox.toBoolean(null, true));
-		assertFalse(Unbox.toBoolean(Boolean.FALSE, true));
-		assertTrue(Unbox.toBoolean(Boolean.TRUE, false));
+		expectFalse(Unbox.toBoolean(null, false));
+		expectTrue(Unbox.toBoolean(null, true));
+		expectFalse(Unbox.toBoolean(Boolean.FALSE, true));
+		expectTrue(Unbox.toBoolean(Boolean.TRUE, false));
 	}
 
 
 	@Test
 	public void testByte()
 	{
-		assertEquals((byte)0, Unbox.toByte(null));
-		assertEquals((byte)1, Unbox.toByte(ONE));
+		expectEqual((byte)0, Unbox.toByte(null));
+		expectEqual((byte)1, Unbox.toByte(ONE));
 	}
 
 
 	@Test
 	public void testChar()
 	{
-		assertEquals((char)0, Unbox.toChar(null));
-		assertEquals('a', Unbox.toChar(Character.valueOf('a')));
+		expectEqual((char)0, Unbox.toChar(null));
+		expectEqual('a', Unbox.toChar(Character.valueOf('a')));
 	}
 
 
 	@Test
 	public void testDouble()
 	{
-		assertEquals(0.0, Unbox.toDouble(null));
-		assertEquals(1.0, Unbox.toDouble(ONE));
-		assertEquals(2.0, Unbox.addDouble(ONE, ONE, null));
+		expectEqual(0.0, Unbox.toDouble(null));
+		expectEqual(1.0, Unbox.toDouble(ONE));
+		expectEqual(2.0, Unbox.addDouble(ONE, ONE, null));
 	}
 
 
 	@Test
 	public void testFloat()
 	{
-		assertEquals(0f, Unbox.toFloat(null));
-		assertEquals(1f, Unbox.toFloat(ONE));
-		assertEquals(2f, Unbox.addFloat(ONE, ONE, null));
+		expectEqual(0f, Unbox.toFloat(null));
+		expectEqual(1f, Unbox.toFloat(ONE));
+		expectEqual(2f, Unbox.addFloat(ONE, ONE, null));
 	}
 
 
 	@Test
 	public void testInt()
 	{
-		assertEquals(0, Unbox.toInt(null));
-		assertEquals(1, Unbox.toInt(ONE));
-		assertEquals(2, Unbox.addInt(ONE, ONE, null));
+		expectEqual(0, Unbox.toInt(null));
+		expectEqual(1, Unbox.toInt(ONE));
+		expectEqual(2, Unbox.addInt(ONE, ONE, null));
 	}
 
 
 	@Test
 	public void testLong()
 	{
-		assertEquals(0L, Unbox.toLong(null));
-		assertEquals(1L, Unbox.toLong(ONE));
-		assertEquals(2L, Unbox.addLong(ONE, ONE, null));
+		expectEqual(0L, Unbox.toLong(null));
+		expectEqual(1L, Unbox.toLong(ONE));
+		expectEqual(2L, Unbox.addLong(ONE, ONE, null));
 	}
 
 
 	@Test
 	public void testShort()
 	{
-		assertEquals((short)0, Unbox.toShort(null));
-		assertEquals((short)1, Unbox.toShort(ONE));
+		expectEqual((short)0, Unbox.toShort(null));
+		expectEqual((short)1, Unbox.toShort(ONE));
 	}
 }

@@ -13,8 +13,9 @@
 package jd.commons.config;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import javax.naming.Context;
@@ -31,10 +32,10 @@ public class ConfigTest
 	{
 		Config map = new MapConfig();
 		Config ro  = map.immutable();
-		assertNotSame(ro, map);
-		assertSame(ro, ro.immutable());
+		not().expectSame(ro, map);
+		expectSame(ro, ro.immutable());
 
-		ConfigAssert.of(ro)
+		ConfigActual.of(ro)
 			.immutable(true)
 			.contains("a", false)
 			.get("a", null)
@@ -53,9 +54,9 @@ public class ConfigTest
 			.create();
 
 		JndiConfig jc = new JndiConfig(context);
-		assertSame(context, jc.getContext());
+		expectSame(context, jc.getContext());
 
-		ConfigAssert.of(jc)
+		ConfigActual.of(jc)
 			.immutable(true)
 			.contains("a", true)
 			.contains("b", false)
@@ -72,11 +73,11 @@ public class ConfigTest
 	{
 		InitialContext ic = new InitialContext();
 
-		assertNull(JndiConfig.createOrNull(null));
-		assertSame(ic, JndiConfig.createOrNull(ic).getContext());
+		expectNull(JndiConfig.createOrNull(null));
+		expectSame(ic, JndiConfig.createOrNull(ic).getContext());
 
-		assertSame(ImmutableConfig.EMPTY, JndiConfig.createOrEmpty(null));
-		assertSame(ic, assertInstanceOf(JndiConfig.class, JndiConfig.createOrEmpty(ic)).getContext());
+		expectSame(ImmutableConfig.EMPTY, JndiConfig.createOrEmpty(null));
+		expectSame(ic, expectInstance(JndiConfig.class, JndiConfig.createOrEmpty(ic)).getContext());
 	}
 
 
@@ -91,11 +92,11 @@ public class ConfigTest
 		Config c3 = new MapConfig();
 		c3.setValue("c", "c3");
 
-		assertNull(Config.concat(null, null));
-		assertSame(c1, Config.concat(c1, null));
-		assertSame(c2, Config.concat(null, c2));
+		expectNull(Config.concat(null, null));
+		expectSame(c1, Config.concat(c1, null));
+		expectSame(c2, Config.concat(null, c2));
 
-		ConfigAssert.of(Config.concat(c1, c2))
+		ConfigActual.of(Config.concat(c1, c2))
 			.immutable(true)
 			.contains("a", true)
 			.contains("b", true)
@@ -105,16 +106,16 @@ public class ConfigTest
 			.toString("Config[map | map]")
 			.keys("a", "b");
 
-		ConfigAssert.of(Config.concat(c2, c1))
+		ConfigActual.of(Config.concat(c2, c1))
 			.get("a", "a2")
 			.get("b", "b2");
 
-		assertNull(Config.concat((Config[])null));
-		assertNull(Config.concat());
-		assertNull(Config.concat((Config)null));
-		assertSame(c1, Config.concat(c1));
+		expectNull(Config.concat((Config[])null));
+		expectNull(Config.concat());
+		expectNull(Config.concat((Config)null));
+		expectSame(c1, Config.concat(c1));
 
-		ConfigAssert.of(Config.concat(c1, c2, c3))
+		ConfigActual.of(Config.concat(c1, c2, c3))
 			.immutable(true)
 			.contains("a", true)
 			.contains("b", true)
@@ -131,20 +132,20 @@ public class ConfigTest
 	public void testMapConfig()
 	{
 		MapConfig c = MapConfig.env();
-		assertNotNull(c.getMap()); 		// covers .getMap()
-		assertTrue(c.isImmutable());
+		expectNotNull(c.getMap()); 		// covers .getMap()
+		expectTrue(c.isImmutable());
 
-		ConfigAssert.of(new MapConfig().set("a").to(1))
+		ConfigActual.of(new MapConfig().set("a").to(1))
 			.get("a", "1")
 			.keys("a")
 			.immutable(false)
 			.clear()
 			.get("a", null);
 
-		ConfigAssert.of(new MapConfig(Map.of()))
+		ConfigActual.of(new MapConfig(Map.of()))
 			.immutable(true);
 
-		ConfigAssert.of(new MapConfig(Map.of(), true))
+		ConfigActual.of(new MapConfig(Map.of(), true))
 			.immutable(true);
 	}
 
@@ -156,13 +157,13 @@ public class ConfigTest
 		mc.setValue("1.1.1", "111").setValue("1.1.2", "112").setValue("1.2.1", "121");
 		Config p1 = mc.prefix("1.");
 		Config p2 = p1.prefix("1.");
-		ConfigAssert.of(p1)
+		ConfigActual.of(p1)
 			.immutable(false)
 			.get("1.1", "111")
 			.keys("1.1", "1.2", "2.1")
 			.toString("Config[\"1.\"->map]");
 
-		ConfigAssert.of(p2)
+		ConfigActual.of(p2)
 			.get("1", "111")
 			.set("1", "aaa")
 			.get("1", "aaa")
@@ -176,12 +177,12 @@ public class ConfigTest
 	@Test
 	public void testPropsConfig() throws Exception
 	{
-		assertEquals(System.getProperty("user.dir"), PropsConfig.system().getValue("user.dir"));
+		expectEqual(System.getProperty("user.dir"), PropsConfig.system().getValue("user.dir"));
 
 		PropsConfig pc = new PropsConfig();
-		assertNotNull(pc.getProperties());
+		expectNotNull(pc.getProperties());
 		pc.setValue("a", "1");
-		ConfigAssert.of(pc)
+		ConfigActual.of(pc)
 			.contains("a", true)
 			.set("b", "2")
 			.get("b", "2")
@@ -196,16 +197,16 @@ public class ConfigTest
 		ByteArrayOutputStream propsBAOS = new ByteArrayOutputStream();
 		pc.write().comment("hello").to(Bytes.to(propsBAOS));
 		byte[] propsBytes  = pc.write().comment("hello").toByteArray();
-		assertArrayEquals(propsBAOS.toByteArray(), propsBytes);
+		expectThat(propsBAOS.toByteArray()).equal(propsBytes);
 		byte[] xmlBytes    = pc.write().xml().toByteArray();
 
 		PropsConfig pcread1a = PropsConfig.readProps().from(propsBytes);
 		PropsConfig pcread1b = PropsConfig.readProps().from(Bytes.from(propsBytes));
 		PropsConfig pcread2  = PropsConfig.readProps().xml().from(xmlBytes);
 
-		assertEquals(pc.getProperties(), pcread1a.getProperties());
-		assertEquals(pc.getProperties(), pcread1b.getProperties());
-		assertEquals(pc.getProperties(), pcread2.getProperties());
+		expectEqual(pc.getProperties(), pcread1a.getProperties());
+		expectEqual(pc.getProperties(), pcread1b.getProperties());
+		expectEqual(pc.getProperties(), pcread2.getProperties());
 	}
 
 
@@ -214,7 +215,7 @@ public class ConfigTest
 	{
 		// increase coverage of ProxyConfig methods:
 		// using TranslateConfig since it passes the tested methods
-		ConfigAssert.of(TranslateConfig.norm(new MapConfig()))
+		ConfigActual.of(TranslateConfig.norm(new MapConfig()))
 			.immutable(false)
 			.clear()
 			.get("a", null)
@@ -227,7 +228,7 @@ public class ConfigTest
 	@Test
 	public void testTranslateConfig()
 	{
-		ConfigAssert.of(TranslateConfig.norm(new MapConfig(Map.of("a", "1 "), true)))
+		ConfigActual.of(TranslateConfig.norm(new MapConfig(Map.of("a", "1 "), true)))
 			.get("a", "1")
 			.get("b", null)
 			.get("c", null)

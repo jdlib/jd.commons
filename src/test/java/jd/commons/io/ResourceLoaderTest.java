@@ -13,7 +13,8 @@
 package jd.commons.io;
 
 
-import static org.assertj.core.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.InputStream;
 import org.junit.jupiter.api.Test;
@@ -25,14 +26,14 @@ public class ResourceLoaderTest
 	public void testNop()
 	{
 		ResourceLoader nop = ResourceLoader.nop();
-		assertEquals("Loader['nop']", nop.toString());
-		assertEquals("nop".hashCode(), nop.hashCode());
-		assertEquals(nop, nop);
-		assertEquals(nop, ResourceLoader.of("nop", s -> null, s -> null));
+		expectEqual("Loader['nop']", nop.toString());
+		expectEqual("nop".hashCode(), nop.hashCode());
+		expectEqual(nop, nop);
+		expectEqual(nop, ResourceLoader.of("nop", s -> null, s -> null));
 		assertNotEquals(nop, "nop");
 
 		Resource res = Resource.of().path("dummy.txt").loadBy(nop);
-		assertThatThrownBy(() -> res.getInputStream()).hasMessage("resource 'dummy.txt' not found");
+		expectError(() -> res.getInputStream()).message("resource 'dummy.txt' not found");
 	}
 
 
@@ -41,12 +42,12 @@ public class ResourceLoaderTest
 	{
 		Class<?> c 				= getClass();
 		ResourceLoader loader 	= ResourceLoader.of(c);
-		assertEquals(c.hashCode(), loader.hashCode());
-		assertEquals(loader, loader);
+		expectEqual(c.hashCode(), loader.hashCode());
+		expectEqual(loader, loader);
 		assertNotEquals(loader, c);
 		assertNotEquals(loader, getClass());
 		assertNotEquals(loader, ResourceLoader.of(ResourceLoader.class));
-		assertEquals("Loader[jd.commons.io.ResourceLoaderTest]", loader.toString());
+		expectEqual("Loader[jd.commons.io.ResourceLoaderTest]", loader.toString());
 	}
 
 
@@ -55,13 +56,13 @@ public class ResourceLoaderTest
 	{
 		ClassLoader cl 			= getClass().getClassLoader();
 		ResourceLoader loader  	= ResourceLoader.of(cl);
-		assertEquals(cl.hashCode(), loader.hashCode());
-		assertEquals(loader, loader);
+		expectEqual(cl.hashCode(), loader.hashCode());
+		expectEqual(loader, loader);
 		assertNotEquals(loader, cl);
-		assertEquals("Loader[" + cl + ']', loader.toString());
+		expectEqual("Loader[" + cl + ']', loader.toString());
 
-		assertEquals("Loader[<system>]", ResourceLoader.system().toString());
-		assertEquals("Loader[<platform>]", ResourceLoader.platform().toString());
+		expectEqual("Loader[<system>]", ResourceLoader.system().toString());
+		expectEqual("Loader[<platform>]", ResourceLoader.platform().toString());
 	}
 
 
@@ -69,9 +70,9 @@ public class ResourceLoaderTest
 	public void testOfContextClassLoader() throws Exception
 	{
 		ResourceLoader rl = ResourceLoader.context();
-		assertEquals("Loader[<context>]", rl.toString());
+		expectEqual("Loader[<context>]", rl.toString());
 
-		assertNotNull(rl.getURL("java/lang/String.class"));
+		expectNotNull(rl.getURL("java/lang/String.class"));
 		try (InputStream in = rl.getInputStream("java/lang/String.class"))
 		{
 		}
@@ -79,7 +80,7 @@ public class ResourceLoaderTest
 		try
 		{
 			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-			assertNotNull(rl.getURL("java/lang/String.class"));
+			expectNotNull(rl.getURL("java/lang/String.class"));
 		}
 		finally
 		{

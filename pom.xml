@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.jdlib</groupId>
 	<artifactId>jd.commons</artifactId>
-	<version>1.2.0</version>
+	<version>1.3.0</version>
 	<packaging>jar</packaging>
 	<name>jd.commons</name>
 	<description>jd.commons is a library containing common utility classes.</description>
@@ -51,9 +51,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>3.27.3</version>
+			<groupId>io.github.jdlib</groupId>
+			<artifactId>deepdive</artifactId>
+			<version>1.4.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

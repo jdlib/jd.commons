@@ -13,9 +13,9 @@
 package jd.commons.check;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -27,10 +27,10 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.io.TempDir;
 import jd.commons.io.FilePath;
 import jd.commons.io.Resource;
+import deepdive.function.CheckedRunnable;
 
 
 public class CheckTest
@@ -85,7 +85,7 @@ public class CheckTest
 	@Test
 	public void testFile()
 	{
-		assertSame(DIR, Check.file(DIR).get());
+		expectSame(DIR, Check.file(DIR).get());
 		Check.file(DIR).isDir().exists();
 		Check.file(SOME_FILE).isFile().exists(true).length().equal(SOME_FILE.length());
 		Check.file(INVALID_FILE).exists(false);
@@ -146,7 +146,7 @@ public class CheckTest
 	{
 		Class<?> arg = String.class;
 		Class<CharSequence> result = Check.derivedFrom(arg, CharSequence.class);
-		assertSame(arg, result);
+		expectSame(arg, result);
 		failCheck(() -> Check.derivedFrom(String.class, Number.class), "java.lang.String is not derived from java.lang.Number");
 
 		Class<?> c1 = CustomClassLoader.load();
@@ -193,8 +193,8 @@ public class CheckTest
 		CheckSize cs = Check.length(5, "len");
 		cs.indexValid(4).endValid(5);
 
-		assertThatThrownBy(() -> cs.indexValid(5)).hasMessage("index is 5, expected to be >= 0 and < 5");
-		assertThatThrownBy(() -> cs.endValid(6)).hasMessage("end is 6, expected to be >= 0 and <= 5");
+		expectError(() -> cs.indexValid(5)).message("index is 5, expected to be >= 0 and < 5");
+		expectError(() -> cs.endValid(6)).message("end is 6, expected to be >= 0 and <= 5");
 	}
 
 
@@ -224,7 +224,7 @@ public class CheckTest
 		Check.notEmpty(new double[] { 1.0 }, null);
 		Check.notEmpty(new int[] { 1 }, null);
 		Check.notEmpty(new long[] { 1L }, null);
-		assertSame(NAMES, Check.notEmpty(NAMES, "names"));
+		expectSame(NAMES, Check.notEmpty(NAMES, "names"));
 		failCheck(() -> Check.notEmpty((Object[])null, "names"), "names is null");
 		failCheck(() -> Check.notEmpty(new Object[0], null), "arg is empty");
 	}
@@ -233,7 +233,7 @@ public class CheckTest
 	@Test
 	public void testNotEmptyCharSequence()
 	{
-		assertSame("a", Check.notEmpty("a", "type"));
+		expectSame("a", Check.notEmpty("a", "type"));
 		failCheck(() -> Check.notEmpty((CharSequence)null, null), "arg is null");
 		failCheck(() -> Check.notEmpty("", "type"), "type is empty");
 	}
@@ -243,7 +243,7 @@ public class CheckTest
 	public void testNotEmptyCollection()
 	{
 		List<String> list = List.of("a");
-		assertSame(list, Check.notEmpty(list, "types"));
+		expectSame(list, Check.notEmpty(list, "types"));
 		failCheck(() -> Check.notEmpty((List<?>)null, null), "arg is null");
 		failCheck(() -> Check.notEmpty(List.of(), "types"), "types is empty");
 	}
@@ -253,7 +253,7 @@ public class CheckTest
 	public void testNotEmptyMap()
 	{
 		Map<String,String> map = Map.of("a", "1");
-		assertSame(map, Check.notEmpty(map, "types"));
+		expectSame(map, Check.notEmpty(map, "types"));
 		failCheck(() -> Check.notEmpty((Map<?,?>)null, null), "arg is null");
 		failCheck(() -> Check.notEmpty(Map.of(), "map"), "map is empty");
 	}
@@ -262,7 +262,7 @@ public class CheckTest
 	@Test
 	public void testNotEqual()
 	{
-		assertSame("a", Check.notEqual("a", "b"));
+		expectSame("a", Check.notEqual("a", "b"));
 		failCheck(() -> Check.notEqual("a", "a"), "\"a\" equal");
 	}
 
@@ -270,7 +270,7 @@ public class CheckTest
 	@Test
 	public void testNotNull()
 	{
-		assertSame("a", Check.notNull("a", "name"));
+		expectSame("a", Check.notNull("a", "name"));
 		failCheck(() -> Check.notNull(null, "name"), "name is null");
 	}
 
@@ -278,7 +278,7 @@ public class CheckTest
 	@Test
 	public void testNotSame()
 	{
-		assertSame("a", Check.notSame("a", "b"));
+		expectSame("a", Check.notSame("a", "b"));
 		failCheck(() -> Check.notSame("a", "a"), "\"a\" same as other arg");
 	}
 
@@ -299,17 +299,17 @@ public class CheckTest
 
 		Check.path(FilePath.of(curDir)).isDir().size().equal(0);
 		Check.size(FilePath.of(curDir), "curDir").equal(0);
-		assertThatThrownBy(() -> Check.size(FilePath.of("doesnotexist"), "curDir").equal(0))
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("can't access size of doesnotexist")
-			.cause().isInstanceOf(IOException.class);
+		expectError(() -> Check.size(FilePath.of("doesnotexist"), "curDir").equal(0))
+			.isA(IllegalArgumentException.class)
+			.message("can't access size of doesnotexist")
+			.cause().isA(IOException.class);
 	}
 
 
 	@Test
 	public void testSame()
 	{
-		assertSame("a", Check.same("a", "a"));
+		expectSame("a", Check.same("a", "a"));
 		failCheck(() -> Check.same("a", null), "\"a\" not same as null");
 	}
 
@@ -335,7 +335,7 @@ public class CheckTest
 	{
 		Check.value(1.3f, null).greater(1).lessEq(1.3).positive().notNaN().finite();
 		Check.value(-1.3, null).greaterEq(-1.3).less(0).notEqual(2).equal(-1.3).negative().notNaN().finite();
-		assertEquals(2.5, Check.value(2.5, null).get());
+		expectEqual(2.5, Check.value(2.5, null).get());
 		failCheck(() -> Check.value(2.5, "price").greater(3), "price is 2.5, expected to be > 3.0");
 		failCheck(() -> Check.value(Float.NaN, "price").notNaN(), "price is NaN");
 		failCheck(() -> Check.value(Double.NEGATIVE_INFINITY, "price").finite(), "price is -Infinity");
@@ -348,7 +348,7 @@ public class CheckTest
 	{
 		Check.value(1, null).greater(0).lessEq(1000);
 		Check.value((short)5, null).greaterEq(0).less(10).notEqual(6).equal(5);
-		assertEquals(2, Check.value(2, null).get());
+		expectEqual(2, Check.value(2, null).get());
 		failCheck(() -> Check.value(4, "count").lessEq(3), "count is 4, expected to be <= 3");
 	}
 
@@ -357,16 +357,15 @@ public class CheckTest
 	public void testValueLong()
 	{
 		Check.value(1L, null).greater(0).lessEq(1000L).equal(1L).notEqual(2);
-		assertEquals(3L, Check.value(3L, null).get());
+		expectEqual(3L, Check.value(3L, null).get());
 		failCheck(() -> Check.value(4L, "count").lessEq(3L), "count is 4, expected to be <= 3");
 		failCheck(() -> Check.value(4L, "count").notEqual(4L), "count is 4, expected to be != 4");
 	}
 
 
-	private static void failCheck(Executable executable, String msg)
+	private static void failCheck(CheckedRunnable<?> runnable, String msg)
 	{
-		IllegalArgumentException e = assertThrows(IllegalArgumentException.class, executable);
-		assertEquals(msg, e.getMessage());
+		expectError(runnable).isA(IllegalArgumentException.class).message(msg);
 	}
 
 

@@ -13,7 +13,7 @@
 package jd.commons.util;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import org.junit.jupiter.api.Test;
 
 
@@ -25,15 +25,15 @@ public class HolderTest
 		Holder<String> holder;
 
 		holder = new Holder<>("a");
-		assertTrue(holder.has("a"));
-		assertFalse(holder.has(null));
-		assertEquals("Holder:a", holder.toString());
-		assertEquals("a", holder.get());
-		assertEquals("a", holder.getOr("b"));
-		assertEquals("b", holder.apply("b"));
+		expectTrue(holder.has("a"));
+		expectFalse(holder.has(null));
+		expectEqual("Holder:a", holder.toString());
+		expectEqual("a", holder.get());
+		expectEqual("a", holder.getOr("b"));
+		expectEqual("b", holder.apply("b"));
 
 		holder.clear();
-		assertNull(holder.get());
-		assertNull(holder.getOr(null));
+		expectNull(holder.get());
+		expectNull(holder.getOr(null));
 	}
 }

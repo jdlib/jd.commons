@@ -13,7 +13,7 @@
 package jd.commons.io.lib;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import org.junit.jupiter.api.Test;
 
 
@@ -25,14 +25,14 @@ public class AppendableWriterTest
 		StringBuilder s = new StringBuilder();
 		try (AppendableWriter w = new AppendableWriter(s))
 		{
-			assertSame(s, w.getAppendable());
+			expectSame(s, w.getAppendable());
 
 			w.append('a').append("bc").append(".de", 1, 3);
 			w.write('f');
 			w.write("gh");
 			w.write(".ij.", 1, 2);
 
-			assertEquals("abcdefghij", w.toString());
+			expectEqual("abcdefghij", w.toString());
 		}
 	}
 }

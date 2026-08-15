@@ -13,9 +13,9 @@
 package jd.commons.io.fluent;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -27,10 +27,10 @@ public class ByteReadDataTest
 	@Test
 	public void testThrowing()
 	{
-		assertThatThrownBy(() -> Bytes.fromError("err").read().throwing(SQLException::new).all())
-			.isInstanceOf(SQLException.class).cause().isInstanceOf(IOException.class);
+		expectError(() -> Bytes.fromError("err").read().throwing(SQLException::new).all())
+			.isA(SQLException.class).cause().isA(IOException.class);
 
 		// coverage for apply catch clause
-		assertNull(new ByteReadData<>(Bytes.fromError("err"), ErrorFunction.swallow()).all());
+		expectNull(new ByteReadData<>(Bytes.fromError("err"), ErrorFunction.swallow()).all());
 	}
 }

@@ -13,8 +13,8 @@
 package jd.commons.util.function;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 import jd.commons.util.UncheckedException;
@@ -28,14 +28,14 @@ public class XPredicateTest
 		XPredicate<String,SQLException> pTrue  = s -> true;
 		XPredicate<String,SQLException> pFalse = s -> false;
 
-		assertTrue(pTrue.and(pTrue).test("x"));
-		assertFalse(pTrue.and(pFalse).test("x"));
-		assertFalse(pFalse.and(pTrue).test("x"));
-		assertTrue(pTrue.or(pFalse).test("x"));
-		assertTrue(pFalse.or(pTrue).test("x"));
-		assertFalse(pFalse.or(pFalse).test("x"));
-		assertFalse(pTrue.negate().test("x"));
-		assertTrue(pFalse.negate().test("x"));
+		expectTrue(pTrue.and(pTrue).test("x"));
+		expectFalse(pTrue.and(pFalse).test("x"));
+		expectFalse(pFalse.and(pTrue).test("x"));
+		expectTrue(pTrue.or(pFalse).test("x"));
+		expectTrue(pFalse.or(pTrue).test("x"));
+		expectFalse(pFalse.or(pFalse).test("x"));
+		expectFalse(pTrue.negate().test("x"));
+		expectTrue(pFalse.negate().test("x"));
 	}
 
 
@@ -45,8 +45,8 @@ public class XPredicateTest
 		XPredicate<String,SQLException> p1 = s -> s.length() > 0;
 		XPredicate<String,SQLException> p2 = s -> { throw new SQLException(); };
 
-		assertTrue(p1.unchecked().test("s"));
-		assertThatThrownBy(() -> p2.unchecked().test("s")).isInstanceOf(UncheckedException.class);
+		expectTrue(p1.unchecked().test("s"));
+		expectError(() -> p2.unchecked().test("s")).isA(UncheckedException.class);
 	}
 
 
@@ -56,14 +56,14 @@ public class XPredicateTest
 		XPredicate<String,Exception> f = XPredicate.FALSE();
 		XPredicate<String,Exception> t = XPredicate.TRUE();
 
-		assertFalse(f.test("x"));
-		assertSame(t, f.negate());
-		assertSame(t, f.or(t));
-		assertSame(f, f.and(t));
+		expectFalse(f.test("x"));
+		expectSame(t, f.negate());
+		expectSame(t, f.or(t));
+		expectSame(f, f.and(t));
 
-		assertTrue(t.test("x"));
-		assertSame(f, t.negate());
-		assertSame(t, t.or(t));
-		assertSame(f, t.and(f));
+		expectTrue(t.test("x"));
+		expectSame(f, t.negate());
+		expectSame(t, t.or(t));
+		expectSame(f, t.and(f));
 	}
 }

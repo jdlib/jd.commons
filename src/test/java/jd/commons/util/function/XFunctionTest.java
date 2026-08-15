@@ -13,8 +13,8 @@
 package jd.commons.util.function;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -27,14 +27,14 @@ public class XFunctionTest
 	@Test
 	public void test() throws SQLException
 	{
-		assertSame("s", XFunction.identity().apply("s"));
+		expectSame("s", XFunction.identity().apply("s"));
 
 		XFunction<String,String,SQLException> pSize  = s -> String.valueOf(s.length());
-		assertEquals("1", pSize.apply("s"));
+		expectEqual("1", pSize.apply("s"));
 
 		XFunction<String,String,SQLException> pSize2 = pSize.andThen(pSize);
-		assertEquals("1", pSize2.apply("s"));
-		assertEquals("2", pSize2.apply(Utils.repeat('a', 33)));
+		expectEqual("1", pSize2.apply("s"));
+		expectEqual("2", pSize2.apply(Utils.repeat('a', 33)));
 	}
 
 
@@ -44,9 +44,9 @@ public class XFunctionTest
 		XFunction<String,String,IOException> f1 = s -> s + s;
 		XFunction<String,String,IOException> f2 = s -> { throw new IOException(); };
 
-		assertEquals("aa", f1.unchecked().apply("a"));
-		assertThatThrownBy(() -> f2.unchecked().apply("a"))
-			.isInstanceOf(UncheckedException.class);
+		expectEqual("aa", f1.unchecked().apply("a"));
+		expectError(() -> f2.unchecked().apply("a"))
+			.isA(UncheckedException.class);
 	}
 
 
@@ -56,8 +56,8 @@ public class XFunctionTest
 		XFunction<String,String,IOException> f1 = XFunction.of(String::trim);
 		XFunction<String,String,IOException> f2 = s -> { throw new IOException(); };
 
-		assertEquals("a", f1.unchecked().apply(" a "));
-		assertThatThrownBy(() -> f2.unchecked().apply("a"))
-			.isInstanceOf(UncheckedException.class);
+		expectEqual("a", f1.unchecked().apply(" a "));
+		expectError(() -> f2.unchecked().apply("a"))
+			.isA(UncheckedException.class);
 	}
 }

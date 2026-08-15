@@ -13,8 +13,8 @@
 package jd.commons.util.function;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import jd.commons.util.UncheckedException;
@@ -28,8 +28,8 @@ public class XSupplierTest
 		XSupplier<String,IOException> p1 = () -> "a";
 		XSupplier<String,IOException> p2 = () -> { throw new IOException(); };
 
-		assertEquals("a", p1.unchecked().get());
-		assertThatThrownBy(() -> p2.unchecked().get())
-			.isInstanceOf(UncheckedException.class);
+		expectEqual("a", p1.unchecked().get());
+		expectError(() -> p2.unchecked().get())
+			.isA(UncheckedException.class);
 	}
 }

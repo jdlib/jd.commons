@@ -13,8 +13,8 @@
 package jd.commons.util;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
@@ -25,10 +25,10 @@ public class UncheckedExceptionTest
 	public void testCreate()
 	{
 		IllegalArgumentException e1 = new IllegalArgumentException();
-		assertSame(e1, UncheckedException.create(e1));
+		expectSame(e1, UncheckedException.create(e1));
 
 		IOException e2 = new IOException();
-		assertThat(UncheckedException.create(e2)).isInstanceOf(UncheckedException.class).hasCause(e2);
+		expectThat(UncheckedException.create(e2)).isA(UncheckedException.class).cause().same(e2);
 	}
 
 
@@ -39,8 +39,8 @@ public class UncheckedExceptionTest
 		IOException ioe = new IOException();
 		UncheckedException uioe = (UncheckedException)UncheckedException.create(ioe);
 
-		assertThatThrownBy(() -> UncheckedException.rethrow(iae, IOException.class)).isSameAs(iae);
-		assertThatThrownBy(() -> UncheckedException.rethrow(ioe, IOException.class)).isSameAs(ioe);
-		assertThatThrownBy(() -> UncheckedException.rethrow(uioe,IOException.class)).isSameAs(ioe);
+		expectError(() -> UncheckedException.rethrow(iae, IOException.class)).same(iae);
+		expectError(() -> UncheckedException.rethrow(ioe, IOException.class)).same(ioe);
+		expectError(() -> UncheckedException.rethrow(uioe,IOException.class)).same(ioe);
 	}
 }

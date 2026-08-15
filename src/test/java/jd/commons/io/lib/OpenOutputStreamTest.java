@@ -13,7 +13,7 @@
 package jd.commons.io.lib;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import org.junit.jupiter.api.Test;
@@ -27,11 +27,11 @@ public class OpenOutputStreamTest
 		TestOutputStream testOut = new TestOutputStream();
 		OpenOutputStream openOut = new OpenOutputStream(testOut);
 
-		assertEquals(0, testOut.flushed);
+		expectEqual(0, testOut.flushed);
 		openOut.flush();
-		assertEquals(1, testOut.flushed);
+		expectEqual(1, testOut.flushed);
 		openOut.close();
-		assertEquals(2, testOut.flushed);
+		expectEqual(2, testOut.flushed);
 	}
 
 

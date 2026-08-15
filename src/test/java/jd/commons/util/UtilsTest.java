@@ -13,8 +13,8 @@
 package jd.commons.util;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.lang.annotation.Annotation;
 import java.nio.file.AccessMode;
 import java.util.Collection;
@@ -31,13 +31,13 @@ public class UtilsTest
 		String[] array = {"a", "b", "c"};
 		String[] newItems = {"1", "2"};
 
-		assertNull(Utils.addFirst(null));
-		assertSame(array, Utils.addFirst(array));
-		assertSame(array, Utils.addFirst(array, (String[])null));
-		assertSame(newItems, Utils.addFirst(null, newItems));
+		expectNull(Utils.addFirst(null));
+		expectSame(array, Utils.addFirst(array));
+		expectSame(array, Utils.addFirst(array, (String[])null));
+		expectSame(newItems, Utils.addFirst(null, newItems));
 
 		String[] result = Utils.addFirst(array, newItems);
-		assertThat(result).containsExactly("1", "2", "a", "b", "c");
+		expectThat(result).elems("1", "2", "a", "b", "c");
 	}
 
 
@@ -47,158 +47,158 @@ public class UtilsTest
 		String[] array = {"a", "b", "c"};
 		String[] newItems = {"1", "2"};
 
-		assertNull(Utils.addLast(null));
-		assertSame(array, Utils.addLast(array));
-		assertSame(array, Utils.addLast(array, (String[])null));
-		assertSame(newItems, Utils.addLast(null, newItems));
+		expectNull(Utils.addLast(null));
+		expectSame(array, Utils.addLast(array));
+		expectSame(array, Utils.addLast(array, (String[])null));
+		expectSame(newItems, Utils.addLast(null, newItems));
 
 		String[] result = Utils.addLast(array, newItems);
-		assertThat(result).containsExactly("a", "b", "c", "1", "2");
+		expectThat(result).elems("a", "b", "c", "1", "2");
 	}
 
 
 	@Test
 	public void testAfterOr()
 	{
-		assertNull(Utils.afterOr(null, '=', null));
-		assertNull(Utils.afterOr("123", '=', null));
-		assertEquals("", 		Utils.afterOr(null, '=', ""));
-		assertEquals("123", 	Utils.afterOr("abc=123", '=', null));
-		assertEquals("123=xyz", Utils.afterOr("abc=123=xyz", '=', null));
-		assertEquals("", 		Utils.afterOr("abc=", '=', null));
+		expectNull(Utils.afterOr(null, '=', null));
+		expectNull(Utils.afterOr("123", '=', null));
+		expectEqual("", 		Utils.afterOr(null, '=', ""));
+		expectEqual("123", 	Utils.afterOr("abc=123", '=', null));
+		expectEqual("123=xyz", Utils.afterOr("abc=123=xyz", '=', null));
+		expectEqual("", 		Utils.afterOr("abc=", '=', null));
 	}
 
 
 	@Test
 	public void testAfterLastOr()
 	{
-		assertNull(Utils.afterLastOr(null, '=', null));
-		assertNull(Utils.afterLastOr("123", '=', null));
-		assertEquals("3", 	Utils.afterLastOr("1.2.3", '.', null));
-		assertEquals("", 	Utils.afterLastOr("1.2.", '.', null));
+		expectNull(Utils.afterLastOr(null, '=', null));
+		expectNull(Utils.afterLastOr("123", '=', null));
+		expectEqual("3", 	Utils.afterLastOr("1.2.3", '.', null));
+		expectEqual("", 	Utils.afterLastOr("1.2.", '.', null));
 	}
 
 
 	@Test
 	public void testBeforeOr()
 	{
-		assertNull(Utils.beforeOr(null, '=', null));
-		assertEquals("abc", Utils.beforeOr("abc", '=', "abc"));
-		assertEquals("abc", Utils.beforeOr("abc=123", '=', ""));
-		assertEquals("", 	Utils.beforeOr("=123", '=', null));
-		assertEquals("", 	Utils.beforeOr(null, '=', ""));
+		expectNull(Utils.beforeOr(null, '=', null));
+		expectEqual("abc", Utils.beforeOr("abc", '=', "abc"));
+		expectEqual("abc", Utils.beforeOr("abc=123", '=', ""));
+		expectEqual("", 	Utils.beforeOr("=123", '=', null));
+		expectEqual("", 	Utils.beforeOr(null, '=', ""));
 	}
 
 
 	@Test
 	public void testBeforeLastOr()
 	{
-		assertNull(Utils.beforeLastOr(null, '=', null));
-		assertEquals("abc", Utils.beforeLastOr("abc", '=', "abc"));
-		assertEquals("abc", Utils.beforeLastOr("abc=123", '=', ""));
-		assertEquals("", 	Utils.beforeLastOr("=123", '=', null));
-		assertEquals("1.2", Utils.beforeLastOr("1.2.3", '.', null));
-		assertEquals("", 	Utils.beforeLastOr(null, '=', ""));
+		expectNull(Utils.beforeLastOr(null, '=', null));
+		expectEqual("abc", Utils.beforeLastOr("abc", '=', "abc"));
+		expectEqual("abc", Utils.beforeLastOr("abc=123", '=', ""));
+		expectEqual("", 	Utils.beforeLastOr("=123", '=', null));
+		expectEqual("1.2", Utils.beforeLastOr("1.2.3", '.', null));
+		expectEqual("", 	Utils.beforeLastOr(null, '=', ""));
 	}
 
 
 	@Test
 	public void testCut()
 	{
-		assertNull(Utils.cutStart(null, "x"));
-		assertEquals("",	Utils.cutStart("", "x"));
-		assertEquals("",	Utils.cutStart("x", "x"));
-		assertEquals("ax",	Utils.cutStart("ax", "x"));
+		expectNull(Utils.cutStart(null, "x"));
+		expectEqual("",	Utils.cutStart("", "x"));
+		expectEqual("",	Utils.cutStart("x", "x"));
+		expectEqual("ax",	Utils.cutStart("ax", "x"));
 
-		assertNull(Utils.cutEnd(null, "x"));
-		assertEquals("",	Utils.cutEnd("", "x"));
-		assertEquals("",	Utils.cutEnd("x", "x"));
-		assertEquals("xa",	Utils.cutEnd("xa", "x"));
+		expectNull(Utils.cutEnd(null, "x"));
+		expectEqual("",	Utils.cutEnd("", "x"));
+		expectEqual("",	Utils.cutEnd("x", "x"));
+		expectEqual("xa",	Utils.cutEnd("xa", "x"));
 	}
 
 
 	@Test
 	public void testEnumOf()
 	{
-		assertNull(Utils.enumOf(AccessMode.class, null));
-		assertSame(AccessMode.READ, Utils.enumOf(AccessMode.class, null, AccessMode.READ));
-		assertSame(AccessMode.READ, Utils.enumOf(AccessMode.class, "xy", AccessMode.READ));
-		assertSame(AccessMode.WRITE, Utils.enumOf(AccessMode.class, "WRITE", AccessMode.READ));
+		expectNull(Utils.enumOf(AccessMode.class, null));
+		expectSame(AccessMode.READ, Utils.enumOf(AccessMode.class, null, AccessMode.READ));
+		expectSame(AccessMode.READ, Utils.enumOf(AccessMode.class, "xy", AccessMode.READ));
+		expectSame(AccessMode.WRITE, Utils.enumOf(AccessMode.class, "WRITE", AccessMode.READ));
 	}
 
 
 	@Test
 	public void testIndexOf()
 	{
-		assertEquals(-1, Utils.indexOf("a", (String[])null));
-		assertEquals(-1, Utils.indexOf("a"));
-		assertEquals(-1, Utils.indexOf("a", "b"));
-		assertEquals(1, Utils.indexOf("a", "b", "a", "c"));
+		expectEqual(-1, Utils.indexOf("a", (String[])null));
+		expectEqual(-1, Utils.indexOf("a"));
+		expectEqual(-1, Utils.indexOf("a", "b"));
+		expectEqual(1, Utils.indexOf("a", "b", "a", "c"));
 	}
 
 
 	@Test
 	public void testIsA() throws Exception
 	{
-		assertFalse(Utils.isA(null, null));
-		assertFalse(Utils.isA(null, CharSequence.class));
-		assertFalse(Utils.isA("a", null));
-		assertFalse(Utils.isA("a", Integer.class));
-		assertTrue(Utils.isA("a", CharSequence.class));
+		expectFalse(Utils.isA(null, null));
+		expectFalse(Utils.isA(null, CharSequence.class));
+		expectFalse(Utils.isA("a", null));
+		expectFalse(Utils.isA("a", Integer.class));
+		expectTrue(Utils.isA("a", CharSequence.class));
 
 		// test annotations
 		Annotation testAnno = getClass().getMethod("testIsA").getAnnotations()[0];
-		assertTrue(Utils.isA(testAnno, Test.class));
-		assertFalse(Utils.isA(testAnno, SuppressWarnings.class));
-		assertFalse(Utils.isA(testAnno, null));
-		assertFalse(Utils.isA(null, Test.class));
+		expectTrue(Utils.isA(testAnno, Test.class));
+		expectFalse(Utils.isA(testAnno, SuppressWarnings.class));
+		expectFalse(Utils.isA(testAnno, null));
+		expectFalse(Utils.isA(null, Test.class));
 	}
 
 
 	@Test
 	public void testIsBlank() throws Exception
 	{
-		assertTrue(Utils.isBlank(null));
-		assertTrue(Utils.isBlank(""));
-		assertTrue(Utils.isBlank(" \t\r\n"));
-		assertFalse(Utils.isBlank(" \t\r\na "));
-		assertFalse(Utils.isBlank("a "));
+		expectTrue(Utils.isBlank(null));
+		expectTrue(Utils.isBlank(""));
+		expectTrue(Utils.isBlank(" \t\r\n"));
+		expectFalse(Utils.isBlank(" \t\r\na "));
+		expectFalse(Utils.isBlank("a "));
 	}
 
 
 	@Test
 	public void testIsEmpty()
 	{
-		assertTrue(Utils.isEmpty((CharSequence)null));
-		assertTrue(Utils.isEmpty(""));
-		assertFalse(Utils.isEmpty("a"));
+		expectTrue(Utils.isEmpty((CharSequence)null));
+		expectTrue(Utils.isEmpty(""));
+		expectFalse(Utils.isEmpty("a"));
 
-		assertTrue(Utils.isEmpty((Object[])null));
-		assertTrue(Utils.isEmpty(new Object[0]));
-		assertFalse(Utils.isEmpty(new String[] { "a" }));
+		expectTrue(Utils.isEmpty((Object[])null));
+		expectTrue(Utils.isEmpty(new Object[0]));
+		expectFalse(Utils.isEmpty(new String[] { "a" }));
 
-		assertTrue(Utils.isEmpty((Collection<?>)null));
-		assertTrue(Utils.isEmpty(List.of()));
-		assertFalse(Utils.isEmpty(List.of("a")));
+		expectTrue(Utils.isEmpty((Collection<?>)null));
+		expectTrue(Utils.isEmpty(List.of()));
+		expectFalse(Utils.isEmpty(List.of("a")));
 
-		assertTrue(Utils.isEmpty((Map<?,?>)null));
-		assertTrue(Utils.isEmpty(Map.of()));
-		assertFalse(Utils.isEmpty(Map.of("a", "1")));
+		expectTrue(Utils.isEmpty((Map<?,?>)null));
+		expectTrue(Utils.isEmpty(Map.of()));
+		expectFalse(Utils.isEmpty(Map.of("a", "1")));
 	}
 
 
 	@Test
 	public void testHave()
 	{
-		assertEquals("x",	Utils.haveStart(null, "x"));
-		assertEquals("x",	Utils.haveStart("", "x"));
-		assertEquals("x",	Utils.haveStart("x", "x"));
-		assertEquals("xa",	Utils.haveStart("a", "x"));
+		expectEqual("x",	Utils.haveStart(null, "x"));
+		expectEqual("x",	Utils.haveStart("", "x"));
+		expectEqual("x",	Utils.haveStart("x", "x"));
+		expectEqual("xa",	Utils.haveStart("a", "x"));
 
-		assertEquals("x",	Utils.haveEnd(null, "x"));
-		assertEquals("x",	Utils.haveEnd("", "x"));
-		assertEquals("x",	Utils.haveEnd("x", "x"));
-		assertEquals("ax",	Utils.haveEnd("a", "x"));
+		expectEqual("x",	Utils.haveEnd(null, "x"));
+		expectEqual("x",	Utils.haveEnd("", "x"));
+		expectEqual("x",	Utils.haveEnd("x", "x"));
+		expectEqual("ax",	Utils.haveEnd("a", "x"));
 	}
 
 
@@ -206,63 +206,63 @@ public class UtilsTest
 	public void testNewArray()
 	{
 		String[] s5 = Utils.newArray(String.class, 5);
-		assertEquals(5, s5.length);
+		expectEqual(5, s5.length);
 
 		String[] s6 = Utils.newArray(s5, 6);
-		assertEquals(6, s6.length);
+		expectEqual(6, s6.length);
 	}
 
 
 	@Test
 	public void testNewHashSet()
 	{
-		assertThat(Utils.newHashSet("a", "b")).containsExactlyInAnyOrder("a", "b");
+		expectThat(Utils.newHashSet("a", "b")).contains().exactly("a", "b");
 	}
 
 
 	@Test
 	public void testNorm()
 	{
-		assertNull(Utils.norm(null));
-		assertNull(Utils.norm(""));
-		assertNull(Utils.norm(" "));
-		assertEquals("a", Utils.norm(" a "));
+		expectNull(Utils.norm(null));
+		expectNull(Utils.norm(""));
+		expectNull(Utils.norm(" "));
+		expectEqual("a", Utils.norm(" a "));
 	}
 
 
 	@Test
 	public void testNotNull()
 	{
-		assertSame("a", Utils.notNull("a"));
-		assertSame("", Utils.notNull(null));
+		expectSame("a", Utils.notNull("a"));
+		expectSame("", Utils.notNull(null));
 	}
 
 
 	@Test
 	public void testPackageName()
 	{
-		assertEquals("jd.commons.util", Utils.packageName(Utils.class));
-		assertEquals("jd.commons.util", Utils.packageName("jd.commons.util.Utils"));
-		assertEquals("", Utils.packageName("Utils"));
-		assertEquals("", Utils.packageName(""));
+		expectEqual("jd.commons.util", Utils.packageName(Utils.class));
+		expectEqual("jd.commons.util", Utils.packageName("jd.commons.util.Utils"));
+		expectEqual("", Utils.packageName("Utils"));
+		expectEqual("", Utils.packageName(""));
 	}
 
 
 	@Test
 	public void testPad()
 	{
-		assertEquals("a..", Utils.padEnd("a", 3, '.'));
-		assertEquals("a.",  Utils.padEnd("a", 2, '.'));
-		assertEquals("a  ", Utils.padEnd("a", 3));
-		assertEquals("100", Utils.padEnd(1, 3));
-		assertEquals("123", Utils.padEnd(123, 2));
+		expectEqual("a..", Utils.padEnd("a", 3, '.'));
+		expectEqual("a.",  Utils.padEnd("a", 2, '.'));
+		expectEqual("a  ", Utils.padEnd("a", 3));
+		expectEqual("100", Utils.padEnd(1, 3));
+		expectEqual("123", Utils.padEnd(123, 2));
 
-		assertEquals("..a", Utils.padStart("a", 3, '.'));
-		assertEquals(".a",  Utils.padStart("a", 2, '.'));
-		assertEquals("  a", Utils.padStart("a", 3));
-		assertEquals("001", Utils.padStart(1, 3));
-		assertEquals("123", Utils.padStart(123, 2));
-		assertEquals("!1",  Utils.padStart(1, 2, '!'));
+		expectEqual("..a", Utils.padStart("a", 3, '.'));
+		expectEqual(".a",  Utils.padStart("a", 2, '.'));
+		expectEqual("  a", Utils.padStart("a", 3));
+		expectEqual("001", Utils.padStart(1, 3));
+		expectEqual("123", Utils.padStart(123, 2));
+		expectEqual("!1",  Utils.padStart(1, 2, '!'));
 	}
 
 
@@ -270,69 +270,69 @@ public class UtilsTest
 	public void testRepeat()
 	{
 		StringBuilder sb = new StringBuilder();
-		assertSame(sb, Utils.repeat('0', 3, sb));
-		assertEquals("000", sb.toString());
+		expectSame(sb, Utils.repeat('0', 3, sb));
+		expectEqual("000", sb.toString());
 
-		assertEquals("aa", Utils.repeat('a', 2));
-		assertEquals("", Utils.repeat('a', -15));
+		expectEqual("aa", Utils.repeat('a', 2));
+		expectEqual("", Utils.repeat('a', -15));
 	}
 
 
 	@Test
 	public void testStartCase()
 	{
-		assertNull(Utils.startLowerCase(null));
-		assertEquals("", 	Utils.startLowerCase(""));
-		assertEquals("abc", Utils.startLowerCase("abc"));
-		assertEquals("aBC", Utils.startLowerCase("ABC"));
+		expectNull(Utils.startLowerCase(null));
+		expectEqual("", 	Utils.startLowerCase(""));
+		expectEqual("abc", Utils.startLowerCase("abc"));
+		expectEqual("aBC", Utils.startLowerCase("ABC"));
 
-		assertNull(Utils.startUpperCase(null));
-		assertEquals("", 	Utils.startUpperCase(""));
-		assertEquals("Abc", Utils.startUpperCase("Abc"));
-		assertEquals("ABC", Utils.startUpperCase("aBC"));
+		expectNull(Utils.startUpperCase(null));
+		expectEqual("", 	Utils.startUpperCase(""));
+		expectEqual("Abc", Utils.startUpperCase("Abc"));
+		expectEqual("ABC", Utils.startUpperCase("aBC"));
 	}
 
 
 	@Test
 	public void testTrimEnd()
 	{
-		assertNull(Utils.trimEnd(null));
-		assertSame("a", Utils.trimEnd("a"));
-		assertEquals(" a b", Utils.trimEnd(" a b \t\r\n"));
+		expectNull(Utils.trimEnd(null));
+		expectSame("a", Utils.trimEnd("a"));
+		expectEqual(" a b", Utils.trimEnd(" a b \t\r\n"));
 	}
 
 
 	@Test
 	public void testTrimStart()
 	{
-		assertNull(Utils.trimStart(null));
-		assertSame("a", Utils.trimStart("a"));
-		assertEquals("a b ", Utils.trimStart("\n\t\r a b "));
+		expectNull(Utils.trimStart(null));
+		expectSame("a", Utils.trimStart("a"));
+		expectEqual("a b ", Utils.trimStart("\n\t\r a b "));
 	}
 
 
 	@Test
 	public void testToArray()
 	{
-		assertThat(Utils.toArray("a")).containsExactly("a");
+		expectThat(Utils.toArray("a")).elems("a");
 	}
 
 
 	@Test
 	public void testStringCollToStringArray()
 	{
-		assertThat(Utils.toArray((Collection<String>)null)).isEmpty();
-		assertThat(Utils.toArray(List.of())).isEmpty();
-		assertThat(Utils.toArray(List.of("a", "b"))).containsExactly("a", "b");
+		expectThat(Utils.toArray((Collection<String>)null)).empty();
+		expectThat(Utils.toArray(List.of())).empty();
+		expectThat(Utils.toArray(List.of("a", "b"))).elems("a", "b");
 	}
 
 
 	@Test
 	public void testCollToArray()
 	{
-		assertThat(Utils.toArray(null, Integer.class)).isInstanceOf(Integer[].class).isEmpty();
-		assertThat(Utils.toArray(List.of(), Integer.class)).isInstanceOf(Integer[].class).isEmpty();
-		assertThat(Utils.toArray(List.of(1, 2), Integer.class)).containsExactly(1, 2);
+		expectThat(Utils.toArray(null, Integer.class)).isA(Integer[].class).empty();
+		expectThat(Utils.toArray(List.of(), Integer.class)).isA(Integer[].class).empty();
+		expectThat(Utils.toArray(List.of(1, 2), Integer.class)).elems(1, 2);
 	}
 }
 

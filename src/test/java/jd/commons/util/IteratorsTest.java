@@ -13,8 +13,8 @@
 package jd.commons.util;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -30,19 +30,19 @@ public class IteratorsTest
 	public void testOfArray()
 	{
 		String[] array = { "a", "b", "c" };
-		assertThat(toList(Iterators.of(array))).containsExactly(array);
-		assertThat(toList(Iterators.of(array, 1, 2))).containsExactly("b");
+		expectThat(toList(Iterators.of(array))).elems(array);
+		expectThat(toList(Iterators.of(array, 1, 2))).elems("b");
 
-		assertThatThrownBy(() -> Iterators.of().next()).isInstanceOf(NoSuchElementException.class);
+		expectError(() -> Iterators.of().next()).isA(NoSuchElementException.class);
 
-		assertFalse(Iterators.of((String[])null).hasNext());
+		expectFalse(Iterators.of((String[])null).hasNext());
 	}
 
 
 	@Test
 	public void testEmpty()
 	{
-		assertThat(Iterators.empty()).isExhausted();
+		expectThat(Iterators.empty()).not().hasNext();
 	}
 
 
@@ -51,12 +51,12 @@ public class IteratorsTest
 	{
 		List<String> list = new ArrayList<>();
 		list.add("a");
-		assertThat(Iterators.immutable(list)).isUnmodifiable();
+		expectError(() -> Iterators.immutable(list).remove()).isA(UnsupportedOperationException.class);
 
 		Iterator<String> it = Iterators.immutable(list);
-		assertTrue(it.hasNext());
-		assertEquals("a", it.next());
-		assertFalse(it.hasNext());
+		expectTrue(it.hasNext());
+		expectEqual("a", it.next());
+		expectFalse(it.hasNext());
 	}
 
 
@@ -69,24 +69,24 @@ public class IteratorsTest
 		Collections.addAll(list2, "1", "2");
 
 		Iterator<String> it = Iterators.join(list1.iterator(), list2.iterator());
-		assertTrue(it.hasNext());
-		assertEquals("a", it.next());
+		expectTrue(it.hasNext());
+		expectEqual("a", it.next());
 		it.remove();
-		assertThat(list1).containsExactly("b");
-		assertEquals("b", it.next());
-		assertEquals("1", it.next());
-		assertEquals("2", it.next());
-		assertFalse(it.hasNext());
-		assertThatThrownBy(() -> it.next()).isInstanceOf(NoSuchElementException.class);
-		assertThatThrownBy(() -> it.remove()).isInstanceOf(NoSuchElementException.class);
+		expectThat(list1).elems("b");
+		expectEqual("b", it.next());
+		expectEqual("1", it.next());
+		expectEqual("2", it.next());
+		expectFalse(it.hasNext());
+		expectError(() -> it.next()).isA(NoSuchElementException.class);
+		expectError(() -> it.remove()).isA(NoSuchElementException.class);
 	}
 
 
 	@Test
 	public void testOptional()
 	{
-		assertThat(Iterators.optional(null)).isExhausted();
-		assertThat(Iterators.optional("a")).hasNext();
+		expectThat(Iterators.optional(null)).not().hasNext();
+		expectThat(Iterators.optional("a")).hasNext();
 	}
 
 
@@ -105,10 +105,10 @@ public class IteratorsTest
 		List<String> list = List.of("a");
 
 		Enumeration<String> en = Iterators.toEnumeration(list.iterator());
-		assertTrue(en.hasMoreElements());
-		assertEquals("a", en.nextElement());
-		assertFalse(en.hasMoreElements());
+		expectTrue(en.hasMoreElements());
+		expectEqual("a", en.nextElement());
+		expectFalse(en.hasMoreElements());
 
-		assertFalse(Iterators.toEnumeration(null).hasMoreElements());
+		expectFalse(Iterators.toEnumeration(null).hasMoreElements());
 	}
 }

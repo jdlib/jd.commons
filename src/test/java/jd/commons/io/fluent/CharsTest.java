@@ -13,11 +13,11 @@
 package jd.commons.io.fluent;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static java.util.stream.Collectors.*;
 import static jd.commons.io.fluent.IO.*;
 import static jd.commons.mock.Mock.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,7 +40,7 @@ public class CharsTest
 	@Test
 	public void testFactoryFromChars() throws Exception
 	{
-		assertEquals("abc", Chars.from('a', 'b', 'c').read().all());
+		expectEqual("abc", Chars.from('a', 'b', 'c').read().all());
 	}
 
 
@@ -51,13 +51,13 @@ public class CharsTest
 		Clob clob = mock(Clob.class).when("getCharacterStream").thenReturn(reader).create();
 		try (Reader blobReader = Chars.from(clob).getReader())
 		{
-			assertSame(reader, blobReader);
+			expectSame(reader, blobReader);
 		}
 
 		clob = mock(Clob.class).when("getCharacterStream", 2L, 3L).thenReturn(reader).create();
 		try (Reader blobReader = Chars.from(clob, 2L, 3L).getReader())
 		{
-			assertSame(reader, blobReader);
+			expectSame(reader, blobReader);
 		}
 	}
 
@@ -71,12 +71,12 @@ public class CharsTest
 		// write.to(OutputStream)
 		byte[] actual = cc.write().asUtf8().toByteArray();
 		byte[] exp    = expected.getBytes(StandardCharsets.UTF_8);
-		assertArrayEquals(exp, actual);
+		expectThat(actual).equal(exp);
 
 		// write.to(Target)
 		StringWriter2 sw = new StringWriter2();
 		cc.write().to(Chars.to(sw));
-		assertEquals(expected, sw.toString());
+		expectEqual(expected, sw.toString());
 	}
 
 
@@ -85,12 +85,12 @@ public class CharsTest
 	{
 		try (Reader reader = Chars.from(new StringReader("abc")).getReader())
 		{
-			assertThat(reader).isInstanceOf(OpenReader.class);
+			expectThat(reader).isA(OpenReader.class);
 		}
 
 		try (Reader reader = Chars.from(new StringReader("abc"), false).getReader())
 		{
-			assertThat(reader).isInstanceOf(StringReader.class);
+			expectThat(reader).isA(StringReader.class);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class CharsTest
 	@Test
 	public void testFromString() throws Exception
 	{
-		assertEquals("abc", Chars.fromString("abc").read().all());
+		expectEqual("abc", Chars.fromString("abc").read().all());
 	}
 
 
@@ -109,13 +109,13 @@ public class CharsTest
 		Clob clob = mock(Clob.class).when("setCharacterStream", 1L).thenReturn(writer).create();
 		try (Writer blobWriter = Chars.to(clob).getWriter())
 		{
-			assertSame(writer, blobWriter);
+			expectSame(writer, blobWriter);
 		}
 
 		clob = mock(Clob.class).when("setCharacterStream", 2L).thenReturn(writer).create();
 		try (Writer blobWriter = Chars.to(clob, 2L).getWriter())
 		{
-			assertSame(writer, blobWriter);
+			expectSame(writer, blobWriter);
 		}
 	}
 
@@ -125,16 +125,16 @@ public class CharsTest
 	{
 		StringWriter s = new StringWriter();
 		Chars.fromString("abc").write().to(Chars.to(s));
-		assertEquals("abc", s.toString());
+		expectEqual("abc", s.toString());
 
 		try (Writer writer = Chars.to(new StringWriter()).getWriter())
 		{
-			assertThat(writer).isInstanceOf(OpenWriter.class);
+			expectInstance(OpenWriter.class, writer);
 		}
 
 		try (Writer writer = Chars.to(new StringWriter(), false).getWriter())
 		{
-			assertThat(writer).isInstanceOf(StringWriter.class);
+			expectInstance(StringWriter.class, writer);
 		}
 	}
 
@@ -143,9 +143,9 @@ public class CharsTest
 	public void testReadResultApply() throws Exception
 	{
 		SQLException e = new SQLException();
-		assertThatThrownBy(() -> Chars.fromString("abc").read().apply(r -> { throw e; }))
-			.isInstanceOf(IOException.class)
-			.cause().isSameAs(e);
+		expectError(() -> Chars.fromString("abc").read().apply(r -> { throw e; }))
+			.isA(IOException.class)
+			.cause().same(e);
 	}
 
 
@@ -154,14 +154,14 @@ public class CharsTest
 	{
 		CharSource src = Chars.fromString("a\nb");
 
-		assertThat(src.read().lines().toList()).containsExactly("a", "b");
-		assertThat(src.read().lines().toArray()).containsExactly("a", "b");
-		assertEquals("ab", src.read().lines().apply(st -> st.collect(joining())));
-		assertEquals("a", src.read().lines().first());
+		expectThat(src.read().lines().toList()).elems("a", "b");
+		expectThat(src.read().lines().toArray()).elems("a", "b");
+		expectEqual("ab", src.read().lines().apply(st -> st.collect(joining())));
+		expectEqual("a", src.read().lines().first());
 
 		src = Chars.fromString("a\n\nb");
-		assertThat(src.read().lines().toList()).containsExactly("a", "", "b");
-		assertThat(src.read().lines().removeBlank().toList()).containsExactly("a", "b");
+		expectThat(src.read().lines().toList()).elems("a", "", "b");
+		expectThat(src.read().lines().removeBlank().toList()).elems("a", "b");
 	}
 
 
@@ -171,14 +171,14 @@ public class CharsTest
 		// implicitly also tests throwing()
 
 		// no exception thrown
-		assertEquals("abc", Chars.fromString("abc").read().unchecked().all());
-		assertEquals("x", Chars.fromString("abc").read().unchecked().apply(in -> "x"));
+		expectEqual("abc", Chars.fromString("abc").read().unchecked().all());
+		expectEqual("x", Chars.fromString("abc").read().unchecked().apply(in -> "x"));
 
 		// exception thrown
 		UnsupportedOperationException uoe = new UnsupportedOperationException("hallo");
 		CharSource cs = () -> { throw uoe; };
-		assertThatThrownBy(() -> cs.read().unchecked().all()).isSameAs(uoe);
-		assertThatThrownBy(() -> cs.read().unchecked().apply(in -> null)).isSameAs(uoe);
+		expectError(() -> cs.read().unchecked().all()).same(uoe);
+		expectError(() -> cs.read().unchecked().apply(in -> null)).same(uoe);
 	}
 
 
@@ -187,7 +187,7 @@ public class CharsTest
 	{
 		CharSource src = Chars.from(new StringReader("a"), false);
 		BufferedReader br = src.getBufferedReader();
-		assertSame(br, Chars.from(br, false).getBufferedReader());
+		expectSame(br, Chars.from(br, false).getBufferedReader());
 	}
 
 
@@ -196,7 +196,7 @@ public class CharsTest
 	{
 		try (Reader reader = Chars.fromString("a").wrap(BufferedReader::new).getReader())
 		{
-			assertInstanceOf(BufferedReader.class, reader);
+			expectInstance(BufferedReader.class, reader);
 		}
 	}
 
@@ -209,7 +209,7 @@ public class CharsTest
 		{
 			w.println("hallo");
 		}
-		assertEquals("hallo" + System.lineSeparator(), s.toString());
+		expectEqual("hallo" + System.lineSeparator(), s.toString());
 	}
 
 
@@ -218,7 +218,7 @@ public class CharsTest
 	{
 		try (Writer writer = Chars.toNull().wrap(OpenWriter::new).getWriter())
 		{
-			assertInstanceOf(OpenWriter.class, writer);
+			expectInstance(OpenWriter.class, writer);
 		}
 	}
 
@@ -227,7 +227,7 @@ public class CharsTest
 	public void testWriteAs() throws IOException
 	{
 		// coverage for EncodeHandler.toString
-		assertEquals("Encode->TransferChars", Chars.fromString("abc").write().asUtf8().handler_.toString());
-		assertArrayEquals("abc".getBytes(), Chars.fromString("abc").write().asLatin1().toByteArray());
+		expectEqual("Encode->TransferChars", Chars.fromString("abc").write().asUtf8().handler_.toString());
+		expectThat(Chars.fromString("abc").write().asLatin1().toByteArray()).equal("abc".getBytes());
 	}
 }

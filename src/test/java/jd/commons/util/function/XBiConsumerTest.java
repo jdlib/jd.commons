@@ -13,8 +13,8 @@
 package jd.commons.util.function;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -29,12 +29,12 @@ public class XBiConsumerTest
 		final StringBuilder b = new StringBuilder();
 		XBiConsumer<String,String,SQLException> c  = (s1,s2) -> b.append(s1).append(s2);
 		c.accept("a", "b");
-		assertEquals("ab", b.toString());
+		expectEqual("ab", b.toString());
 
 		XBiConsumer<String,String,SQLException> c2 = c.andThen(c);
 		b.setLength(0);
 		c2.accept("a", "b");
-		assertEquals("abab", b.toString());
+		expectEqual("abab", b.toString());
 	}
 
 
@@ -45,7 +45,7 @@ public class XBiConsumerTest
 		XBiConsumer<String,String,IOException> c2 = (s1,s2) -> { throw new IOException(); };
 
 		c1.unchecked().accept("a", "b");
-		assertThatThrownBy(() -> c2.unchecked().accept("a", "b"))
-			.isInstanceOf(UncheckedException.class);
+		expectError(() -> c2.unchecked().accept("a", "b"))
+			.isA(UncheckedException.class);
 	}
 }

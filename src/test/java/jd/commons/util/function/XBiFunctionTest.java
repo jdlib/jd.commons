@@ -13,8 +13,8 @@
 package jd.commons.util.function;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -27,10 +27,10 @@ public class XBiFunctionTest
 	public void test() throws SQLException
 	{
 		XBiFunction<String,String,String,SQLException> f  = (s1,s2) -> s1 + s2;
-		assertEquals("st", f.apply("s", "t"));
+		expectEqual("st", f.apply("s", "t"));
 
 		XBiFunction<String,String,String,SQLException> f2 = f.andThen(s -> s + '!');
-		assertEquals("st!", f2.apply("s", "t"));
+		expectEqual("st!", f2.apply("s", "t"));
 	}
 
 
@@ -40,8 +40,8 @@ public class XBiFunctionTest
 		XBiFunction<String,String,String,IOException> c1 = (s1,s2) -> s1 + s2;
 		XBiFunction<String,String,String,IOException> c2 = (s1,s2) -> { throw new IOException(); };
 
-		assertEquals("ab", c1.unchecked().apply("a", "b"));
-		assertThatThrownBy(() -> c2.unchecked().apply("a", "b"))
-			.isInstanceOf(UncheckedException.class);
+		expectEqual("ab", c1.unchecked().apply("a", "b"));
+		expectError(() -> c2.unchecked().apply("a", "b"))
+			.isA(UncheckedException.class);
 	}
 }

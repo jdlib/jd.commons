@@ -13,16 +13,16 @@
 package jd.commons.util;
 
 
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import static jd.commons.io.fluent.IO.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import deepdive.function.CheckedRunnable;
 
 
 public class ArgumentsTest
@@ -32,13 +32,13 @@ public class ArgumentsTest
 		Arguments args;
 
 		args = new Arguments((String[])null);
-		assertEquals(0, args.size());
+		expectEqual(0, args.size());
 
 		args = new Arguments("", "a", null);
-		assertEquals(1, args.size());
+		expectEqual(1, args.size());
 
 		args = new Arguments(Arrays.asList("", "a", null));
-		assertEquals(1, args.size());
+		expectEqual(1, args.size());
 	}
 
 
@@ -46,8 +46,8 @@ public class ArgumentsTest
 	public void testConsume()
 	{
 		Arguments args = new Arguments("a");
-		assertFalse(args.consume("b"));
-		assertTrue(args.consume("a"));
+		expectFalse(args.consume("b"));
+		expectTrue(args.consume("a"));
 	}
 
 
@@ -55,8 +55,8 @@ public class ArgumentsTest
 	public void testConsumeAny()
 	{
 		Arguments args = new Arguments("a");
-		assertFalse(args.consumeAny("b"));
-		assertTrue(args.consumeAny("b", "a"));
+		expectFalse(args.consumeAny("b"));
+		expectTrue(args.consumeAny("b", "a"));
 	}
 
 
@@ -65,28 +65,28 @@ public class ArgumentsTest
 	{
 		Arguments args = new Arguments("x");
 
-		assertTrue(args.hasMore());
-		assertTrue(args.hasMore(1));
-		assertFalse(args.hasMore(2));
-		assertEquals(1, args.size());
-		assertEquals(0, args.index());
-		assertThat(args.getAll()).containsExactly("x");
+		expectTrue(args.hasMore());
+		expectTrue(args.hasMore(1));
+		expectFalse(args.hasMore(2));
+		expectEqual(1, args.size());
+		expectEqual(0, args.index());
+		expectThat(args.getAll()).elems("x");
 
 		List<String> remaining = args.getRemaining();
-		assertThat(remaining).containsExactly("x");
+		expectThat(remaining).elems("x");
 
-		assertEquals("x", args.get());
-		assertTrue(args.replace("a"));
-		assertEquals("a", args.get());
-		assertEquals("a", args.next().value());
-		assertEquals(1, args.index());
+		expectEqual("x", args.get());
+		expectTrue(args.replace("a"));
+		expectEqual("a", args.get());
+		expectEqual("a", args.next().value());
+		expectEqual(1, args.index());
 
-		assertFalse(args.hasMore());
-		assertFalse(args.replace("!"));
-		assertNull(args.get());
+		expectFalse(args.hasMore());
+		expectFalse(args.replace("!"));
+		expectNull(args.get());
 
-		assertIAE(() -> args.next(), "arg expected");
-		assertIAE(() -> args.next("count"), "count arg expected");
+		expectIAE(() -> args.next(), "arg expected");
+		expectIAE(() -> args.next("count"), "count arg expected");
 	}
 
 
@@ -98,20 +98,20 @@ public class ArgumentsTest
 		String includeArg = '@' + includeFile.toString();
 
 		Arguments args = new Arguments("one", includeArg, "two");
-		assertEquals(3, args.size());
+		expectEqual(3, args.size());
 
 		args.resolveIncludes();
 		args.consume("one");
 		args.consume("-i1");
 		args.consume("-i2");
 		args.consume("two");
-		assertFalse(args.hasMore());
+		expectFalse(args.hasMore());
 
 		Chars.fromString(includeArg).write().asUtf8().to(includeFile);
 
-		assertThatThrownBy(() -> new Arguments("one", includeArg, "two").resolveIncludes())
-			.isInstanceOf(IllegalArgumentException.class)
-			.hasMessage("circular inclusion of file " + includeFile);
+		expectError(() -> new Arguments("one", includeArg, "two").resolveIncludes())
+			.isA(IllegalArgumentException.class)
+			.message("circular inclusion of file " + includeFile);
 	}
 
 
@@ -119,9 +119,9 @@ public class ArgumentsTest
 	public void testNext()
 	{
 		Arguments args = new Arguments("true", "false", "a");
-		assertTrue(args.next().asBoolean());
-		assertFalse(args.next().asBoolean());
-		assertIAE(() -> args.next("flag").asBoolean(), "flag \"a\" can't be converted to boolean (true/false)");
+		expectTrue(args.next().asBoolean());
+		expectFalse(args.next().asBoolean());
+		expectIAE(() -> args.next("flag").asBoolean(), "flag \"a\" can't be converted to boolean (true/false)");
 	}
 
 
@@ -129,27 +129,27 @@ public class ArgumentsTest
 	{
 		Pattern aPattern = Pattern.compile("a.*");
 		Arguments args = new Arguments("abc");
-		assertTrue(args.nextMatches(aPattern));
-		assertTrue(args.nextMatches(s -> s.contains("b")));
-		assertTrue(args.nextStartsWith("a"));
+		expectTrue(args.nextMatches(aPattern));
+		expectTrue(args.nextMatches(s -> s.contains("b")));
+		expectTrue(args.nextStartsWith("a"));
 
 		args = new Arguments("xyz");
-		assertFalse(args.nextMatches(aPattern));
-		assertFalse(args.nextMatches(s -> s.contains("b")));
-		assertFalse(args.nextStartsWith("a"));
+		expectFalse(args.nextMatches(aPattern));
+		expectFalse(args.nextMatches(s -> s.contains("b")));
+		expectFalse(args.nextStartsWith("a"));
 	}
 
 
 	@Test public void testNextStartsWith()
 	{
 		Arguments args = new Arguments("abc");
-		assertTrue(args.nextStartsWith("a"));
-		assertFalse(args.nextStartsWith("x"));
+		expectTrue(args.nextStartsWith("a"));
+		expectFalse(args.nextStartsWith("x"));
 	}
 
 
-	private static void assertIAE(ThrowingCallable callable, String msg)
+	private static void expectIAE(CheckedRunnable<?> runnable, String msg)
 	{
-		assertThatThrownBy(callable).isInstanceOf(IllegalArgumentException.class).hasMessage(msg);
+		expectError(runnable).isA(IllegalArgumentException.class).message(msg);
 	}
 }

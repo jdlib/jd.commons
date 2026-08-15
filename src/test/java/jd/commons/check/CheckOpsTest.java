@@ -13,54 +13,53 @@
 package jd.commons.check;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import org.junit.jupiter.api.Test;
 
 
-// perfect coverage
 public class CheckOpsTest
 {
 	@Test
 	public void testEq()
 	{
-		assertTrue(CheckOp.EQ.compare(1L, 1L));
-		assertFalse(CheckOp.EQ.compare(1L, 2L));
+		expectTrue(CheckOp.EQ.compare(1L, 1L));
+		expectFalse(CheckOp.EQ.compare(1L, 2L));
 	}
 
 
 	@Test
 	public void testNotEq()
 	{
-		assertTrue(CheckOp.NOT_EQ.compare(1.0, 2.0));
-		assertFalse(CheckOp.NOT_EQ.compare(1.0, 1.0));
+		expectTrue(CheckOp.NOT_EQ.compare(1.0, 2.0));
+		expectFalse(CheckOp.NOT_EQ.compare(1.0, 1.0));
 	}
 
 
 	@Test
 	public void testGreaterEq()
 	{
-		assertTrue(CheckOp.GREATER_EQ.compare(1L, 1L));
-		assertTrue(CheckOp.GREATER_EQ.compare(2L, 1L));
-		assertFalse(CheckOp.GREATER_EQ.compare(1L, 2L));
+		expectTrue(CheckOp.GREATER_EQ.compare(1L, 1L));
+		expectTrue(CheckOp.GREATER_EQ.compare(2L, 1L));
+		expectFalse(CheckOp.GREATER_EQ.compare(1L, 2L));
 
-		assertTrue(CheckOp.GREATER_EQ.compare(1.0, 1.0));
-		assertTrue(CheckOp.GREATER_EQ.compare(2.0, 1.0));
-		assertFalse(CheckOp.GREATER_EQ.compare(1.0, 2.0));
+		expectTrue(CheckOp.GREATER_EQ.compare(1.0, 1.0));
+		expectTrue(CheckOp.GREATER_EQ.compare(2.0, 1.0));
+		expectFalse(CheckOp.GREATER_EQ.compare(1.0, 2.0));
 	}
 
 
 	@Test
 	public void testLess()
 	{
-		assertTrue(CheckOp.LESS.compare(1.0, 2.0));
-		assertFalse(CheckOp.LESS.compare(1.0, 1.0));
+		expectTrue(CheckOp.LESS.compare(1.0, 2.0));
+		expectFalse(CheckOp.LESS.compare(1.0, 1.0));
 	}
 
 
 	@Test
 	public void testLessEq()
 	{
-		assertTrue(CheckOp.LESS_EQ.compare(1.0, 2.0));
-		assertFalse(CheckOp.LESS_EQ.compare(2.0, 1.0));
+		expectTrue(CheckOp.LESS_EQ.compare(1.0, 2.0));
+		expectFalse(CheckOp.LESS_EQ.compare(2.0, 1.0));
 	}
 }

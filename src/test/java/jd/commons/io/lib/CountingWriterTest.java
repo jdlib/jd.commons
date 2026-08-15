@@ -13,7 +13,7 @@
 package jd.commons.io.lib;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import org.junit.jupiter.api.Test;
 
 
@@ -25,21 +25,21 @@ public class CountingWriterTest
 		try (CountingWriter w = new CountingWriter(new StringWriter2()))
 		{
 			long expected = 0;
-			assertEquals(expected, w.count());
+			expectEqual(expected, w.count());
 
 			w.write(17);
-			expected = assertCount(expected, 1, w);
+			expected = expectCount(expected, 1, w);
 
 			w.write("abcd", 1, 2);
-			expected = assertCount(expected, 2, w);
+			expected = expectCount(expected, 2, w);
 		}
 	}
 
 
-	private long assertCount(long current, long delta, CountingWriter w)
+	private long expectCount(long current, long delta, CountingWriter w)
 	{
 		long expected = current + delta;
-		assertEquals(expected, w.count());
+		expectEqual(expected, w.count());
 		return expected;
 	}
 }

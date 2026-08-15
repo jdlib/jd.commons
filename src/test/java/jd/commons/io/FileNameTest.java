@@ -13,7 +13,7 @@
 package jd.commons.io;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
@@ -26,12 +26,12 @@ public class FileNameTest
 	public void testMultipleExtensions()
 	{
 		FileName fn = new FileName("archive.tar.gz");
-		assertEquals("archive.tar.gz", fn.toString());
-		assertEquals("archive.tar.gz", fn.getName());
-		assertEquals("archive", fn.getBaseName());
-		assertEquals(List.of("tar", "gz"), fn.getExtensions());
-		assertEquals("gz", fn.getExtension());
-		assertTrue(fn.hasExtension("gz"));
+		expectEqual("archive.tar.gz", fn.toString());
+		expectEqual("archive.tar.gz", fn.getName());
+		expectEqual("archive", fn.getBaseName());
+		expectEqual(List.of("tar", "gz"), fn.getExtensions());
+		expectEqual("gz", fn.getExtension());
+		expectTrue(fn.hasExtension("gz"));
 	}
 
 
@@ -39,9 +39,9 @@ public class FileNameTest
 	public void testNoExtension()
 	{
 		FileName fn = new FileName("README");
-		assertEquals("README", fn.getBaseName());
-		assertEquals(List.of(), fn.getExtensions());
-		assertEquals("", fn.getExtension());
+		expectEqual("README", fn.getBaseName());
+		expectEqual(List.of(), fn.getExtensions());
+		expectEqual("", fn.getExtension());
 	}
 
 
@@ -49,10 +49,10 @@ public class FileNameTest
 	public void testLeadingDot()
 	{
 		FileName fn = new FileName(".bashrc");
-		assertEquals("", fn.getBaseName());
+		expectEqual("", fn.getBaseName());
 		// extensions: none (no further dots)
-		assertEquals(List.of("bashrc"), fn.getExtensions());
-		assertEquals("bashrc", fn.getExtension());
+		expectEqual(List.of("bashrc"), fn.getExtensions());
+		expectEqual("bashrc", fn.getExtension());
 	}
 
 
@@ -60,9 +60,9 @@ public class FileNameTest
 	public void testTrailingDot()
 	{
 		FileName fn = new FileName("abc.");
-		assertEquals("abc", fn.getBaseName());
-		assertEquals(List.of(""), fn.getExtensions());
-		assertEquals("", fn.getExtension());
+		expectEqual("abc", fn.getBaseName());
+		expectEqual(List.of(""), fn.getExtensions());
+		expectEqual("", fn.getExtension());
 	}
 
 
@@ -70,10 +70,10 @@ public class FileNameTest
 	public void testEmptyName()
 	{
 		FileName fn = new FileName("");
-		assertEquals("", fn.getName());
-		assertEquals("", fn.getBaseName());
-		assertEquals(List.of(), fn.getExtensions());
-		assertEquals("", fn.getExtension());
+		expectEqual("", fn.getName());
+		expectEqual("", fn.getBaseName());
+		expectEqual(List.of(), fn.getExtensions());
+		expectEqual("", fn.getExtension());
 	}
 
 
@@ -82,17 +82,17 @@ public class FileNameTest
 	{
 		File file = new File("docs/report.pdf");
 		FileName fnOfFile = FileName.of(file);
-		assertEquals("report.pdf", fnOfFile.getName());
+		expectEqual("report.pdf", fnOfFile.getName());
 
 		FileName fnOfPath = FileName.of(Paths.get("/tmp/data.csv"));
-		assertEquals("data.csv", fnOfPath.getName());
+		expectEqual("data.csv", fnOfPath.getName());
 
 		FileName fnOfrootPath = FileName.of(Paths.get("/").getRoot());
-		assertEquals("", fnOfrootPath.getName());
+		expectEqual("", fnOfrootPath.getName());
 
 		FileName fnOfParts = FileName.of("archive", "tar", "gz");
-		assertEquals("archive.tar.gz", fnOfParts.getName());
-		assertEquals("archive", fnOfParts.getBaseName());
+		expectEqual("archive.tar.gz", fnOfParts.getName());
+		expectEqual("archive", fnOfParts.getBaseName());
 	}
 
 
@@ -103,10 +103,10 @@ public class FileNameTest
 		FileName b = new FileName("foo.txt");
 		FileName c = new FileName("bar.txt");
 
-		assertEquals(a, b);
-		assertEquals(a.hashCode(), b.hashCode());
-		assertNotEquals(a, c);
-		assertNotEquals(a, null);
-		assertNotEquals(a, "foo.txt");
+		expectEqual(a, b);
+		expectEqual(a.hashCode(), b.hashCode());
+		not().expectEqual(a, c);
+		not().expectEqual(a, null);
+		not().expectEqual(a, "foo.txt");
 	}
 }

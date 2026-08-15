@@ -13,8 +13,8 @@
 package jd.commons.util.function;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
@@ -29,17 +29,17 @@ public class XBiPredicateTest
 		XBiPredicate<String,String,SQLException> pTrue  = (s1,s2) -> true;
 		XBiPredicate<String,String,SQLException> pFalse = (s1,s2) -> false;
 
-		assertTrue(pTrue.and(pTrue).test("x", "y"));
-		assertFalse(pTrue.and(pFalse).test("x", "y"));
-		assertFalse(pFalse.and(pTrue).test("x", "y"));
-		assertFalse(pFalse.and(pFalse).test("x", "y"));
+		expectTrue(pTrue.and(pTrue).test("x", "y"));
+		expectFalse(pTrue.and(pFalse).test("x", "y"));
+		expectFalse(pFalse.and(pTrue).test("x", "y"));
+		expectFalse(pFalse.and(pFalse).test("x", "y"));
 
-		assertTrue(pTrue.or(pFalse).test("x", "y"));
-		assertTrue(pFalse.or(pTrue).test("x", "y"));
-		assertFalse(pFalse.or(pFalse).test("x", "y"));
+		expectTrue(pTrue.or(pFalse).test("x", "y"));
+		expectTrue(pFalse.or(pTrue).test("x", "y"));
+		expectFalse(pFalse.or(pFalse).test("x", "y"));
 
-		assertFalse(pTrue.negate().test("x", "y"));
-		assertTrue(pFalse.negate().test("x", "y"));
+		expectFalse(pTrue.negate().test("x", "y"));
+		expectTrue(pFalse.negate().test("x", "y"));
 	}
 
 
@@ -49,8 +49,8 @@ public class XBiPredicateTest
 		XBiPredicate<String,String,IOException> p1 = (s1,s2) -> true;
 		XBiPredicate<String,String,IOException> p2 = (s1,s2) -> { throw new IOException(s1); };
 
-		assertTrue(() -> p1.unchecked().test("1", "2"));
-		assertThatThrownBy(() -> p2.unchecked().test("1", "2"))
-			.isInstanceOf(UncheckedException.class);
+		expectTrue(p1.unchecked().test("1", "2"));
+		expectError(() -> p2.unchecked().test("1", "2"))
+			.isA(UncheckedException.class);
 	}
 }

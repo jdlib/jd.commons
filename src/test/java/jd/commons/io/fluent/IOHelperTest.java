@@ -13,14 +13,14 @@
 package jd.commons.io.fluent;
 
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static deepdive.ExpectStatic.*;
+import static deepdive.ExpectThat.*;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.SQLException;
-import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.Test;
 import jd.commons.io.lib.AppendableWriter;
+import deepdive.actual.java.lang.ThrowableActual;
 
 
 public class IOHelperTest
@@ -29,10 +29,10 @@ public class IOHelperTest
 	public void testToWriter()
 	{
 		Appendable a1 = Writer.nullWriter();
-		assertSame(a1, IOHelper.toWriter(a1));
+		expectSame(a1, IOHelper.toWriter(a1));
 
 		Appendable a2 = new StringBuilder();
-		assertInstanceOf(AppendableWriter.class, IOHelper.toWriter(a2));
+		expectInstance(AppendableWriter.class, IOHelper.toWriter(a2));
 	}
 
 
@@ -40,15 +40,15 @@ public class IOHelperTest
 	public void testGetThrowsIOorRTException()
 	{
 		IllegalStateException e1 = new IllegalStateException();
-		assertGetThrowsIOorRTException(e1).isSameAs(e1);
+		expectGetThrowsIOorRTException(e1).same(e1);
 
 		SQLException e2 = new SQLException();
-		assertGetThrowsIOorRTException(e2).isInstanceOf(IOException.class).cause().isSameAs(e2);
+		expectGetThrowsIOorRTException(e2).isA(IOException.class).cause().same(e2);
 	}
 
 
-	private AbstractThrowableAssert<?,? extends Throwable> assertGetThrowsIOorRTException(Object e)
+	private ThrowableActual<?,?,?> expectGetThrowsIOorRTException(Object e)
 	{
-		return assertThatThrownBy(() -> IOHelper.getThrowsIOorRTException(e).get());
+		return expectError(() -> IOHelper.getThrowsIOorRTException(e).get());
 	}
 }

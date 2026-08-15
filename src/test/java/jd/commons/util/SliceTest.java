@@ -1,6 +1,7 @@
 package jd.commons.util;
 
 
+import static deepdive.ExpectStatic.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -13,13 +14,13 @@ public class SliceTest
 	public void testStart()
 	{
 		Slice start0 = Slice.build().create();
-		assertIndexes(start0.indexes(3), 0, 1, 2);
+		expectIndexes(start0.indexes(3), 0, 1, 2);
 
 		Slice start1 = Slice.build().start(1).create();
-		assertIndexes(start1.indexes(3), 1, 2);
+		expectIndexes(start1.indexes(3), 1, 2);
 
 		Slice startNeg = Slice.build().start(-3).create();
-		assertIndexes(startNeg.indexes(5), 2, 3, 4);
+		expectIndexes(startNeg.indexes(5), 2, 3, 4);
 	}
 
 
@@ -27,8 +28,8 @@ public class SliceTest
 	public void testEnd()
 	{
 		Slice end4 = Slice.build().end(4).create();
-		assertIndexes(end4.indexes(3), 0, 1, 2);
-		assertIndexes(end4.indexes(5), 0, 1, 2, 3);
+		expectIndexes(end4.indexes(3), 0, 1, 2);
+		expectIndexes(end4.indexes(5), 0, 1, 2, 3);
 	}
 
 
@@ -36,13 +37,13 @@ public class SliceTest
 	public void testStep()
 	{
 		Slice plus2 = Slice.build().step(2).create();
-		assertIndexes(plus2.indexes(5), 0, 2, 4);
+		expectIndexes(plus2.indexes(5), 0, 2, 4);
 
 		Slice revert = Slice.build().step(-1).create();
-		assertIndexes(revert.indexes(5), 4, 3, 2, 1, 0);
+		expectIndexes(revert.indexes(5), 4, 3, 2, 1, 0);
 
 		Slice minus3 = Slice.build().step(-3).create();
-		assertIndexes(minus3.indexes(10), 9, 6, 3, 0);
+		expectIndexes(minus3.indexes(10), 9, 6, 3, 0);
 	}
 
 
@@ -58,7 +59,7 @@ public class SliceTest
 	public void testApplyToList()
 	{
 		Slice slice = Slice.build().start(1).create();
-		assertEquals(List.of("b", "c"), slice.applyTo(List.of("a", "b", "c")));
+		expectEqual(List.of("b", "c"), slice.applyTo(List.of("a", "b", "c")));
 	}
 
 
@@ -74,13 +75,13 @@ public class SliceTest
 	public void testIndexesEmpty()
 	{
 		// invalid len
-		assertIndexesEmpty(Slice.build().end(2).create(), -1);
+		expectIndexesEmpty(Slice.build().end(2).create(), -1);
 
 		// step > 0: start >= end
-		assertIndexesEmpty(Slice.build().start(3).end(3).create(), 12);
+		expectIndexesEmpty(Slice.build().start(3).end(3).create(), 12);
 
 		// step < 0: start <= end
-		assertIndexesEmpty(Slice.build().start(3).end(3).step(-1).create(), 12);
+		expectIndexesEmpty(Slice.build().start(3).end(3).step(-1).create(), 12);
 	}
 
 
@@ -90,17 +91,17 @@ public class SliceTest
 		Slice.Indexes indexes = Slice.build().create().indexes(5);
 		StringBuilder s = new StringBuilder();
 		indexes.forEach(n -> s.append(n));
-		assertEquals("01234", s.toString());
+		expectEqual("01234", s.toString());
 	}
 
 
 	@Test
 	public void testToString()
 	{
-		assertToString(":", Slice.build());
-		assertToString("1:", Slice.build().start(1));
-		assertToString("1:2", Slice.build().start(1).end(2));
-		assertToString("1:5:2", Slice.build().start(1).end(5).step(2));
+		expectToString(":", Slice.build());
+		expectToString("1:", Slice.build().start(1));
+		expectToString("1:2", Slice.build().start(1).end(2));
+		expectToString("1:5:2", Slice.build().start(1).end(5).step(2));
 	}
 
 
@@ -113,9 +114,9 @@ public class SliceTest
 		Slice start0End1 = Slice.build().start(0).end(1).create();
 		Slice start0Step2 = Slice.build().start(0).step(2).create();
 
-		assertEquals(start0, start0);
-		assertEquals(end1, end1);
-		assertEquals(step2, step2);
+		expectEqual(start0, start0);
+		expectEqual(end1, end1);
+		expectEqual(step2, step2);
 
 		assertNotEquals(0, start0.hashCode());
 
@@ -127,20 +128,20 @@ public class SliceTest
 	}
 
 
-	private static void assertIndexes(Slice.Indexes indexes, int... expected)
+	private static void expectIndexes(Slice.Indexes indexes, int... expected)
 	{
 		assertArrayEquals(expected, indexes.get());
 	}
 
 
-	private static void assertToString(String expected, Slice.Builder builder)
+	private static void expectToString(String expected, Slice.Builder builder)
 	{
-		assertEquals(expected, builder.create().toString());
+		expectEqual(expected, builder.create().toString());
 	}
 
 
-	private static void assertIndexesEmpty(Slice slice, int len)
+	private static void expectIndexesEmpty(Slice slice, int len)
 	{
-		assertSame(Indexes.EMPTY, slice.indexes(len));
+		expectSame(Indexes.EMPTY, slice.indexes(len));
 	}
 }
